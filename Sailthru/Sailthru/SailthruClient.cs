@@ -372,6 +372,7 @@ namespace Sailthru
                     byte[] byteArray = Encoding.UTF8.GetBytes(strData);
                     request.ContentType = "application/x-www-form-urlencoded";
                     request.ContentLength = byteArray.Length;
+                    ((HttpWebRequest)request).UserAgent = "Sailthru API .NET Client";
                     Stream dataStream = request.GetRequestStream();
                     // Write the data to the request stream.
                     dataStream.Write(byteArray, 0, byteArray.Length);
