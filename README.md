@@ -72,6 +72,6 @@
 	Boolean includeName = true;
 	response = client.ImportContacts(email, password, includeName);
 	
-## Stats [http://docs.sailthru.com/api/stats]
+## Stats (http://docs.sailthru.com/api/stats)
 ### Get Stat
 	response = client.GetStat("list");
