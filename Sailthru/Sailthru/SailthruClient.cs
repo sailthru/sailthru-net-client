@@ -425,8 +425,6 @@ namespace Sailthru
 
             strPostString += "&sig=" + sigHash;
 
-            Console.WriteLine("Params: " + strPostString);
-
             return this.HttpRequest(this.strAPIUri + "/" + strAction, strPostString, "GET");
         }
 
@@ -496,7 +494,6 @@ namespace Sailthru
             string strPostString = GetStringForPost(htForPost);
 
             strPostString += "&sig=" + sigHash;
-            Console.WriteLine(strPostString);
 
             return this.HttpRequest(this.strAPIUri + "/" + strAction, strPostString, method);
         }
@@ -725,7 +722,6 @@ namespace Sailthru
             {
                 values += s;
             }
-            Console.WriteLine("Sorted value: " + values);
             return values;
         }
 
