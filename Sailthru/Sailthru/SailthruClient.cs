@@ -225,7 +225,14 @@ namespace Sailthru
         /// <param name="sendVars"></param>
         /// <returns></returns>
         /// <seealso cref="http://docs.sailthru.com/api/email"/>
-        public SailthruResponse SetEmail(string strEmail, Hashtable htVars = null, Hashtable htLists = null, Hashtable htTemplates = null, int verified = 0, String optout = null, string send = null, Hashtable sendVars = null)
+        public SailthruResponse SetEmail(string strEmail, 
+            Hashtable htVars = null, 
+            Hashtable htLists = null, 
+            Hashtable htTemplates = null, 
+            int verified = 0, 
+            String optout = null, 
+            string send = null, 
+            Hashtable sendVars = null)
         {
             if (htVars == null) htVars = new Hashtable();
             if (htLists == null) htLists = new Hashtable();
@@ -234,15 +241,39 @@ namespace Sailthru
             Hashtable hashForPost = new Hashtable();
             foreach (DictionaryEntry entry in htVars)
             {
-                hashForPost.Add("vars[" + entry.Key + "]", entry.Value.ToString());
+                hashForPost.Add("vars[" + entry.Key.ToString() + "]", entry.Value.ToString());
             }
 
             foreach (DictionaryEntry entry in htLists)
             {
-                hashForPost.Add("lists[" + entry.Key + "]", entry.Value.ToString());
+                hashForPost.Add("lists[" + entry.Key.ToString() + "]", entry.Value.ToString());
+            }
+
+            foreach (DictionaryEntry entry in htTemplates)
+            {
+                hashForPost.Add("templates[" + entry.Key.ToString() + "]", entry.Value.ToString());
             }
 
             hashForPost.Add("email", strEmail);
+            hashForPost.Add("verified", verified);
+
+            if (optout != null) 
+            {
+                hashForPost.Add("optout", optout);
+            }
+
+            if (send != null)
+            {
+                hashForPost.Add("send", send);
+            }
+
+            if (sendVars != null)
+            {
+                foreach (DictionaryEntry entry in sendVars)
+                {
+                    hashForPost.Add("send_vars[" + entry.Key.ToString() + "]", entry.Value.ToString());
+                }
+            }
 
             return this.ApiPost("email", hashForPost);
         }
@@ -372,7 +403,7 @@ namespace Sailthru
                     byte[] byteArray = Encoding.UTF8.GetBytes(strData);
                     request.ContentType = "application/x-www-form-urlencoded";
                     request.ContentLength = byteArray.Length;
-                    ((HttpWebRequest)request).UserAgent = "Sailthru API .NET Client";
+                    ((HttpWebRequest)request).UserAgent = "Sailthru API C# Client";
                     Stream dataStream = request.GetRequestStream();
                     // Write the data to the request stream.
                     dataStream.Write(byteArray, 0, byteArray.Length);

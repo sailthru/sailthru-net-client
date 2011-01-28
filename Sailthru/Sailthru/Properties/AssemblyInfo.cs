@@ -8,9 +8,9 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyTitle("Sailthru")]
 [assembly: AssemblyDescription("")]
 [assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("Sailthru")]
-[assembly: AssemblyProduct("Sailthru")]
-[assembly: AssemblyCopyright("Copyright © Microsoft 2011")]
+[assembly: AssemblyCompany("Sailthru, Inc.")]
+[assembly: AssemblyProduct("Sailthru Client API")]
+[assembly: AssemblyCopyright("Copyright © Sailthru, Inc. 2011")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 
