@@ -16,7 +16,7 @@ namespace Sailthru
     {
         #region Properties
 
-        private string strAPIUri = "http://api.sailthru.com";
+        private string strAPIUri = "https://api.sailthru.com";
         private string strAPIKey;
         private string strSecret;
 
@@ -418,9 +418,12 @@ namespace Sailthru
                 response = request.GetResponse();
 
             }
-            catch (Exception e)
+            catch (WebException e)
             {
-                throw e;
+                using (HttpWebResponse errorResponse = (HttpWebResponse)e.Response)
+                {
+                    response = (WebResponse)errorResponse;
+                }
             }
 
             return new SailthruResponse(response);

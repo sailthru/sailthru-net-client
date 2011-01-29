@@ -64,31 +64,45 @@ namespace Sailthru
         /// </summary>
         private void parseJSON()
         {
-            if (((HttpWebResponse)webResponse).StatusCode == HttpStatusCode.OK)
+            if (webResponse != null)
             {
-                Stream dataStream = webResponse.GetResponseStream();
-                StreamReader reader = new StreamReader(dataStream);
-
-                var responseStr = reader.ReadToEnd();
-
-                // Clean up the streams.
-                reader.Close();
-                dataStream.Close();
-                webResponse.Close();
-
-                this.rawResponse = responseStr;
-
-                var jsonResponse = Sailthru.JSON.JsonDecode(responseStr);
-
-                if (jsonResponse is Hashtable)
+                var httpWebResponse = (HttpWebResponse)webResponse;
+                if (httpWebResponse.StatusCode == HttpStatusCode.OK)
                 {
-                    hashtableResponse = (Hashtable)jsonResponse;
-                    if (!hashtableResponse.ContainsKey(ERROR_KEY) || !hashtableResponse.ContainsKey(ERROR_MSG_KEY))
+                    Stream dataStream = webResponse.GetResponseStream();
+                    StreamReader reader = new StreamReader(dataStream);
+
+                    var responseStr = reader.ReadToEnd();
+
+                    // Clean up the streams.
+                    reader.Close();
+                    dataStream.Close();
+                    webResponse.Close();
+
+                    this.rawResponse = responseStr;
+
+                    var jsonResponse = Sailthru.JSON.JsonDecode(responseStr);
+
+                    if (jsonResponse is Hashtable)
                     {
-                        this.validResponse = true;
+                        hashtableResponse = (Hashtable)jsonResponse;
+                        if (!hashtableResponse.ContainsKey(ERROR_KEY) || !hashtableResponse.ContainsKey(ERROR_MSG_KEY))
+                        {
+                            this.validResponse = true;
+                        }
                     }
                 }
-                
+                else
+                {
+                    this.rawResponse = httpWebResponse.StatusDescription;
+                    this.hashtableResponse = createErrorResponse(httpWebResponse.StatusDescription);
+                }
+            }
+            else
+            {
+                var msg = "There was a problem making request to the server";
+                this.rawResponse = msg;
+                this.hashtableResponse = createErrorResponse(msg);
             }
         }
 
@@ -99,6 +113,14 @@ namespace Sailthru
         public Boolean IsOK()
         {
             return this.validResponse;
+        }
+
+        private Hashtable createErrorResponse(String message)
+        {
+            Hashtable hash = new Hashtable();
+            hash.Add(ERROR_KEY, 99);
+            hash.Add(ERROR_MSG_KEY, message);
+            return hash;
         }
     }
 }
