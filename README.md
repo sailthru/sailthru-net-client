@@ -16,6 +16,12 @@
     SailthruResponse response;
     response = client.Send("default2", "abc@sailthru.com");
 	
+	//recommended to check response from server
+	if (response.IsOK())
+	{
+		//do something
+	}
+	
 ### Multi Send
 	//multi send
 	String[] emails = {"abc@sailthru.com", "xyz@gmail.com"};

@@ -115,6 +115,12 @@ namespace Sailthru
             return this.validResponse;
         }
 
+        
+        /// <summary>
+        /// create custom hastable with error and errormsg
+        /// </summary>
+        /// <param name="message"></param>
+        /// <returns></returns>
         private Hashtable createErrorResponse(String message)
         {
             Hashtable hash = new Hashtable();
