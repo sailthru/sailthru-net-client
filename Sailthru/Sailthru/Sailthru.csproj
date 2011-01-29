@@ -48,6 +48,7 @@
     <Compile Include="OrdinalComparer.cs" />
     <Compile Include="SailthruClient.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="SailthruException.cs" />
     <Compile Include="SailthruResponse.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
