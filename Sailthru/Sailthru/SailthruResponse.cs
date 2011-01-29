@@ -17,6 +17,15 @@ namespace Sailthru
 
         private String rawResponse;
 
+        private Boolean validResponse;
+
+        protected const String ERROR_KEY = "error";
+        protected const String ERROR_MSG_KEY = "errormsg";
+
+        
+        /// <summary>
+        /// Response from Server represented as HashTable
+        /// </summary>
         public Hashtable HashtableResponse
         {
             get
@@ -25,6 +34,9 @@ namespace Sailthru
             }
         }
 
+        /// <summary>
+        /// RawResponse Getter
+        /// </summary>
         public String RawResponse
         {
             get
@@ -33,14 +45,23 @@ namespace Sailthru
             }
         }
 
+        
+        /// <summary>
+        /// Constructor
+        /// </summary>
+        /// <param name="response"></param>
         public SailthruResponse(WebResponse response)
         {
             this.webResponse = response;
             this.hashtableResponse = null;
             this.rawResponse = "";
+            this.validResponse = false;
             parseJSON();
         }
 
+        /// <summary>
+        /// Parse Response JSON
+        /// </summary>
         private void parseJSON()
         {
             if (((HttpWebResponse)webResponse).StatusCode == HttpStatusCode.OK)
@@ -58,17 +79,26 @@ namespace Sailthru
                 this.rawResponse = responseStr;
 
                 var jsonResponse = Sailthru.JSON.JsonDecode(responseStr);
-                
+
                 if (jsonResponse is Hashtable)
-                {   
+                {
                     hashtableResponse = (Hashtable)jsonResponse;
-                    Console.WriteLine(hashtableResponse.Keys.Count);
+                    if (!hashtableResponse.ContainsKey(ERROR_KEY) || !hashtableResponse.ContainsKey(ERROR_MSG_KEY))
+                    {
+                        this.validResponse = true;
+                    }
                 }
+                
             }
-            else
-            {
-                Console.WriteLine(((HttpWebResponse)webResponse).StatusCode);
-            }
+        }
+
+        /// <summary>
+        /// Check if the response is valid
+        /// </summary>
+        /// <returns></returns>
+        public Boolean IsOK()
+        {
+            return this.validResponse;
         }
     }
 }
