@@ -21,6 +21,10 @@
 	{
 		//do something
 	}
+    else
+    {
+        String errorrResponse = response.RawResponse;
+    }
 	
 ### Multi Send
 	//multi send

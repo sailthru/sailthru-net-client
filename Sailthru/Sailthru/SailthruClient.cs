@@ -232,7 +232,10 @@ namespace Sailthru
             int verified = 0, 
             String optout = null, 
             string send = null, 
-            Hashtable sendVars = null)
+            Hashtable sendVars = null,
+            String sms = null,
+            String twitter = null,
+            String changeEmail = null)
         {
             if (htVars == null) htVars = new Hashtable();
             if (htLists == null) htLists = new Hashtable();
@@ -273,6 +276,21 @@ namespace Sailthru
                 {
                     hashForPost.Add("send_vars[" + entry.Key.ToString() + "]", entry.Value.ToString());
                 }
+            }
+
+            if (sms != null)
+            {
+                hashForPost.Add("sms", sms);
+            }
+
+            if (twitter != null)
+            {
+                hashForPost.Add("twitter", twitter);
+            }
+
+            if (changeEmail != null)
+            {
+                hashForPost.Add("change_email", changeEmail);
             }
 
             return this.ApiPost("email", hashForPost);
