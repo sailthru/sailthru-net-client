@@ -172,6 +172,14 @@ namespace Sailthru
             //if (htOptions == null) htOptions = new Hashtable();   //For Next release
             Hashtable hashForPost = new Hashtable();
 
+            if (htOptions != null)
+            {
+                foreach (DictionaryEntry entry in htOptions)
+                {
+                    hashForPost.Add(entry.Key.ToString(), entry.Value.ToString());
+                }
+            }
+
             hashForPost.Add("name", strName);
             hashForPost.Add("list", strList);
             hashForPost.Add("schedule_time", strScheduleTime);
