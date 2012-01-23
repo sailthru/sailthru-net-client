@@ -5,11 +5,11 @@
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <ProductVersion>8.0.30703</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
-    <ProjectGuid>{21C7EF1E-3D2E-4AA8-B3FA-787A80F7C939}</ProjectGuid>
+    <ProjectGuid>{4993ADAC-7553-4733-B72F-011CE4D93A3B}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>Sailthru</RootNamespace>
-    <AssemblyName>Sailthru</AssemblyName>
+    <RootNamespace>Sailthru.Models</RootNamespace>
+    <AssemblyName>Sailthru.Models</AssemblyName>
     <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
   </PropertyGroup>
@@ -36,7 +36,6 @@
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
-    <Reference Include="System.Web" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
@@ -44,21 +43,15 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="JSON.cs" />
-    <Compile Include="OrdinalComparer.cs" />
-    <Compile Include="SailthruClient.cs" />
+    <Compile Include="BlastRequest.cs" />
+    <Compile Include="EmailRequest.cs" />
+    <Compile Include="ImportContactRequest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="SailthruException.cs" />
-    <Compile Include="SailthruResponse.cs" />
+    <Compile Include="SendRequest.cs" />
+    <Compile Include="TemplateRequest.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\Sailthru.Models\Sailthru.Models.csproj">
-      <Project>{4993ADAC-7553-4733-B72F-011CE4D93A3B}</Project>
-      <Name>Sailthru.Models</Name>
-    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

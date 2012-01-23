@@ -9,6 +9,8 @@ using System.Collections;
 using System.Security.Cryptography;
 using System.Collections.Specialized;
 using System.Web;
+using Sailthru.Models;
+using Newtonsoft.Json;
 
 namespace Sailthru
 {
@@ -52,11 +54,10 @@ namespace Sailthru
         
         #endregion
 
-
         #region Public Methods
 
         /// <summary>
-        /// 
+        /// REceive the output of a Post.
         /// </summary>
         /// <param name="parameters"></param>
         /// <returns></returns>
@@ -73,9 +74,8 @@ namespace Sailthru
             return true;
         }
 
-
         /// <summary>
-        /// 
+        /// Receive and verify the output of a Post.
         /// </summary>
         /// <param name="parameters"></param>
         /// <returns></returns>
@@ -99,7 +99,6 @@ namespace Sailthru
             return false;
         }
 
-        
         /// <summary>
         /// Save Template
         /// </summary>
@@ -117,6 +116,18 @@ namespace Sailthru
             return this.ApiPost("template", fields);
         }
 
+        /// <summary>
+        /// Save Template
+        /// </summary>
+        /// <param name="request">TemplateRequest parameters.</param>
+        /// <seealso cref="http://docs.sailthru.com/api/template"/>
+        /// <returns></returns>
+        public SailthruResponse SaveTemplate(TemplateRequest request)
+        {
+            Hashtable hashForPost = new Hashtable();
+            hashForPost.Add("json", JsonConvert.SerializeObject(request));
+            return this.ApiPost("template", hashForPost);
+        }
         
         /// <summary>
         /// Get Template
@@ -129,7 +140,6 @@ namespace Sailthru
             return this.ApiGet("template", "template=" + strTemplateName);     
         }
 
-        
         /// <summary>
         /// Fetch email contacts from an address book at one of the major email providers (aol/gmail/hotmail/yahoo) 
         /// </summary>
@@ -152,6 +162,18 @@ namespace Sailthru
             return this.ApiPost("contacts", hashForPost);
         }
 
+        /// <summary>
+        /// Fetch email contacts from an address book at one of the major email providers (aol/gmail/hotmail/yahoo) 
+        /// </summary>
+        /// <param name="strEmail">ImportContactRequest parameters.</param>
+        /// <seealso cref="http://docs.sailthru.com/api/template"/>
+        /// <returns>SailthruResponse Object</returns>
+        public SailthruResponse ImportContacts(ImportContactRequest request)
+        {
+            Hashtable hashForPost = new Hashtable();
+            hashForPost.Add("json", JsonConvert.SerializeObject(request));
+            return this.ApiPost("contacts", hashForPost);
+        }
 
         /// <summary>
         /// Create, update, and/or schedule a blast.
@@ -192,7 +214,18 @@ namespace Sailthru
             return this.ApiPost("blast", hashForPost);
         }
 
-
+        /// <summary>
+        /// Create, update, and/or schedule a blast.
+        /// </summary>
+        /// <param name="request">BlastRequest parameters.</param>
+        /// <seealso cref="http://docs.sailthru.com/api/blast"/>
+        /// <returns></returns>
+        public SailthruResponse ScheduleBlast(BlastRequest request)
+        {
+            Hashtable hashForPost = new Hashtable();
+            hashForPost.Add("json", JsonConvert.SerializeObject(request));
+            return this.ApiPost("blast", hashForPost);
+        }
         
         /// <summary>
         /// Get Blast
@@ -205,8 +238,6 @@ namespace Sailthru
             return this.ApiGet("blast", "blast_id=" + strBlastId);
         }
         
-
-
         /// <summary>
         /// Get information about one of your users.
         /// </summary>
@@ -217,8 +248,6 @@ namespace Sailthru
         {
             return this.ApiGet("email", "email=" + strEmail);
         }
-
-
 
         /// <summary>
         /// Update information about one of your users, including adding and removing the user from lists.
@@ -268,7 +297,7 @@ namespace Sailthru
             hashForPost.Add("email", strEmail);
             hashForPost.Add("verified", verified);
 
-            if (optout != null) 
+            if (optout != null)
             {
                 hashForPost.Add("optout", optout);
             }
@@ -304,7 +333,20 @@ namespace Sailthru
             return this.ApiPost("email", hashForPost);
         }
 
-        
+        /// <summary>
+        /// Update information about one of your users, including adding and removing the user from lists.
+        /// </summary>
+        /// <param name="request">EmailRequest parameters.</param>
+        /// <returns></returns>
+        /// <seealso cref="http://docs.sailthru.com/api/email"/>
+        public SailthruResponse SetEmail(EmailRequest request)
+        {
+            Hashtable hashForPost = new Hashtable();
+            hashForPost.Add("json", JsonConvert.SerializeObject(request));
+
+            return this.ApiPost("email", hashForPost);
+        }
+
         /// <summary>
         /// Send a transactional email for multiple users
         /// </summary>
@@ -333,12 +375,11 @@ namespace Sailthru
                 }
             }
             
-            hashForPost.Add("template", strTemplateName);
+            hashForPost.Add("template", strTemplateName);   
             hashForPost.Add("email", string.Join(",", strEmail));
             
             return this.ApiPost("send", hashForPost);
         }
-
 
         /// <summary>
         /// Send a transactional Email for a single user
@@ -354,8 +395,18 @@ namespace Sailthru
             return this.Multisend(strTemplateName, new string[] { strEmail }, htVars, htOptions);
         }
 
+        /// <summary>
+        /// Send a transactional Email for a single or multiple users.
+        /// </summary>
+        /// <param name="request">SendRequest parameters.</param>
+        /// <returns></returns>
+        public SailthruResponse Send(SendRequest request)
+        {
+            Hashtable hashForPost = new Hashtable();
+            hashForPost.Add("json", JsonConvert.SerializeObject(request));  
+            return this.ApiPost("send", hashForPost);
+        }
 
-        
         /// <summary>
         /// cancel a future send before it goes out.
         /// </summary>
@@ -367,8 +418,6 @@ namespace Sailthru
             return this.ApiDelete("send", "send_id=" + strSendId);
         }
         
-
-
         /// <summary>
         /// check on the status of a send
         /// </summary>
@@ -379,7 +428,6 @@ namespace Sailthru
         {
             return this.ApiGet("send", "send_id=" + strSendId + "&api_key=" + strAPIKey); 
         }
-
 
         /// <summary>
         /// Request various stats from Sailthru.
@@ -407,9 +455,7 @@ namespace Sailthru
 
         #endregion
 
-
         #region Protected Methods
-
 
         /** 
         * Generic HTTP request function for POST, GET and DELETE
@@ -455,7 +501,6 @@ namespace Sailthru
             return new SailthruResponse(response);
         }
 
-
         /// <summary>
         /// For making  API GET Request
         /// </summary>
@@ -468,7 +513,6 @@ namespace Sailthru
 
             return this.ApiGet(strAction, htForPost);
         }
-
 
         /// <summary>
         /// For making  API GET Request
@@ -489,7 +533,6 @@ namespace Sailthru
             return this.HttpRequest(this.strAPIUri + "/" + strAction, strPostString, "GET");
         }
 
-
         /// <summary>
         /// For making  API DELETE Request
         /// </summary>
@@ -502,7 +545,6 @@ namespace Sailthru
 
             return this._ApiPost(strAction, htForPost, "DELETE");
         }
-
 
         /// <summary>
         /// For making  API POST Request
@@ -517,7 +559,6 @@ namespace Sailthru
             return ApiPost(strAction, htForPost);
         }
 
-
         /// <summary>
         /// For making  API POST Request
         /// </summary>
@@ -528,7 +569,6 @@ namespace Sailthru
         {
             return this._ApiPost(strAction, htForPost, "POST");
         }
-
 
         protected string GetStringForPost(Hashtable htForPost)
         {
@@ -563,7 +603,6 @@ namespace Sailthru
 
         #region Private Methods
 
-        
         /// <summary>
         /// Parse given hash table
         /// check if it contains api_key and format and if not present add them
@@ -585,7 +624,6 @@ namespace Sailthru
 
             return htForPost;
         }
-
 
         /// <summary>
         /// URL Encode String
@@ -638,8 +676,6 @@ namespace Sailthru
             return values;
         }
 
-
-
         /// <summary>
         /// Extracts the values from the NameValueCollection in alphabetical order.
         /// </summary>
@@ -662,8 +698,6 @@ namespace Sailthru
             return extractParamValues(paramString);
         }
 
-
-
         /// <summary>
         /// Returns an MD5 hash of the secret + sorted list of parameter values for an API call.
         /// </summary>
@@ -675,7 +709,6 @@ namespace Sailthru
             string strString = strSecret + strParams;
             return md5(strString);
         }
-
 
         /// <summary>
         /// Generates an MD5 hash of the string.
@@ -693,7 +726,6 @@ namespace Sailthru
             }
             return result.ToString();
         }
-
 
         /// <summary>
         /// Converts the hashtable entries into a url-encoded string representation of key/value pairs.         
@@ -729,7 +761,6 @@ namespace Sailthru
             return parms;
         }
 
-
         /// <summary>
         /// Extract param value from hashtable
         /// </summary>
@@ -752,7 +783,6 @@ namespace Sailthru
 
             return list;
         }
-
 
         /// <summary>
         /// Sort API Parameter Values
