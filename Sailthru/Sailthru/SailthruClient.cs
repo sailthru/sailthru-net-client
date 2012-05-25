@@ -717,7 +717,7 @@ namespace Sailthru
         /// <returns></returns>
         private static string md5(string strMd5String)
         {
-            byte[] original_bytes = System.Text.Encoding.ASCII.GetBytes(strMd5String);
+            byte[] original_bytes = Encoding.UTF8.GetBytes(strMd5String);
             byte[] encoded_bytes = new MD5CryptoServiceProvider().ComputeHash(original_bytes);
             StringBuilder result = new StringBuilder();
             for (int i = 0; i < encoded_bytes.Length; i++)
