@@ -466,39 +466,50 @@ namespace Sailthru
 
             WebResponse response;
             WebRequest request;
+            HttpWebRequest httpWebRequest;
             try
             {
                 if (strMethod == "POST")
                 {
-                    request = WebRequest.Create(strURI);
-                    request.Method = strMethod;
+                    httpWebRequest = (HttpWebRequest)HttpWebRequest.Create(strURI);
                     byte[] byteArray = Encoding.UTF8.GetBytes(strData);
-                    request.ContentType = "application/x-www-form-urlencoded";
-                    request.ContentLength = byteArray.Length;
-                    ((HttpWebRequest)request).UserAgent = "Sailthru API C# Client";
-                    Stream dataStream = request.GetRequestStream();
-                    // Write the data to the request stream.
-                    dataStream.Write(byteArray, 0, byteArray.Length);
-                    dataStream.Close();
+
+                    httpWebRequest.ContentType = "application/x-www-form-urlencoded";
+                    httpWebRequest.SendChunked = false;
+                    httpWebRequest.UserAgent = "Sailthru API C# Client";
+                    httpWebRequest.Method = strMethod;
+                    httpWebRequest.ContentLength = byteArray.Length;
+
+                    // write POST body
+                    using (Stream requestStream = httpWebRequest.GetRequestStream())
+                    {
+                        requestStream.Write(byteArray, 0, byteArray.Length);
+                        requestStream.Close();
+                    }
                 }
                 else
                 {
+                    httpWebRequest = (HttpWebRequest)HttpWebRequest.Create(strURI + "?" + strData);
+                    httpWebRequest.ContentType = "application/x-www-form-urlencoded";
+                    httpWebRequest.SendChunked = false;
+                    httpWebRequest.UserAgent = "Sailthru API C# Client";
+                    httpWebRequest.Method = strMethod;
+
                     request = WebRequest.Create(strURI + "?" + strData);
                     request.Method = strMethod;
                 }
 
-                response = request.GetResponse();
-
+                return new SailthruResponse((HttpWebResponse)httpWebRequest.GetResponse());
             }
             catch (WebException e)
             {
                 using (HttpWebResponse errorResponse = (HttpWebResponse)e.Response)
                 {
-                    response = (WebResponse)errorResponse;
+                    response = errorResponse;
+                    return new SailthruResponse((HttpWebResponse)response);
                 }
             }
-
-            return new SailthruResponse(response);
+            
         }
 
         /// <summary>
@@ -717,7 +728,7 @@ namespace Sailthru
         /// <returns></returns>
         private static string md5(string strMd5String)
         {
-            byte[] original_bytes = System.Text.Encoding.ASCII.GetBytes(strMd5String);
+            byte[] original_bytes = System.Text.Encoding.UTF8.GetBytes(strMd5String);
             byte[] encoded_bytes = new MD5CryptoServiceProvider().ComputeHash(original_bytes);
             StringBuilder result = new StringBuilder();
             for (int i = 0; i < encoded_bytes.Length; i++)

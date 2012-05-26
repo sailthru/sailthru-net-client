@@ -11,7 +11,7 @@ namespace Sailthru
     public class SailthruResponse
     {
 
-        private WebResponse webResponse;
+        private HttpWebResponse webResponse;
 
         private Hashtable hashtableResponse;
 
@@ -50,7 +50,7 @@ namespace Sailthru
         /// Constructor
         /// </summary>
         /// <param name="response"></param>
-        public SailthruResponse(WebResponse response)
+        public SailthruResponse(HttpWebResponse response)
         {
             this.webResponse = response;
             this.hashtableResponse = null;
@@ -63,40 +63,40 @@ namespace Sailthru
         /// Parse Response JSON
         /// </summary>
         private void parseJSON()
-        {
+        {   
+
             if (webResponse != null)
             {
-                var httpWebResponse = (HttpWebResponse)webResponse;
-                if (httpWebResponse.StatusCode == HttpStatusCode.OK)
+                HttpWebResponse httpWebResponse = webResponse;
+                Stream dataStream = httpWebResponse.GetResponseStream();
+                StreamReader reader = new StreamReader(dataStream);
+
+                var responseStr = reader.ReadToEnd();
+
+                // Clean up the streams.
+                reader.Close();
+                dataStream.Close();
+                webResponse.Close();
+
+                this.rawResponse = responseStr;
+
+                var jsonResponse = Sailthru.JSON.JsonDecode(responseStr);
+
+                if (jsonResponse is Hashtable)
                 {
-                    Stream dataStream = webResponse.GetResponseStream();
-                    StreamReader reader = new StreamReader(dataStream);
-
-                    var responseStr = reader.ReadToEnd();
-
-                    // Clean up the streams.
-                    reader.Close();
-                    dataStream.Close();
-                    webResponse.Close();
-
-                    this.rawResponse = responseStr;
-
-                    var jsonResponse = Sailthru.JSON.JsonDecode(responseStr);
-
-                    if (jsonResponse is Hashtable)
+                    hashtableResponse = (Hashtable)jsonResponse;
+                    if (!hashtableResponse.ContainsKey(ERROR_KEY) || !hashtableResponse.ContainsKey(ERROR_MSG_KEY))
                     {
-                        hashtableResponse = (Hashtable)jsonResponse;
-                        if (!hashtableResponse.ContainsKey(ERROR_KEY) || !hashtableResponse.ContainsKey(ERROR_MSG_KEY))
-                        {
-                            this.validResponse = true;
-                        }
+                        this.validResponse = true;
                     }
                 }
                 else
                 {
-                    this.rawResponse = httpWebResponse.StatusDescription;
-                    this.hashtableResponse = createErrorResponse(httpWebResponse.StatusDescription);
+                    this.rawResponse = responseStr;
+                    this.hashtableResponse = createErrorResponse(responseStr);
                 }
+                
+                
             }
             else
             {
