@@ -463,9 +463,6 @@ namespace Sailthru
         */
         protected SailthruResponse HttpRequest(string strURI, string strData, string strMethod)
         {
-
-            WebResponse response;
-            WebRequest request;
             HttpWebRequest httpWebRequest;
             try
             {
@@ -494,9 +491,6 @@ namespace Sailthru
                     httpWebRequest.SendChunked = false;
                     httpWebRequest.UserAgent = "Sailthru API C# Client";
                     httpWebRequest.Method = strMethod;
-
-                    request = WebRequest.Create(strURI + "?" + strData);
-                    request.Method = strMethod;
                 }
 
                 return new SailthruResponse((HttpWebResponse)httpWebRequest.GetResponse());
@@ -505,8 +499,7 @@ namespace Sailthru
             {
                 using (HttpWebResponse errorResponse = (HttpWebResponse)e.Response)
                 {
-                    response = errorResponse;
-                    return new SailthruResponse((HttpWebResponse)response);
+                    return new SailthruResponse((HttpWebResponse)errorResponse);
                 }
             }
             
