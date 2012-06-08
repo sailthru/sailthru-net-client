@@ -81,11 +81,20 @@ namespace Sailthru
         /// <returns></returns>
         public bool ReceiveVerifyPost(NameValueCollection parameters)
         {
+            List<string> requiredParams = new List<string> { "action", "email", "send_id", "sig" };
+            foreach (String key in parameters.Keys)
+            {
+                if (!requiredParams.Contains(key))
+                {
+                    return false;
+                }
+            }
             if (parameters.Get("action") != "verify" && parameters.Get("send_id") != null)
                 return false;
 
             //check signature of request against parameter data
             string sig = parameters["sig"];
+            parameters.Remove("sig");
             string paramsAsString = extractValuesFromCollection(parameters);
             if (sig != getSignatureHash(paramsAsString, this.strSecret))
                 return false;
