@@ -63,10 +63,20 @@ namespace Sailthru
         /// <returns></returns>
         public bool ReceiveOptoutPost(NameValueCollection parameters)
         {
+            List<string> requiredParams = new List<string> { "action", "email", "sig" };
+            foreach (String key in parameters.Keys)
+            {
+                if (!requiredParams.Contains(key))
+                {
+                    return false;
+                }
+            }
             if (parameters.Get("email") == null || parameters.Get("optout") == null)
                 return false;
 
             string sig = parameters["sig"];
+            parameters.Remove("sig"); // unset sig parameter
+
             string paramsAsString = extractValuesFromCollection(parameters);
             if (sig != getSignatureHash(paramsAsString, this.strSecret))
                 return false;
