@@ -157,42 +157,7 @@ namespace Sailthru
         public SailthruResponse GetTemplate(string strTemplateName)
         {
             return this.ApiGet("template", "template=" + strTemplateName);     
-        }
-
-        /// <summary>
-        /// Fetch email contacts from an address book at one of the major email providers (aol/gmail/hotmail/yahoo) 
-        /// </summary>
-        /// <param name="strEmail">Email String</param>
-        /// <param name="strPassword">Password String</param>
-        /// <param name="boolIncludeNames">Boolean</param>
-        /// <seealso cref="http://docs.sailthru.com/api/template"/>
-        /// <returns>SailthruResponse Object</returns>
-        public SailthruResponse ImportContacts(string strEmail, string strPassword, bool boolIncludeNames)
-        {
-            Hashtable hashForPost = new Hashtable();
-            hashForPost.Add("email", strEmail);
-            hashForPost.Add("password", strPassword);
-
-            if (boolIncludeNames)
-            {
-                hashForPost.Add("names", "1");
-            }
-
-            return this.ApiPost("contacts", hashForPost);
-        }
-
-        /// <summary>
-        /// Fetch email contacts from an address book at one of the major email providers (aol/gmail/hotmail/yahoo) 
-        /// </summary>
-        /// <param name="strEmail">ImportContactRequest parameters.</param>
-        /// <seealso cref="http://docs.sailthru.com/api/template"/>
-        /// <returns>SailthruResponse Object</returns>
-        public SailthruResponse ImportContacts(ImportContactRequest request)
-        {
-            Hashtable hashForPost = new Hashtable();
-            hashForPost.Add("json", JsonConvert.SerializeObject(request));
-            return this.ApiPost("contacts", hashForPost);
-        }
+        }		        
 
         /// <summary>
         /// Create, update, and/or schedule a blast.
