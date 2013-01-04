@@ -44,7 +44,6 @@
   <ItemGroup>
     <Compile Include="BlastRequest.cs" />
     <Compile Include="EmailRequest.cs" />
-    <Compile Include="ImportContactRequest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="SendRequest.cs" />
     <Compile Include="TemplateRequest.cs" />
