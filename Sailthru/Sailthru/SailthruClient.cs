@@ -595,7 +595,7 @@ namespace Sailthru
             string sigHash = getSignatureHash(sortedValuesString, this.strSecret);
             string strPostString = GetStringForPost(htForPost);
 
-            strPostString += "&sig=" + sigHash;		
+            strPostString += "&sig=" + sigHash;
 
             return this.HttpRequest(this.strAPIUri + "/" + strAction, strPostString, "GET");
         }
