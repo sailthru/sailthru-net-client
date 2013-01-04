@@ -5,6 +5,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Sailthru", "Sailthru\Sailth
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Sailthru.Models", "Sailthru.Models\Sailthru.Models.csproj", "{4993ADAC-7553-4733-B72F-011CE4D93A3B}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Example", "Example\Example.csproj", "{CAF196AA-F0DA-4DFC-975A-7982298A166B}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -19,6 +21,13 @@ Global
 		{4993ADAC-7553-4733-B72F-011CE4D93A3B}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{4993ADAC-7553-4733-B72F-011CE4D93A3B}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{4993ADAC-7553-4733-B72F-011CE4D93A3B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{CAF196AA-F0DA-4DFC-975A-7982298A166B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{CAF196AA-F0DA-4DFC-975A-7982298A166B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{CAF196AA-F0DA-4DFC-975A-7982298A166B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{CAF196AA-F0DA-4DFC-975A-7982298A166B}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(MonoDevelopProperties) = preSolution
+		StartupItem = Sailthru\Sailthru.csproj
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

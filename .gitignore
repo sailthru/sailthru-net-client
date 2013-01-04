@@ -6,3 +6,4 @@ dist
 *resharper*
 *.user
 *.cache
+*.userprefs
