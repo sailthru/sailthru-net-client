@@ -186,19 +186,6 @@ namespace Sailthru
         }
 
         /// <summary>
-        /// Fetch email contacts from an address book at one of the major email providers (aol/gmail/hotmail/yahoo) 
-        /// </summary>
-        /// <param name="strEmail">ImportContactRequest parameters.</param>
-        /// <seealso cref="http://docs.sailthru.com/api/template"/>
-        /// <returns>SailthruResponse Object</returns>
-        public SailthruResponse ImportContacts(ImportContactRequest request)
-        {
-            Hashtable hashForPost = new Hashtable();
-            hashForPost.Add("json", JsonConvert.SerializeObject(request));
-            return this.ApiPost("contacts", hashForPost);
-        }
-
-        /// <summary>
         /// Create, update, and/or schedule a blast.
         /// </summary>
         /// <param name="strName"></param>
@@ -275,6 +262,20 @@ namespace Sailthru
             parameters["email"] = email;
             return this.ApiGet("email", parameters);
         }
+
+
+		/// <summary>
+		/// Get information about one of your users.
+		/// </summary>
+		/// <param name="request"></param>
+		/// <returns></returns>
+		/// <seealso cref="http://docs.sailthru.com/api/email"/>
+		public SailthruResponse GetEmail (EmailRequest request)
+		{
+			Hashtable hashForPost = new Hashtable();
+			hashForPost.Add("json", JsonConvert.SerializeObject(request));
+			return this.ApiGet("email", hashForPost);
+		}
 
         /// <summary>
         /// Update information about one of your users, including adding and removing the user from lists.
@@ -529,6 +530,36 @@ namespace Sailthru
             return this.ApiGet("stats", parameters);
         }
 
+
+		/// <summary>
+		/// Set information about one of your users. Users are referenced by multiple keys.
+		/// </summary>
+		/// <param name="request"></param>
+		/// <returns></returns>
+		/// <seealso cref="http://docs.sailthru.com/api/user"/>
+		public SailthruResponse SetUser (UserRequest request)
+		{
+			Hashtable hashForPost = new Hashtable();
+			hashForPost.Add("json", JsonConvert.SerializeObject(request));  
+			return this.ApiPost("user", hashForPost);
+		}
+
+
+		/// <summary>
+		/// Get information about one of your users. Users are referenced by multiple keys.
+		/// </summary>
+		/// <param name="request"></param>
+		/// <returns></returns>
+		/// <seealso cref="http://docs.sailthru.com/api/user"/>
+		public SailthruResponse GetUser (UserRequest request)
+		{
+			Hashtable hashForPost = new Hashtable();
+			hashForPost.Add("json", JsonConvert.SerializeObject(request, Formatting.None, new JsonSerializerSettings { NullValueHandling = NullValueHandling.Ignore }));  // If null is not ignored, user API call doesn't seem to work which is strange
+			return this.ApiGet("user", hashForPost);
+		}
+
+
+
         #endregion
 
         #region Protected Methods
@@ -567,9 +598,8 @@ namespace Sailthru
             return request;
         }
 
-        protected HttpWebRequest BuildPostWithFileRequest(String action, Hashtable parameters, File file)
+        protected HttpWebRequest BuildPostWithFileRequest(String action, Hashtable parameters, String filePath)
         {
-			File f = new File("a");
             // Prepare web request
             HttpWebRequest request = BuildRequest("POST", action);
             String boundary = "---------------------------" + DateTime.Now.Ticks.ToString("x");
@@ -671,10 +701,10 @@ namespace Sailthru
             return SendRequest(request);
         }
 
-        protected SailthruResponse ApiPostWithFile(string action, Hashtable htForPost, File file)
+        protected SailthruResponse ApiPostWithFile(string action, Hashtable htForPost, String filePath)
         {
             AddAuthenticationAndFormatToParams(htForPost);
-            HttpWebRequest request = BuildPostWithFileRequest(action, htForPost, file);
+            HttpWebRequest request = BuildPostWithFileRequest(action, htForPost, filePath);
             return SendRequest(request);
         }
 

@@ -20,6 +20,9 @@ Global
 		{4993ADAC-7553-4733-B72F-011CE4D93A3B}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{4993ADAC-7553-4733-B72F-011CE4D93A3B}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
+	GlobalSection(MonoDevelopProperties) = preSolution
+		StartupItem = Sailthru\Sailthru.csproj
+	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
 	EndGlobalSection
