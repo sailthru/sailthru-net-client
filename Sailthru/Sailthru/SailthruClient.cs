@@ -460,16 +460,16 @@ namespace Sailthru
             return this.ApiGet("send", parameters); 
         }
 
-        public SailthruResponse ProcessJob (String jobType, String reportEmail, String postbackUrl, Hashtable parameters)
+        public SailthruResponse ProcessJob(String jobType, String reportEmail, String postbackUrl, Hashtable parameters)
         {
-            parameters ["job"] = jobType;
+            parameters["job"] = jobType;
             if (reportEmail != null) {
-                parameters ["report_email"] = reportEmail;
+                parameters["report_email"] = reportEmail;
             }
             if (postbackUrl != null) {
-                parameters ["postback_url"] = postbackUrl;
+                parameters["postback_url"] = postbackUrl;
             }
-            if (parameters.ContainsKey ("file")) {
+            if (parameters.ContainsKey("file")) {
                 String filePath = (String)parameters["file"];
                 parameters.Remove("file");
                 return this.ApiPostWithFile("job", parameters, filePath);
@@ -478,30 +478,30 @@ namespace Sailthru
             }
         }
 
-        public SailthruResponse ProcessImportJob (String listName, List<String> emails)
+        public SailthruResponse ProcessImportJob(String listName, List<String> emails)
         {
-            return ProcessImportJob (null, null, listName, emails);
+            return ProcessImportJob(null, null, listName, emails);
         }
 
-        public SailthruResponse ProcessImportJob (String reportEmail, String postbackUrl, String listName, List<String> emails)
+        public SailthruResponse ProcessImportJob(String reportEmail, String postbackUrl, String listName, List<String> emails)
         {
             Hashtable htForPost = new Hashtable();
             htForPost["list"] = listName;
-            htForPost["emails"] = String.Join (",", emails);
-            return ProcessJob ("import", reportEmail, postbackUrl, htForPost);
+            htForPost["emails"] = String.Join(",", emails);
+            return ProcessJob("import", reportEmail, postbackUrl, htForPost);
         }
 
-        public SailthruResponse ProcessImportJob (String listName, String filePath)
+        public SailthruResponse ProcessImportJob(String listName, String filePath)
         {
-            return ProcessImportJob (null, null, listName, filePath);
+            return ProcessImportJob(null, null, listName, filePath);
         }
 
-        public SailthruResponse ProcessImportJob (String reportEmail, String postbackUrl, String listName, String filePath)
+        public SailthruResponse ProcessImportJob(String reportEmail, String postbackUrl, String listName, String filePath)
         {
             Hashtable htForPost = new Hashtable();
             htForPost["list"] = listName;
             htForPost["file"] = filePath;
-            return ProcessJob ("import", reportEmail, postbackUrl, htForPost);
+            return ProcessJob("import", reportEmail, postbackUrl, htForPost);
         }
 
         /// <summary>
@@ -533,7 +533,7 @@ namespace Sailthru
 
         #region Protected Methods
 
-        protected HttpWebRequest BuildRequest (String method, String path)
+        protected HttpWebRequest BuildRequest(String method, String path)
         {
             String uri = this.apiHost + "/" + path;
             HttpWebRequest request = (HttpWebRequest)HttpWebRequest.Create(uri);
@@ -543,12 +543,12 @@ namespace Sailthru
             return request;
         }
 
-        protected HttpWebRequest BuildRequest (String method, String action, Hashtable parameters)
+        protected HttpWebRequest BuildRequest(String method, String action, Hashtable parameters)
         {        
             return BuildRequest(method, action + "?" + GetParameterString(parameters));
         }
 
-        protected HttpWebRequest BuildPostRequest (String action, Hashtable parameters)
+        protected HttpWebRequest BuildPostRequest(String action, Hashtable parameters)
         {
             HttpWebRequest request = BuildRequest("POST", action);
             request.ContentType = "application/x-www-form-urlencoded";
@@ -567,8 +567,9 @@ namespace Sailthru
             return request;
         }
 
-        protected HttpWebRequest BuildPostWithFileRequest (String action, Hashtable parameters, String filePath)
+        protected HttpWebRequest BuildPostWithFileRequest(String action, Hashtable parameters, File file)
         {
+			File f = new File("a");
             // Prepare web request
             HttpWebRequest request = BuildRequest("POST", action);
             String boundary = "---------------------------" + DateTime.Now.Ticks.ToString("x");
@@ -670,10 +671,10 @@ namespace Sailthru
             return SendRequest(request);
         }
 
-        protected SailthruResponse ApiPostWithFile(string action, Hashtable htForPost, String filePath)
+        protected SailthruResponse ApiPostWithFile(string action, Hashtable htForPost, File file)
         {
             AddAuthenticationAndFormatToParams(htForPost);
-            HttpWebRequest request = BuildPostWithFileRequest(action, htForPost, filePath);
+            HttpWebRequest request = BuildPostWithFileRequest(action, htForPost, file);
             return SendRequest(request);
         }
 
@@ -697,7 +698,7 @@ namespace Sailthru
 
         #region Private Methods
 
-        private void AddAuthenticationAndFormatToParams (Hashtable parameters)
+        private void AddAuthenticationAndFormatToParams(Hashtable parameters)
         {
             if (!parameters.Contains("api_key")) {
                 parameters["api_key"] = this.apiKey;
