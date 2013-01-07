@@ -17,10 +17,11 @@ namespace Sailthru
     public class SailthruClient
     {
         #region Properties
-
-        private string strAPIUri = "https://api.sailthru.com";
-        private string strAPIKey;
-        private string strSecret;
+        private static OrdinalComparer ORDINAL_COMPARER = new OrdinalComparer();
+        private static string DEFAULT_API_URL = "https://api.sailthru.com";
+        private string apiHost;
+        private string apiKey;
+        private string secret;
 
         #endregion
 
@@ -29,26 +30,27 @@ namespace Sailthru
         /// <summary>
         /// Constructor with default API URI
         /// </summary>
-        /// <param name="strAPIKey"></param>
-        /// <param name="strSecret"></param>
-        public SailthruClient(string strAPIKey, string strSecret)
+        /// <param name="apiKey"></param>
+        /// <param name="secret"></param>
+        public SailthruClient(string apiKey, string secret)
         {
-            this.strAPIKey = strAPIKey;
-            this.strSecret = strSecret;
+            this.apiHost = DEFAULT_API_URL;
+            this.apiKey = apiKey;
+            this.secret = secret;
         }
 
 
         /// <summary>
         /// Constructor with custom API URI
         /// </summary>
-        /// <param name="strAPIKey"></param>
-        /// <param name="strSecret"></param>
-        /// <param name="strAPIUri"></param>
-        public SailthruClient(string strAPIKey, string strSecret, string strAPIUri)
+        /// <param name="apiKey"></param>
+        /// <param name="secret"></param>
+        /// <param name="apiHost"></param>
+        public SailthruClient(string apiKey, string secret, string apiHost)
         {
-            this.strAPIUri = strAPIUri;
-            this.strAPIKey = strAPIKey;
-            this.strSecret = strSecret;
+            this.apiHost = apiHost;
+            this.apiKey = apiKey;
+            this.secret = secret;
         }
 
         
@@ -57,29 +59,29 @@ namespace Sailthru
         #region Public Methods
 
         /// <summary>
-        /// REceive the output of a Post.
+        /// Receive the output of a Post.
         /// </summary>
         /// <param name="parameters"></param>
         /// <returns></returns>
-        public bool ReceiveOptoutPost(NameValueCollection parameters)
+        public bool ReceiveOptoutPost (NameValueCollection parameters)
         {
             List<string> requiredParams = new List<string> { "action", "email", "sig" };
-            foreach (String key in parameters.Keys)
-            {
-                if (!requiredParams.Contains(key))
-                {
+            foreach (String key in parameters.Keys) {
+                if (!requiredParams.Contains (key)) {
                     return false;
                 }
             }
-            if (parameters.Get("email") == null || parameters.Get("optout") == null)
-                return false;
 
-            string sig = parameters["sig"];
-            parameters.Remove("sig"); // unset sig parameter
-
-            string paramsAsString = extractValuesFromCollection(parameters);
-            if (sig != getSignatureHash(paramsAsString, this.strSecret))
+            if (parameters.Get ("email") == null || parameters.Get ("optout") == null) {
                 return false;
+            }
+
+            string providedSignatureHash = parameters ["sig"];
+            parameters.Remove ("sig");
+
+            if (providedSignatureHash != GetSignatureHash (parameters)) {
+                return false;
+            }
 
             return true;
         }
@@ -89,25 +91,25 @@ namespace Sailthru
         /// </summary>
         /// <param name="parameters"></param>
         /// <returns></returns>
-        public bool ReceiveVerifyPost(NameValueCollection parameters)
+        public bool ReceiveVerifyPost (NameValueCollection parameters)
         {
             List<string> requiredParams = new List<string> { "action", "email", "send_id", "sig" };
-            foreach (String key in parameters.Keys)
-            {
-                if (!requiredParams.Contains(key))
-                {
+            foreach (String key in parameters.Keys) {
+                if (!requiredParams.Contains (key)) {
                     return false;
                 }
             }
-            if (parameters.Get("action") != "verify" && parameters.Get("send_id") != null)
+
+            if (parameters.Get ("action") != "verify" && parameters.Get ("send_id") != null) {
                 return false;
+            }
 
             //check signature of request against parameter data
-            string sig = parameters["sig"];
-            parameters.Remove("sig");
-            string paramsAsString = extractValuesFromCollection(parameters);
-            if (sig != getSignatureHash(paramsAsString, this.strSecret))
+            string providedSignature = parameters ["sig"];
+            parameters.Remove ("sig");
+            if (providedSignature != GetSignatureHash (parameters)) {
                 return false;
+            }
 
             SailthruResponse response = GetSend(parameters["send_id"]);
             var hash = response.HashtableResponse;
@@ -154,9 +156,11 @@ namespace Sailthru
         /// <param name="strTemplateName"></param>
         /// <seealso cref="http://docs.sailthru.com/api/template"/>
         /// <returns></returns>
-        public SailthruResponse GetTemplate(string strTemplateName)
+        public SailthruResponse GetTemplate(string templateName)
         {
-            return this.ApiGet("template", "template=" + strTemplateName);     
+            Hashtable parameters = new Hashtable();
+            parameters["template"] = templateName;
+            return this.ApiGet("template", parameters);     
         }
 
         /// <summary>
@@ -252,9 +256,11 @@ namespace Sailthru
         /// <param name="strBlastId"></param>
         /// <seealso cref="http://docs.sailthru.com/api/blast"/>
         /// <returns></returns>
-        public SailthruResponse GetBlast(string strBlastId)
+        public SailthruResponse GetBlast(string blastId)
         {
-            return this.ApiGet("blast", "blast_id=" + strBlastId);
+            Hashtable parameters = new Hashtable();
+            parameters["blast_id"] = blastId;
+            return this.ApiGet("blast", parameters);
         }
         
         /// <summary>
@@ -263,9 +269,11 @@ namespace Sailthru
         /// <param name="strEmail"></param>
         /// <returns></returns>
         /// <seealso cref="http://docs.sailthru.com/api/email"/>
-        public SailthruResponse GetEmail(string strEmail)
+        public SailthruResponse GetEmail(string email)
         {
-            return this.ApiGet("email", "email=" + strEmail);
+            Hashtable parameters = new Hashtable();
+            parameters["email"] = email;
+            return this.ApiGet("email", parameters);
         }
 
         /// <summary>
@@ -429,23 +437,71 @@ namespace Sailthru
         /// <summary>
         /// cancel a future send before it goes out.
         /// </summary>
-        /// <param name="strSendId"></param>
+        /// <param name="sendId"></param>
         /// <returns></returns>
         /// <seealso cref="http://docs.sailthru.com/api/send"/>
-        public SailthruResponse CancelSend(string strSendId)
+        public SailthruResponse CancelSend(string sendId)
         {
-            return this.ApiDelete("send", "send_id=" + strSendId);
+            Hashtable parameters = new Hashtable();
+            parameters["send_id"] = sendId;
+            return this.ApiDelete("send", parameters);
         }
         
         /// <summary>
         /// check on the status of a send
         /// </summary>
-        /// <param name="strSendId"></param>
+        /// <param name="sendId"></param>
         /// <returns></returns>
         /// <seealso cref="http://docs.sailthru.com/api/send"/>
-        public SailthruResponse GetSend(string strSendId)
+        public SailthruResponse GetSend(string sendId)
         {
-            return this.ApiGet("send", "send_id=" + strSendId + "&api_key=" + strAPIKey); 
+            Hashtable parameters = new Hashtable();
+            parameters["send_id"] = sendId;
+            return this.ApiGet("send", parameters); 
+        }
+
+        public SailthruResponse ProcessJob (String jobType, String reportEmail, String postbackUrl, Hashtable parameters)
+        {
+            parameters ["job"] = jobType;
+            if (reportEmail != null) {
+                parameters ["report_email"] = reportEmail;
+            }
+            if (postbackUrl != null) {
+                parameters ["postback_url"] = postbackUrl;
+            }
+            if (parameters.ContainsKey ("file")) {
+                String filePath = (String)parameters["file"];
+                parameters.Remove("file");
+                return this.ApiPostWithFile("job", parameters, filePath);
+            } else {
+                return this.ApiPost("job", parameters);
+            }
+        }
+
+        public SailthruResponse ProcessImportJob (String listName, List<String> emails)
+        {
+            return ProcessImportJob (null, null, listName, emails);
+        }
+
+        public SailthruResponse ProcessImportJob (String reportEmail, String postbackUrl, String listName, List<String> emails)
+        {
+            Hashtable htForPost = new Hashtable();
+            htForPost["list"] = listName;
+            htForPost["emails"] = String.Join (",", emails);
+            return ProcessJob ("import", reportEmail, postbackUrl, htForPost);
+        }
+
+        public SailthruResponse ProcessImportJob (String listName, String filePath)
+        {
+            return ProcessImportJob (null, null, listName, filePath);
+        }
+
+        public SailthruResponse ProcessImportJob (String reportEmail, String postbackUrl, String listName, String filePath)
+        {
+            Hashtable htForPost = new Hashtable();
+            htForPost["list"] = listName;
+            htForPost["file"] = filePath;
+            return ProcessJob ("import", reportEmail, postbackUrl, htForPost);
         }
 
         /// <summary>
@@ -458,15 +514,16 @@ namespace Sailthru
         /// <seealso cref="http://docs.sailthru.com/api/stats"/>
         public SailthruResponse GetStat(String stat, String list = null, String date = null)
         {
-            String parameters = "stat=" + stat;
+            Hashtable parameters = new Hashtable();
+            parameters["stat"] = stat;
             if (list != null)
             {
-                parameters += "&list=" + list;
+                parameters["list"] = list;
             }
 
             if (date != null)
             {
-                parameters += "&date=" + date;
+                parameters["date"] = date;
             }
 
             return this.ApiGet("stats", parameters);
@@ -476,176 +533,193 @@ namespace Sailthru
 
         #region Protected Methods
 
-        /** 
-        * Generic HTTP request function for POST, GET and DELETE
-        * 
-        */
-        protected SailthruResponse HttpRequest(string strURI, string strData, string strMethod)
+        protected HttpWebRequest BuildRequest (String method, String path)
         {
-            HttpWebRequest httpWebRequest;
-            try
+            String uri = this.apiHost + "/" + path;
+            HttpWebRequest request = (HttpWebRequest)HttpWebRequest.Create (uri);
+            request.Method = method;
+            request.UserAgent = "Sailthru API C# Client";
+            request.SendChunked = false;
+            return request;
+        }
+
+        protected HttpWebRequest BuildRequest (String method, String action, Hashtable parameters)
+        {        
+            return BuildRequest (method, action + "?" + GetParameterString(parameters));
+        }
+
+        protected HttpWebRequest BuildPostRequest (String action, Hashtable parameters)
+        {
+            HttpWebRequest request = BuildRequest ("POST", action);
+            request.ContentType = "application/x-www-form-urlencoded";
+
+            String bodyString = GetParameterString(parameters);
+            byte[] body = Encoding.UTF8.GetBytes(bodyString);
+
+            request.ContentLength = body.Length;
+
+            using (Stream requestStream = request.GetRequestStream())
             {
-                if (strMethod == "POST")
-                {
-                    httpWebRequest = (HttpWebRequest)HttpWebRequest.Create(strURI);
-                    byte[] byteArray = Encoding.UTF8.GetBytes(strData);
-
-                    httpWebRequest.ContentType = "application/x-www-form-urlencoded";
-                    httpWebRequest.SendChunked = false;
-                    httpWebRequest.UserAgent = "Sailthru API C# Client";
-                    httpWebRequest.Method = strMethod;
-                    httpWebRequest.ContentLength = byteArray.Length;
-
-                    // write POST body
-                    using (Stream requestStream = httpWebRequest.GetRequestStream())
-                    {
-                        requestStream.Write(byteArray, 0, byteArray.Length);
-                        requestStream.Close();
-                    }
-                }
-                else
-                {
-                    httpWebRequest = (HttpWebRequest)HttpWebRequest.Create(strURI + "?" + strData);
-                    httpWebRequest.ContentType = "application/x-www-form-urlencoded";
-                    httpWebRequest.SendChunked = false;
-                    httpWebRequest.UserAgent = "Sailthru API C# Client";
-                    httpWebRequest.Method = strMethod;
-                }
-
-                return new SailthruResponse((HttpWebResponse)httpWebRequest.GetResponse());
+                requestStream.Write(body, 0, body.Length);
+                requestStream.Close();
             }
-            catch (WebException e)
+
+            return request;
+        }
+
+        protected HttpWebRequest BuildPostWithFileRequest (String action, Hashtable parameters, String filePath)
+        {
+            // Prepare web request
+            HttpWebRequest request = BuildRequest ("POST", action);
+            String boundary = "---------------------------" + DateTime.Now.Ticks.ToString ("x");
+            request.ContentType = "multipart/form-data; boundary=" + boundary;
+
+            // Use to build post body
+            StringBuilder bodyBuilder = new StringBuilder ();
+
+            // Add form fields
+            foreach (string key in parameters.Keys) {
+                bodyBuilder.AppendFormat ("\r\n--{0}\r\n", boundary);
+                bodyBuilder.AppendFormat ("Content-Disposition: form-data; name=\"{0}\"\r\n\r\n{1}", 
+                                          UrlEncode(key), UrlEncode(parameters[key].ToString()));
+            }
+
+            // Header for file data
+            String fileName = Path.GetFileName (filePath);
+            bodyBuilder.AppendFormat ("\r\n--{0}\r\n", boundary);
+            bodyBuilder.AppendFormat ("Content-Disposition: form-data; name=\"file\"; filename=\"{0}\"\r\n", UrlEncode(fileName));
+            bodyBuilder.Append ("Content-Type: text/plain\r\n\r\n");
+
+            // Read file and add to body
+            using (StreamReader streamReader = new StreamReader (filePath)) {
+                char[] buffer = new char[1024];
+                int read = 0;
+                while ((read = streamReader.ReadBlock(buffer, 0, buffer.Length)) != 0) {
+                    bodyBuilder.Append(read == 1024 ? buffer : buffer.Take(read).ToArray());
+                }
+                streamReader.Close ();
+            }
+
+            // Finish file part
+            bodyBuilder.AppendFormat ("\r\n--{0}\r\n", boundary);
+
+            // Get body
+            byte[] bodyBytes = Encoding.UTF8.GetBytes(bodyBuilder.ToString());
+
+            // Write body to request
+            using (Stream stream = request.GetRequestStream()) 
+            {
+                stream.Write(bodyBytes, 0, bodyBytes.Length);
+                stream.Close();
+            }
+
+            return request;
+        }
+
+        protected SailthruResponse SendRequest (HttpWebRequest request)
+        {
+            try 
+            {
+                return new SailthruResponse((HttpWebResponse)request.GetResponse());
+            } 
+            catch (WebException e) 
             {
                 using (HttpWebResponse errorResponse = (HttpWebResponse)e.Response)
                 {
                     return new SailthruResponse((HttpWebResponse)errorResponse);
                 }
             }
-            
         }
 
         /// <summary>
         /// For making  API GET Request
         /// </summary>
-        /// <param name="strAction">API Method String</param>
-        /// <param name="strParams">API Parameter String</param>
+        /// <param name="action">API Method String</param>
+        /// <param name="parameters">API Parameter Hashtable</param>
         /// <returns>SailthruResponse Object</returns>
-        protected SailthruResponse ApiGet(string strAction, string strParams)
+        protected SailthruResponse ApiGet(String action, Hashtable parameters)
         {
-            Hashtable htForPost = ExtractHashtableFromParam(strParams);
-
-            return this.ApiGet(strAction, htForPost);
-        }
-
-        /// <summary>
-        /// For making  API GET Request
-        /// </summary>
-        /// <param name="strAction">API Method String</param>
-        /// <param name="htForPost">API Parameter Hashtable</param>
-        /// <returns>SailthruResponse Object</returns>
-        protected SailthruResponse ApiGet(String strAction, Hashtable htForPost)
-        {
-            htForPost = ParseHashtable(htForPost);
-
-            string sortedValuesString = GetSortedValuesString(htForPost);
-            string sigHash = getSignatureHash(sortedValuesString, this.strSecret);
-            string strPostString = GetStringForPost(htForPost);
-
-            strPostString += "&sig=" + sigHash;
-
-            return this.HttpRequest(this.strAPIUri + "/" + strAction, strPostString, "GET");
+            AddAuthenticationAndFormatToParams(parameters);
+            HttpWebRequest request = BuildRequest("GET", action, parameters);
+            return SendRequest(request);
         }
 
         /// <summary>
         /// For making  API DELETE Request
         /// </summary>
-        /// <param name="strAction"></param>
+        /// <param name="action"></param>
         /// <param name="strParams"></param>
         /// <returns>SailthruResponse Object</returns>
-        protected SailthruResponse ApiDelete(string strAction, string strParams)
+        protected SailthruResponse ApiDelete(string action, Hashtable parameters)
         {
-            Hashtable htForPost = ExtractHashtableFromParam(strParams);
-
-            return this._ApiPost(strAction, htForPost, "DELETE");
+            AddAuthenticationAndFormatToParams(parameters);
+            HttpWebRequest request = BuildRequest("DELETE", action, parameters);
+            return SendRequest(request);
         }
 
         /// <summary>
         /// For making  API POST Request
         /// </summary>
-        /// <param name="strAction"></param>
-        /// <param name="strString"></param>
+        /// <param name="action"></param>
+        /// <param name="parameters"></param>
         /// <returns>SailthruResponse Object</returns>
-        protected SailthruResponse ApiPost(string strAction, string strString)
+        protected SailthruResponse ApiPost(string action, Hashtable parameters)
         {
-            Hashtable htForPost = ExtractHashtableFromParam(strString);
-
-            return ApiPost(strAction, htForPost);
+            AddAuthenticationAndFormatToParams(parameters);
+            HttpWebRequest request = BuildPostRequest(action, parameters);
+            return SendRequest(request);
         }
 
-        /// <summary>
-        /// For making  API POST Request
-        /// </summary>
-        /// <param name="strAction"></param>
-        /// <param name="htForPost"></param>
-        /// <returns>SailthruResponse Object</returns>
-        protected SailthruResponse ApiPost(string strAction, Hashtable htForPost)
+        protected SailthruResponse ApiPostWithFile (string action, Hashtable htForPost, String filePath)
         {
-            return this._ApiPost(strAction, htForPost, "POST");
+            AddAuthenticationAndFormatToParams(htForPost);
+            HttpWebRequest request = BuildPostWithFileRequest(action, htForPost, filePath);
+            return SendRequest(request);
         }
 
-        protected string GetStringForPost(Hashtable htForPost)
-        {
-            string parameters = "";
-            ICollection keys = htForPost.Keys;
+        protected string GetParameterString(Hashtable parameters)
+        {                        
+            StringBuilder builder = new StringBuilder();
 
-            if (htForPost.Count > 0)
+            if (parameters != null && parameters.Count > 0)
             {
-                foreach (string Key in keys)
+                foreach (string key in parameters.Keys)
                 {
-                    parameters += urlEncodeString(Key) + "=" + urlEncodeString(htForPost[Key].ToString()) + "&";
+                    builder.AppendFormat("{0}={1}&", UrlEncode(key), UrlEncode (parameters[key].ToString()));                    
                 }
-                parameters = parameters.Substring(0, parameters.Length - 1);
+                builder = builder.Remove(builder.Length - 1, 1);                
             }
 
-            return parameters;
-        }
-
-        protected SailthruResponse _ApiPost(string strAction, Hashtable htForPost, String method)
-        {
-            htForPost = ParseHashtable(htForPost);
-            string sortedValuesString = GetSortedValuesString(htForPost);
-            string sigHash = getSignatureHash(sortedValuesString, this.strSecret);
-            string strPostString = GetStringForPost(htForPost);
-
-            strPostString += "&sig=" + sigHash;
-
-            return this.HttpRequest(this.strAPIUri + "/" + strAction, strPostString, method);
+            return builder.Length > 0 ? builder.ToString() : "";
         }
 
         #endregion
 
         #region Private Methods
 
-        /// <summary>
-        /// Parse given hash table
-        /// check if it contains api_key and format and if not present add them
-        /// </summary>
-        /// <param name="htForPost"></param>
-        /// <returns></returns>
-        private Hashtable ParseHashtable(Hashtable htForPost)
+        private void AddAuthenticationAndFormatToParams (Hashtable parameters)
         {
-            // Check for API key and Format
-            if (htForPost.ContainsKey("api_key") == false)
-            {
-                htForPost.Add("api_key", this.strAPIKey);
+            if (!parameters.Contains ("api_key")) {
+                parameters ["api_key"] = this.apiKey;
             }
-
-            if (htForPost.ContainsKey("format") == false)
-            {
-                htForPost.Add("format", "json");
+            if (!parameters.Contains ("format")) {
+                parameters ["format"] = "json";
             }
+            if (!parameters.Contains ("sig")) {
+                parameters ["sig"] = GetSignatureHash (parameters.Values);
+            }
+        }
 
-            return htForPost;
+        private String GetSignatureHash (ICollection values)
+        {
+            List<String> stringValues = new List<String>();
+            foreach(Object value in values) {
+                stringValues.Add(value.ToString());
+            }
+            String[] valuesArray = stringValues.ToArray();
+            Array.Sort(valuesArray, ORDINAL_COMPARER);
+            String valuesString = String.Join("", valuesArray);
+            return md5(secret + valuesString);
         }
 
         /// <summary>
@@ -653,94 +727,24 @@ namespace Sailthru
         /// </summary>
         /// <param name="s"></param>
         /// <returns></returns>
-        private string urlEncodeString(string s)
+        private string UrlEncode(string s)
         {
-            if (s == null)
-                s = "";
-
-            return HttpUtility.UrlEncode(s);
+            return HttpUtility.UrlEncode(s == null ? "" : s);
         }
 
-        /// <summary>
-        /// Splits up a string of key/value parameters and concatenates all values together with no delimete
-        /// </summary>
-        /// <param name="strParams"></param>
-        /// <returns></returns>
-        private static string extractParamValues(string strParams)
+        private static void OrdinalSort (Object[] values)
         {
-            ArrayList list = new ArrayList();
-
-            string values = "";
-
-            string[] pairs = strParams.Split('&');
-
-            //add all values to list
-            foreach (string s in pairs)
-            {
-                //if (!String.IsNullOrEmpty(s))
-                if (s != null && s != "")
-                {
-                    list.Add(s.Split('=')[1]);
-                }
-            }
-
-            //sort the list
-            string[] sortedVals = new string[list.Count];
-            list.CopyTo(sortedVals);
-
-            OrdinalComparer comparer = new OrdinalComparer();
-            Array.Sort(sortedVals, comparer);
-
-            foreach (string s in sortedVals)
-            {
-                values += s;
-            }
-
-            return values;
-        }
-
-        /// <summary>
-        /// Extracts the values from the NameValueCollection in alphabetical order.
-        /// </summary>
-        /// <param name="collection"></param>
-        /// <returns></returns>
-        private string extractValuesFromCollection(NameValueCollection collection)
-        {
-            string paramString = "";
-
-            foreach (string key in collection.Keys)
-            {
-                paramString += "&" + key + "=" + collection[key];
-            }
-
-            if (paramString.Length > 0)
-            {
-                paramString = paramString.Substring(1);
-            }
-
-            return extractParamValues(paramString);
-        }
-
-        /// <summary>
-        /// Returns an MD5 hash of the secret + sorted list of parameter values for an API call.
-        /// </summary>
-        /// <param name="strParams"></param>
-        /// <param name="strSecret"></param>
-        /// <returns></returns>
-        private string getSignatureHash(string strParams, string strSecret)
-        {
-            string strString = strSecret + strParams;
-            return md5(strString);
+            Array.Sort(values, ORDINAL_COMPARER);
         }
 
         /// <summary>
         /// Generates an MD5 hash of the string.
         /// </summary>
-        /// <param name="strMd5String"></param>
+        /// <param name="value"></param>
         /// <returns></returns>
-        private static string md5(string strMd5String)
+        private static string md5(string value)
         {
-            byte[] original_bytes = System.Text.Encoding.UTF8.GetBytes(strMd5String);
+            byte[] original_bytes = System.Text.Encoding.UTF8.GetBytes(value);
             byte[] encoded_bytes = new MD5CryptoServiceProvider().ComputeHash(original_bytes);
             StringBuilder result = new StringBuilder();
             for (int i = 0; i < encoded_bytes.Length; i++)
@@ -748,95 +752,6 @@ namespace Sailthru
                 result.Append(encoded_bytes[i].ToString("x2"));
             }
             return result.ToString();
-        }
-
-        /// <summary>
-        /// Converts the hashtable entries into a url-encoded string representation of key/value pairs.         
-        /// </summary>
-        /// <param name="table"></param>
-        /// <returns></returns>
-        private string HashToParamString(Hashtable table)
-        {
-            string parms = "";
-
-            ICollection keys = table.Keys;
-
-            var json_format_found = false;
-
-            foreach (string key in keys)
-            {
-                if (key == "format" && table[key].ToString() == "json")
-                {
-                    json_format_found = true;
-                }
-                parms += "&" + key + "=" + table[key];
-            }
-
-            if (parms.Length > 0)
-            {
-                parms = parms.Substring(1);
-                if (json_format_found == false)
-                {
-                    parms += "&format=json";
-                }
-            }
-
-            return parms;
-        }
-
-        /// <summary>
-        /// Extract param value from hashtable
-        /// </summary>
-        /// <param name="strParams"></param>
-        /// <returns></returns>
-        private static Hashtable ExtractHashtableFromParam(string strParams)
-        {
-            Hashtable list = new Hashtable();
-
-            string[] pairs = strParams.Split('&');
-
-            //add all values to list
-            foreach (string s in pairs)
-            {
-                if (s != null && s != "")
-                {
-                    list.Add(s.Split('=')[0], s.Split('=')[1]);
-                }
-            }
-
-            return list;
-        }
-
-        /// <summary>
-        /// Sort API Parameter Values
-        /// </summary>
-        /// <param name="htForPost"></param>
-        /// <returns></returns>
-        private string GetSortedValuesString(Hashtable htForPost)
-        {
-            string values = "";
-
-            ArrayList listOfValues = new ArrayList();
-
-            ICollection myKeys = htForPost.Keys;
-
-            foreach (string Key in myKeys)
-            {
-                listOfValues.Add(htForPost[Key].ToString());
-            }
-
-            //sort the list
-            string[] sortedVals = new string[listOfValues.Count];
-            listOfValues.CopyTo(sortedVals);
-
-            OrdinalComparer comparer = new OrdinalComparer();
-            Array.Sort(sortedVals, comparer);
-
-            foreach (string s in sortedVals)
-            {
-                values += s;
-            }
-            return values;
         }
 
         #endregion
