@@ -63,23 +63,23 @@ namespace Sailthru
         /// </summary>
         /// <param name="parameters"></param>
         /// <returns></returns>
-        public bool ReceiveOptoutPost (NameValueCollection parameters)
+        public bool ReceiveOptoutPost(NameValueCollection parameters)
         {
             List<string> requiredParams = new List<string> { "action", "email", "sig" };
             foreach (String key in parameters.Keys) {
-                if (!requiredParams.Contains (key)) {
+                if (!requiredParams.Contains(key)) {
                     return false;
                 }
             }
 
-            if (parameters.Get ("email") == null || parameters.Get ("optout") == null) {
+            if (parameters.Get("email") == null || parameters.Get("optout") == null) {
                 return false;
             }
 
-            string providedSignatureHash = parameters ["sig"];
-            parameters.Remove ("sig");
+            string providedSignatureHash = parameters["sig"];
+            parameters.Remove("sig");
 
-            if (providedSignatureHash != GetSignatureHash (parameters)) {
+            if (providedSignatureHash != GetSignatureHash(parameters)) {
                 return false;
             }
 
@@ -91,23 +91,23 @@ namespace Sailthru
         /// </summary>
         /// <param name="parameters"></param>
         /// <returns></returns>
-        public bool ReceiveVerifyPost (NameValueCollection parameters)
+        public bool ReceiveVerifyPost(NameValueCollection parameters)
         {
             List<string> requiredParams = new List<string> { "action", "email", "send_id", "sig" };
             foreach (String key in parameters.Keys) {
-                if (!requiredParams.Contains (key)) {
+                if (!requiredParams.Contains(key)) {
                     return false;
                 }
             }
 
-            if (parameters.Get ("action") != "verify" && parameters.Get ("send_id") != null) {
+            if (parameters.Get("action") != "verify" && parameters.Get("send_id") != null) {
                 return false;
             }
 
             //check signature of request against parameter data
-            string providedSignature = parameters ["sig"];
-            parameters.Remove ("sig");
-            if (providedSignature != GetSignatureHash (parameters)) {
+            string providedSignature = parameters["sig"];
+            parameters.Remove("sig");
+            if (providedSignature != GetSignatureHash(parameters)) {
                 return false;
             }
 
@@ -536,7 +536,7 @@ namespace Sailthru
         protected HttpWebRequest BuildRequest (String method, String path)
         {
             String uri = this.apiHost + "/" + path;
-            HttpWebRequest request = (HttpWebRequest)HttpWebRequest.Create (uri);
+            HttpWebRequest request = (HttpWebRequest)HttpWebRequest.Create(uri);
             request.Method = method;
             request.UserAgent = "Sailthru API C# Client";
             request.SendChunked = false;
@@ -545,12 +545,12 @@ namespace Sailthru
 
         protected HttpWebRequest BuildRequest (String method, String action, Hashtable parameters)
         {        
-            return BuildRequest (method, action + "?" + GetParameterString(parameters));
+            return BuildRequest(method, action + "?" + GetParameterString(parameters));
         }
 
         protected HttpWebRequest BuildPostRequest (String action, Hashtable parameters)
         {
-            HttpWebRequest request = BuildRequest ("POST", action);
+            HttpWebRequest request = BuildRequest("POST", action);
             request.ContentType = "application/x-www-form-urlencoded";
 
             String bodyString = GetParameterString(parameters);
@@ -570,38 +570,38 @@ namespace Sailthru
         protected HttpWebRequest BuildPostWithFileRequest (String action, Hashtable parameters, String filePath)
         {
             // Prepare web request
-            HttpWebRequest request = BuildRequest ("POST", action);
-            String boundary = "---------------------------" + DateTime.Now.Ticks.ToString ("x");
+            HttpWebRequest request = BuildRequest("POST", action);
+            String boundary = "---------------------------" + DateTime.Now.Ticks.ToString("x");
             request.ContentType = "multipart/form-data; boundary=" + boundary;
 
             // Use to build post body
-            StringBuilder bodyBuilder = new StringBuilder ();
+            StringBuilder bodyBuilder = new StringBuilder();
 
             // Add form fields
             foreach (string key in parameters.Keys) {
-                bodyBuilder.AppendFormat ("\r\n--{0}\r\n", boundary);
-                bodyBuilder.AppendFormat ("Content-Disposition: form-data; name=\"{0}\"\r\n\r\n{1}", 
+                bodyBuilder.AppendFormat("\r\n--{0}\r\n", boundary);
+                bodyBuilder.AppendFormat("Content-Disposition: form-data; name=\"{0}\"\r\n\r\n{1}", 
                                           UrlEncode(key), UrlEncode(parameters[key].ToString()));
             }
 
             // Header for file data
-            String fileName = Path.GetFileName (filePath);
-            bodyBuilder.AppendFormat ("\r\n--{0}\r\n", boundary);
-            bodyBuilder.AppendFormat ("Content-Disposition: form-data; name=\"file\"; filename=\"{0}\"\r\n", UrlEncode(fileName));
-            bodyBuilder.Append ("Content-Type: text/plain\r\n\r\n");
+            String fileName = Path.GetFileName(filePath);
+            bodyBuilder.AppendFormat("\r\n--{0}\r\n", boundary);
+            bodyBuilder.AppendFormat("Content-Disposition: form-data; name=\"file\"; filename=\"{0}\"\r\n", UrlEncode(fileName));
+            bodyBuilder.Append("Content-Type: text/plain\r\n\r\n");
 
             // Read file and add to body
-            using (StreamReader streamReader = new StreamReader (filePath)) {
+            using (StreamReader streamReader = new StreamReader(filePath)) {
                 char[] buffer = new char[1024];
                 int read = 0;
                 while ((read = streamReader.ReadBlock(buffer, 0, buffer.Length)) != 0) {
                     bodyBuilder.Append(read == 1024 ? buffer : buffer.Take(read).ToArray());
                 }
-                streamReader.Close ();
+                streamReader.Close();
             }
 
             // Finish file part
-            bodyBuilder.AppendFormat ("\r\n--{0}\r\n", boundary);
+            bodyBuilder.AppendFormat("\r\n--{0}\r\n", boundary);
 
             // Get body
             byte[] bodyBytes = Encoding.UTF8.GetBytes(bodyBuilder.ToString());
@@ -616,7 +616,7 @@ namespace Sailthru
             return request;
         }
 
-        protected SailthruResponse SendRequest (HttpWebRequest request)
+        protected SailthruResponse SendRequest(HttpWebRequest request)
         {
             try 
             {
@@ -670,7 +670,7 @@ namespace Sailthru
             return SendRequest(request);
         }
 
-        protected SailthruResponse ApiPostWithFile (string action, Hashtable htForPost, String filePath)
+        protected SailthruResponse ApiPostWithFile(string action, Hashtable htForPost, String filePath)
         {
             AddAuthenticationAndFormatToParams(htForPost);
             HttpWebRequest request = BuildPostWithFileRequest(action, htForPost, filePath);
@@ -685,7 +685,7 @@ namespace Sailthru
             {
                 foreach (string key in parameters.Keys)
                 {
-                    builder.AppendFormat("{0}={1}&", UrlEncode(key), UrlEncode (parameters[key].ToString()));                    
+                    builder.AppendFormat("{0}={1}&", UrlEncode(key), UrlEncode(parameters[key].ToString()));                    
                 }
                 builder = builder.Remove(builder.Length - 1, 1);                
             }
@@ -699,18 +699,18 @@ namespace Sailthru
 
         private void AddAuthenticationAndFormatToParams (Hashtable parameters)
         {
-            if (!parameters.Contains ("api_key")) {
-                parameters ["api_key"] = this.apiKey;
+            if (!parameters.Contains("api_key")) {
+                parameters["api_key"] = this.apiKey;
             }
-            if (!parameters.Contains ("format")) {
-                parameters ["format"] = "json";
+            if (!parameters.Contains("format")) {
+                parameters["format"] = "json";
             }
             if (!parameters.Contains ("sig")) {
-                parameters ["sig"] = GetSignatureHash (parameters.Values);
+                parameters["sig"] = GetSignatureHash(parameters.Values);
             }
         }
 
-        private String GetSignatureHash (ICollection values)
+        private String GetSignatureHash(ICollection values)
         {
             List<String> stringValues = new List<String>();
             foreach(Object value in values) {
@@ -732,7 +732,7 @@ namespace Sailthru
             return HttpUtility.UrlEncode(s == null ? "" : s);
         }
 
-        private static void OrdinalSort (Object[] values)
+        private static void OrdinalSort(Object[] values)
         {
             Array.Sort(values, ORDINAL_COMPARER);
         }
