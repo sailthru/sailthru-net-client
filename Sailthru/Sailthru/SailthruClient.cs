@@ -66,8 +66,8 @@ namespace Sailthru
         public bool ReceiveOptoutPost(NameValueCollection parameters)
         {
             List<string> requiredParams = new List<string> { "action", "email", "sig" };
-            foreach (String key in parameters.Keys) {
-                if (!requiredParams.Contains(key)) {
+            foreach (String key in requiredParams) {
+                if (!parameters.ContainsKey(key)) {
                     return false;
                 }
             }
