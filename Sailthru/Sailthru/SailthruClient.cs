@@ -661,14 +661,16 @@ namespace Sailthru
                 }
             }
         }
-
+        
+        /// For custom API calls that wrappers above don't cover, you can use the below:
+        ///
         /// <summary>
         /// For making  API GET Request
         /// </summary>
         /// <param name="action">API Method String</param>
         /// <param name="parameters">API Parameter Hashtable</param>
         /// <returns>SailthruResponse Object</returns>
-        protected SailthruResponse ApiGet(String action, Hashtable parameters)
+        public SailthruResponse ApiGet(String action, Hashtable parameters)
         {
             AddAuthenticationAndFormatToParams(parameters);
             HttpWebRequest request = BuildRequest("GET", action, parameters);
@@ -681,7 +683,7 @@ namespace Sailthru
         /// <param name="action"></param>
         /// <param name="strParams"></param>
         /// <returns>SailthruResponse Object</returns>
-        protected SailthruResponse ApiDelete(string action, Hashtable parameters)
+        public SailthruResponse ApiDelete(string action, Hashtable parameters)
         {
             AddAuthenticationAndFormatToParams(parameters);
             HttpWebRequest request = BuildRequest("DELETE", action, parameters);
@@ -694,7 +696,7 @@ namespace Sailthru
         /// <param name="action"></param>
         /// <param name="parameters"></param>
         /// <returns>SailthruResponse Object</returns>
-        protected SailthruResponse ApiPost(string action, Hashtable parameters)
+        public SailthruResponse ApiPost(string action, Hashtable parameters)
         {
             AddAuthenticationAndFormatToParams(parameters);
             HttpWebRequest request = BuildPostRequest(action, parameters);
