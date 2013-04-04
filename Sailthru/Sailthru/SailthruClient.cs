@@ -67,7 +67,7 @@ namespace Sailthru
         {
             List<string> requiredParams = new List<string> { "action", "email", "sig" };
             foreach (String key in requiredParams) {
-                if (!parameters.ContainsKey(key)) {
+                if (!parameters.AllKeys.Contains(key)) {
                     return false;
                 }
             }
