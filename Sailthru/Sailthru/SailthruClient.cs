@@ -469,7 +469,7 @@ namespace Sailthru
         {
             Hashtable hashForPost = new Hashtable();
             hashForPost.Add("json", JsonConvert.SerializeObject(request));  
-            return this.ApiPost("send", hashForPost);
+            return this.ApiPost("purchase", hashForPost);
         }
 
         public SailthruResponse ProcessJob(String jobType, String reportEmail, String postbackUrl, Hashtable parameters)
