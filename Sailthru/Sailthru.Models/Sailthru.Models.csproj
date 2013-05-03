@@ -48,6 +48,7 @@
     <Compile Include="SendRequest.cs" />
     <Compile Include="TemplateRequest.cs" />
     <Compile Include="UserRequest.cs" />
+    <Compile Include="PurchaseRequest.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
