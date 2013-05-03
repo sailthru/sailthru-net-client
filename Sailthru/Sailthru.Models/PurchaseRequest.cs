@@ -1,5 +1,5 @@
 ﻿// -----------------------------------------------------------------------
-// <copyright file="SendRequest.cs" company="Microsoft">
+// <copyright file="PurchaseRequest.cs" company="Microsoft">
 // TODO: Update copyright text.
 // </copyright>
 // -----------------------------------------------------------------------
@@ -54,7 +54,7 @@ namespace Sailthru.Models
         /// The message_id.
         /// </value>
         [JsonProperty(PropertyName = "message_id")]
-        public string Message_id { get; set; }
+        public string MessageID { get; set; }
 
         /// <summary>
         /// Gets or sets the adjustments.
@@ -90,7 +90,7 @@ namespace Sailthru.Models
         /// The reminder_template.
         /// </value>
         [JsonProperty(PropertyName = "reminder_template")]
-        public string Reminder_template { get; set; }
+        public string ReminderTemplate { get; set; }
 
         /// <summary>
         /// Gets or sets the reminder_time.
@@ -99,7 +99,7 @@ namespace Sailthru.Models
         /// The reminder_time.
         /// </value>
         [JsonProperty(PropertyName = "reminder_time")]
-        public string Reminder_time { get; set; }
+        public string ReminderTime { get; set; }
 
         /// <summary>
         /// Gets or sets the send_template.
@@ -108,7 +108,7 @@ namespace Sailthru.Models
         /// The send_template.
         /// </value>
         [JsonProperty(PropertyName = "send_template")]
-        public string Send_template { get; set; }
+        public string SendTemplate { get; set; }
 
         /// <summary>
         /// Gets or sets the tenders.
