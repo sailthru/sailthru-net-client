@@ -460,6 +460,17 @@ namespace Sailthru
             parameters["send_id"] = sendId;
             return this.ApiGet("send", parameters); 
         }
+        /// <summary>
+        /// Submit a Purchase to Sailthru
+        /// </summary>
+        /// <param name="request">Purchaserequest parameters.</param>
+        /// <returns></returns>
+        public SailthruResponse Purchase(PurchaseRequest request)
+        {
+            Hashtable hashForPost = new Hashtable();
+            hashForPost.Add("json", JsonConvert.SerializeObject(request));  
+            return this.ApiPost("purchase", hashForPost);
+        }
 
         public SailthruResponse ProcessJob(String jobType, String reportEmail, String postbackUrl, Hashtable parameters)
         {
