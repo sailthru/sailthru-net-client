@@ -1,4 +1,4 @@
-﻿﻿using System;
+﻿﻿﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -146,7 +146,7 @@ namespace Sailthru
         public SailthruResponse SaveTemplate(TemplateRequest request)
         {
             Hashtable hashForPost = new Hashtable();
-			hashForPost.Add("json", JsonConvert.SerializeObject(request, Formatting.None, new JsonSerializerSettings { NullValueHandling = NullValueHandling.Ignore }));
+            hashForPost.Add("json", JsonConvert.SerializeObject(request, Formatting.None, new JsonSerializerSettings { NullValueHandling = NullValueHandling.Ignore }));
             return this.ApiPost("template", hashForPost);
         }
         
@@ -233,7 +233,7 @@ namespace Sailthru
         public SailthruResponse ScheduleBlast(BlastRequest request)
         {
             Hashtable hashForPost = new Hashtable();
-			hashForPost.Add("json", JsonConvert.SerializeObject(request, Formatting.None, new JsonSerializerSettings { NullValueHandling = NullValueHandling.Ignore }));
+            hashForPost.Add("json", JsonConvert.SerializeObject(request, Formatting.None, new JsonSerializerSettings { NullValueHandling = NullValueHandling.Ignore }));
             return this.ApiPost("blast", hashForPost);
         }
         
@@ -370,7 +370,7 @@ namespace Sailthru
         public SailthruResponse SetEmail(EmailRequest request)
         {
             Hashtable hashForPost = new Hashtable();
-			hashForPost.Add("json", JsonConvert.SerializeObject(request, Formatting.None, new JsonSerializerSettings { NullValueHandling = NullValueHandling.Ignore }));
+        	hashForPost.Add("json", JsonConvert.SerializeObject(request, Formatting.None, new JsonSerializerSettings { NullValueHandling = NullValueHandling.Ignore }));
 
             return this.ApiPost("email", hashForPost);
         }
@@ -431,7 +431,7 @@ namespace Sailthru
         public SailthruResponse Send(SendRequest request)
         {
             Hashtable hashForPost = new Hashtable();
-			hashForPost.Add("json", JsonConvert.SerializeObject(request, Formatting.None, new JsonSerializerSettings { NullValueHandling = NullValueHandling.Ignore }));  
+            hashForPost.Add("json", JsonConvert.SerializeObject(request, Formatting.None, new JsonSerializerSettings { NullValueHandling = NullValueHandling.Ignore }));  
             return this.ApiPost("send", hashForPost);
         }
 
@@ -468,7 +468,7 @@ namespace Sailthru
         public SailthruResponse Purchase(PurchaseRequest request)
         {
             Hashtable hashForPost = new Hashtable();
-			hashForPost.Add("json", JsonConvert.SerializeObject(request, Formatting.None, new JsonSerializerSettings { NullValueHandling = NullValueHandling.Ignore }));  
+            hashForPost.Add("json", JsonConvert.SerializeObject(request, Formatting.None, new JsonSerializerSettings { NullValueHandling = NullValueHandling.Ignore }));  
             return this.ApiPost("purchase", hashForPost);
         }
 
@@ -574,8 +574,6 @@ namespace Sailthru
         #endregion
 
         #region Protected Methods
-
-
 
         protected HttpWebRequest BuildRequest(String method, String path)
         {
