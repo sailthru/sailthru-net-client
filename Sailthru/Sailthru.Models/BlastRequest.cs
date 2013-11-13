@@ -269,7 +269,7 @@ namespace Sailthru.Models
         /// The AB test.
         /// </value>
         [JsonProperty(PropertyName = "abtest")]
-        public ABTestType ABTest { get; set; }
+        public ABTestType? ABTest { get; set; }
 
         /// <summary>
         /// Gets or sets the test percent.
