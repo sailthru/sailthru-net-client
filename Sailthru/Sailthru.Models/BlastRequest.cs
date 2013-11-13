@@ -51,22 +51,6 @@ namespace Sailthru.Models
         }
 
         /// <summary>
-        /// Flag to determine AB Test options.
-        /// </summary>
-        public enum ABTestType
-        {
-            /// <summary>
-            /// Disable the AB test.
-            /// </summary>
-            Disabled = 0,
-
-            /// <summary>
-            /// Enable the AB test.
-            /// </summary>
-            Enabled = 1
-        }
-
-        /// <summary>
         /// Flag to determine the visibility of the blast.
         /// </summary>
         public enum VisibilityType
@@ -261,15 +245,6 @@ namespace Sailthru.Models
         /// </value>
         [JsonProperty(PropertyName = "email_hour_range")]
         public int EmailHourRange { get; set; }
-
-        /// <summary>
-        /// Gets or sets the AB test.
-        /// </summary>
-        /// <value>
-        /// The AB test.
-        /// </value>
-        [JsonProperty(PropertyName = "abtest")]
-        public ABTestType ABTest { get; set; }
 
         /// <summary>
         /// Gets or sets the test percent.
