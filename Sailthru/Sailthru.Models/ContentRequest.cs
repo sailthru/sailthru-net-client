@@ -72,7 +72,7 @@
 		/// The tags.
         /// </value>
 		[JsonProperty(PropertyName = "tags")]
-		public ArrayList Tags { get; set; }
+		public string[] Tags { get; set; }
 
         /// <summary>
         /// Gets or sets the vars.
