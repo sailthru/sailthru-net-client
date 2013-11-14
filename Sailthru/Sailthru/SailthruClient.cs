@@ -1,4 +1,4 @@
-﻿﻿﻿﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -264,18 +264,18 @@ namespace Sailthru
         }
 
 
-		/// <summary>
-		/// Get information about one of your users.
-		/// </summary>
-		/// <param name="request"></param>
-		/// <returns></returns>
-		/// <seealso cref="http://docs.sailthru.com/api/email"/>
-		public SailthruResponse GetEmail (EmailRequest request)
-		{
-			Hashtable hashForPost = new Hashtable();
-			hashForPost.Add("json", JsonConvert.SerializeObject(request, Formatting.None, new JsonSerializerSettings { NullValueHandling = NullValueHandling.Ignore }));
-			return this.ApiGet("email", hashForPost);
-		}
+        /// <summary>
+        /// Get information about one of your users.
+        /// </summary>
+        /// <param name="request"></param>
+        /// <returns></returns>
+        /// <seealso cref="http://docs.sailthru.com/api/email"/>
+        public SailthruResponse GetEmail (EmailRequest request)
+        {
+            Hashtable hashForPost = new Hashtable();
+            hashForPost.Add("json", JsonConvert.SerializeObject(request, Formatting.None, new JsonSerializerSettings { NullValueHandling = NullValueHandling.Ignore }));
+            return this.ApiGet("email", hashForPost);
+        }
 
         /// <summary>
         /// Update information about one of your users, including adding and removing the user from lists.
@@ -542,34 +542,58 @@ namespace Sailthru
         }
 
 
-		/// <summary>
-		/// Set information about one of your users. Users are referenced by multiple keys.
-		/// </summary>
-		/// <param name="request"></param>
-		/// <returns></returns>
-		/// <seealso cref="http://docs.sailthru.com/api/user"/>
-		public SailthruResponse SetUser (UserRequest request)
-		{
-			Hashtable hashForPost = new Hashtable();
-			hashForPost.Add("json", JsonConvert.SerializeObject(request, Formatting.None, new JsonSerializerSettings { NullValueHandling = NullValueHandling.Ignore }));  
-			return this.ApiPost("user", hashForPost);
-		}
+        /// <summary>
+        /// Set information about one of your users. Users are referenced by multiple keys.
+        /// </summary>
+        /// <param name="request"></param>
+        /// <returns></returns>
+        /// <seealso cref="http://docs.sailthru.com/api/user"/>
+        public SailthruResponse SetUser (UserRequest request)
+        {
+            Hashtable hashForPost = new Hashtable();
+            hashForPost.Add("json", JsonConvert.SerializeObject(request, Formatting.None, new JsonSerializerSettings { NullValueHandling = NullValueHandling.Ignore }));  
+            return this.ApiPost("user", hashForPost);
+        }
 
 
-		/// <summary>
-		/// Get information about one of your users. Users are referenced by multiple keys.
-		/// </summary>
-		/// <param name="request"></param>
-		/// <returns></returns>
-		/// <seealso cref="http://docs.sailthru.com/api/user"/>
-		public SailthruResponse GetUser (UserRequest request)
-		{
-			Hashtable hashForPost = new Hashtable();
-			hashForPost.Add("json", JsonConvert.SerializeObject(request, Formatting.None, new JsonSerializerSettings { NullValueHandling = NullValueHandling.Ignore }));  // If null is not ignored, user API call doesn't seem to work which is strange
-			return this.ApiGet("user", hashForPost);
-		}
+        /// <summary>
+        /// Get information about one of your users. Users are referenced by multiple keys.
+        /// </summary>
+        /// <param name="request"></param>
+        /// <returns></returns>
+        /// <seealso cref="http://docs.sailthru.com/api/user"/>
+        public SailthruResponse GetUser (UserRequest request)
+        {
+            Hashtable hashForPost = new Hashtable();
+            hashForPost.Add("json", JsonConvert.SerializeObject(request, Formatting.None, new JsonSerializerSettings { NullValueHandling = NullValueHandling.Ignore }));  // If null is not ignored, user API call doesn't seem to work which is strange
+            return this.ApiGet("user", hashForPost);
+        }
 
+        /// <summary>
+        /// Get information about one of your urls.
+        /// </summary>
+        /// <param name="request"></param>
+        /// <returns></returns>
+        /// <seealso cref="http://docs.sailthru.com/api/content"/>
+        public SailthruResponse GetContent (string url)
+        {
+            Hashtable hashForPost = new Hashtable();
+            hashForPost.Add ("url", url);
+            return this.ApiGet("content", hashForPost);
+        }
 
+        /// <summary>
+        /// Set information about one of your urls.
+        /// </summary>
+        /// <param name="request"></param>
+        /// <returns></returns>
+        /// <seealso cref="http://docs.sailthru.com/api/content"/>
+        public SailthruResponse SetContent (ContentRequest request)
+        {
+            Hashtable hashForPost = new Hashtable();
+            hashForPost.Add("json", JsonConvert.SerializeObject(request, Formatting.None, new JsonSerializerSettings { NullValueHandling = NullValueHandling.Ignore }));  
+            return this.ApiPost("content", hashForPost);
+        }
 
         #endregion
 
