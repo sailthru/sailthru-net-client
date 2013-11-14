@@ -1,4 +1,4 @@
-﻿﻿// -----------------------------------------------------------------------
+﻿﻿﻿// -----------------------------------------------------------------------
 // <copyright file="ContentRequest.cs" company="Microsoft">
 // TODO: Update copyright text.
 // </copyright>
@@ -106,15 +106,6 @@ namespace Sailthru.Models
 		/// </value>
 		[JsonProperty(PropertyName = "location")]
 		public ArrayList Location { get; set; }
-
-		/// <summary>
-		/// Gets or sets the price.
-		/// </summary>
-		/// <value>
-		/// The price.
-		/// </value>
-		[JsonProperty(PropertyName = "price")]
-		public int Price { get; set; }
 
 		/// <summary>
 		/// Gets or sets the description.
