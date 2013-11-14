@@ -1,10 +1,4 @@
-﻿﻿﻿// -----------------------------------------------------------------------
-// <copyright file="ContentRequest.cs" company="Microsoft">
-// TODO: Update copyright text.
-// </copyright>
-// -----------------------------------------------------------------------
-
-namespace Sailthru.Models
+﻿namespace Sailthru.Models
 {
     using System;
     using System.Collections.Generic;
