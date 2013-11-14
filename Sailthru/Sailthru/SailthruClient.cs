@@ -1,4 +1,4 @@
-﻿﻿﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -575,10 +575,10 @@ namespace Sailthru
 		/// <param name="request"></param>
 		/// <returns></returns>
 		/// <seealso cref="http://docs.sailthru.com/api/content"/>
-		public SailthruResponse GetContent (ContentRequest request)
+		public SailthruResponse GetContent (string url)
 		{
 			Hashtable hashForPost = new Hashtable();
-			hashForPost.Add("json", JsonConvert.SerializeObject(request, Formatting.None, new JsonSerializerSettings { NullValueHandling = NullValueHandling.Ignore }));  // If null is not ignored, user API call doesn't seem to work which is strange
+			hashForPost.Add ("url", url);
 			return this.ApiGet("content", hashForPost);
 		}
 
