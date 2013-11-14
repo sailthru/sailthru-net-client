@@ -19,6 +19,22 @@ namespace Sailthru.Models
     [JsonObject(MemberSerialization.OptIn)]
 	public class ContentRequest
     {
+		/// <summary>
+		/// Flag to determine the spider options.
+		/// </summary>
+		public enum SpiderType
+		{
+			/// <summary>
+			/// Spider is disabled.
+			/// </summary>
+			Disabled = 0,
+
+			/// <summary>
+			/// Spider is enabled.
+			/// </summary>
+			Enabled = 1
+		}
+
         /// <summary>
 		/// Gets or sets the url.
         /// </summary>
@@ -134,6 +150,6 @@ namespace Sailthru.Models
 		/// The spider.
 		/// </value>
 		[JsonProperty(PropertyName = "spider")]
-		public int Spider { get; set; }
+		public SpiderType Spider { get; set; }
    }
 }
