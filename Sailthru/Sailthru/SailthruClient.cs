@@ -778,7 +778,12 @@ namespace Sailthru
             }
         }
 
-        private String GetSignatureHash(ICollection values)
+        private String GetSignatureHash(NameValueCollection col) 
+        {
+           return GetSignatureHash(col.Cast<string>().Select(e => col[e]));
+        }
+
+        private String GetSignatureHash(IEnumerable values)
         {
             List<String> stringValues = new List<String>();
             foreach(Object value in values) {
