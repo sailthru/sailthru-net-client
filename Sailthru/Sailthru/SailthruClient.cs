@@ -647,7 +647,7 @@ namespace Sailthru
             foreach (string key in parameters.Keys) {
                 bodyBuilder.AppendFormat("\r\n--{0}\r\n", boundary);
                 bodyBuilder.AppendFormat("Content-Disposition: form-data; name=\"{0}\"\r\n\r\n{1}", 
-                                          UrlEncode(key), UrlEncode(parameters[key].ToString()));
+                                          key, parameters[key].ToString());
             }
 
             // Header for file data
