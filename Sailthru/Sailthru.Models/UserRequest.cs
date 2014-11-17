@@ -97,7 +97,7 @@ namespace Sailthru.Models
 		/// The login.
 		/// </value>
 		[JsonProperty(PropertyName = "login")]
-		public string Login { private get; set; }
+		public Hashtable Login { private get; set; }
 	}
 }
 
