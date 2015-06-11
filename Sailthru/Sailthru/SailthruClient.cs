@@ -522,9 +522,10 @@ namespace Sailthru
         /// <param name="stat"></param>
         /// <param name="list"></param>
         /// <param name="date"></param>
+        /// <param name="htOptions"></param>
         /// <returns></returns>
         /// <seealso cref="http://docs.sailthru.com/api/stats"/>
-        public SailthruResponse GetStat(String stat, String list = null, String date = null)
+        public SailthruResponse GetStat(String stat, String list = null, String date = null, Hashtable htOptions = null)
         {
             Hashtable parameters = new Hashtable();
             parameters["stat"] = stat;
@@ -537,10 +538,80 @@ namespace Sailthru
             {
                 parameters["date"] = date;
             }
+            
+            if (htOptions != null)
+            {
+                foreach (DictionaryEntry entry in htOptions)
+                {
+                    parameters[entry.Key.ToString()] = entry.Value.ToString();
+                }
+            }
+
+            return this.ApiGet("stats", parameters);
+        }
+        
+        /// <summary> 
+        /// Request various stats from Sailthru.
+        /// </summary>
+        /// <param name="stat"></param>
+        /// <param name="list"></param>
+        /// <param name="startDate"></param>
+        /// <param name="endDate"></param>
+        /// <param name="htOptions"></param>
+        /// <returns></returns>
+        /// <seealso cref="http://docs.sailthru.com/api/stats"/>
+        public SailthruResponse GetStat(String stat, String template = null, String startDate = null, String endDate = null, Hashtable htOptions)
+        {
+            Hashtable parameters = new Hashtable();
+            parameters["stat"] = stat;
+            if (template != null)
+            {
+                parameters["template"] = template;
+            }
+
+            if (startDate != null)
+            {
+                parameters["start_date"] = date;
+            }
+            
+            if (endDate != null)
+            {
+                parameters["end_date"] = date;
+            }
+
+            if (htOptions != null)
+            {
+                foreach (DictionaryEntry entry in htOptions)
+                {
+                    parameters[entry.Key.ToString()] = entry.Value.ToString();
+                }
+            }
 
             return this.ApiGet("stats", parameters);
         }
 
+        /// <summary>
+        /// Request various stats from Sailthru.
+        /// </summary>
+        /// <param name="stat"></param>
+        /// <param name="htOptions"></param>
+        /// <returns></returns>
+        /// <seealso cref="http://docs.sailthru.com/api/stats"/>
+        public SailthruResponse GetStat(String stat, Hashtable htOptions)
+        {
+            Hashtable parameters = new Hashtable();
+            parameters["stat"] = stat;
+            
+            if (htOptions != null)
+            {
+                foreach (DictionaryEntry entry in htOptions)
+                {
+                    parameters[entry.Key.ToString()] = entry.Value.ToString();
+                }
+            }
+
+            return this.ApiGet("stats", parameters);
+        }
 
         /// <summary>
         /// Set information about one of your users. Users are referenced by multiple keys.
