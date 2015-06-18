@@ -554,13 +554,13 @@ namespace Sailthru
         /// Request various stats from Sailthru.
         /// </summary>
         /// <param name="stat"></param>
-        /// <param name="list"></param>
+        /// <param name="template"></param>
         /// <param name="startDate"></param>
         /// <param name="endDate"></param>
         /// <param name="htOptions"></param>
         /// <returns></returns>
         /// <seealso cref="http://docs.sailthru.com/api/stats"/>
-        public SailthruResponse GetStat(String stat, String template = null, String startDate = null, String endDate = null, Hashtable htOptions)
+        public SailthruResponse GetStat(String stat, String template = null, String startDate = null, String endDate = null, Hashtable htOptions = null)
         {
             Hashtable parameters = new Hashtable();
             parameters["stat"] = stat;
@@ -571,12 +571,12 @@ namespace Sailthru
 
             if (startDate != null)
             {
-                parameters["start_date"] = date;
+                parameters["start_date"] = startDate;
             }
             
             if (endDate != null)
             {
-                parameters["end_date"] = date;
+                parameters["end_date"] = endDate;
             }
 
             if (htOptions != null)
