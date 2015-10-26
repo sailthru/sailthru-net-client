@@ -71,6 +71,15 @@ namespace Sailthru.Models
 		public Hashtable Vars { private get; set; }
 
 		/// <summary>
+		/// Gets or sets the anonymous cookie.
+		/// </summary>
+		/// <value>
+		/// The cookies.
+		/// </value>
+		[JsonProperty(PropertyName = "cookies")]
+		public Hashtable Cookies { private get; set; }
+
+		/// <summary>
 		/// set custom variables on the user
 		/// </summary>
 		/// <value>
