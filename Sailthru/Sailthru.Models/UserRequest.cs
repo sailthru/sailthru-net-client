@@ -7,6 +7,8 @@ namespace Sailthru.Models
 	using System.Linq;
 	using System.Text;
 	using Newtonsoft.Json;
+       using Newtonsoft.Json.Converters;
+
 	using System.Collections;
 
 	public class UserRequest
@@ -80,6 +82,7 @@ namespace Sailthru.Models
 		public Hashtable Lists { private get; set; }
 
 
+               public enum OptoutStatus { all, blast, basic, none }
 		/// <summary>
 		/// set email opt-out status to none, all, or blast
 		/// </summary>
@@ -87,7 +90,8 @@ namespace Sailthru.Models
 		/// The optout_email.
 		/// </value>
 		[JsonProperty(PropertyName = "optout_email")]
-		public string OptoutEmail { private get; set; }
+               [JsonConverter(typeof(StringEnumConverter))]
+		public OptoutStatus OptoutEmail { private get; set; }
 
 
 		/// <summary>
