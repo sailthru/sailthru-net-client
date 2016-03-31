@@ -15,6 +15,8 @@ namespace Sailthru
 
         private Hashtable hashtableResponse;
 
+        private Hashtable rateLimitInfo;
+
         private String rawResponse;
 
         private Boolean validResponse;
@@ -56,6 +58,7 @@ namespace Sailthru
             this.hashtableResponse = null;
             this.rawResponse = "";
             this.validResponse = false;
+            this.rateLimitInfo = new Hashtable();
             parseJSON();
         }
 
@@ -95,8 +98,17 @@ namespace Sailthru
                     this.rawResponse = responseStr;
                     this.hashtableResponse = createErrorResponse(responseStr);
                 }
-                
-                
+
+                // parse rate limit headers
+                WebHeaderCollection headers = webResponse.Headers;
+                if (headers.Get("X-Rate-Limit-Limit") != null &&
+                    headers.Get("X-Rate-Limit-Remaining") != null &&
+                    headers.Get("X-Rate-Limit-Reset") != null)
+                {
+                    this.rateLimitInfo.Add("limit", headers.Get("X-Rate-Limit-Limit"));
+                    this.rateLimitInfo.Add("remaining", headers.Get("X-Rate-Limit-Limit"));
+                    this.rateLimitInfo.Add("reset", headers.Get("X-Rate-Limit-Limit"));
+                }
             }
             else
             {
@@ -127,6 +139,11 @@ namespace Sailthru
             hash.Add(ERROR_KEY, 99);
             hash.Add(ERROR_MSG_KEY, message);
             return hash;
+        }
+
+        public Hashtable getRateLimitInfo()
+        {
+            return this.rateLimitInfo;
         }
     }
 }
