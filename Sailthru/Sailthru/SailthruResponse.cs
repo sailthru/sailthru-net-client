@@ -105,9 +105,10 @@ namespace Sailthru
                     headers.Get("X-Rate-Limit-Remaining") != null &&
                     headers.Get("X-Rate-Limit-Reset") != null)
                 {
-                    this.rateLimitInfo.Add("limit", headers.Get("X-Rate-Limit-Limit"));
-                    this.rateLimitInfo.Add("remaining", headers.Get("X-Rate-Limit-Limit"));
-                    this.rateLimitInfo.Add("reset", headers.Get("X-Rate-Limit-Limit"));
+                    this.rateLimitInfo.Add("limit", Int32.Parse(headers.Get("X-Rate-Limit-Limit")));
+                    this.rateLimitInfo.Add("remaining", Int32.Parse(headers.Get("X-Rate-Limit-Remaining")));
+                    DateTime reset = new DateTime(1970, 1, 1, 0, 0, 0, 0);
+                    this.rateLimitInfo.Add("reset", reset.AddSeconds(Int64.Parse(headers.Get("X-Rate-Limit-Reset"))));
                 }
             }
             else
