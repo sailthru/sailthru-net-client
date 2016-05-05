@@ -19,6 +19,7 @@ namespace Sailthru
         #region Properties
         private static OrdinalComparer ORDINAL_COMPARER = new OrdinalComparer();
         private static string DEFAULT_API_URL = "https://api.sailthru.com";
+        private Hashtable lastRateLimitInfo;
         private string apiHost;
         private string apiKey;
         private string secret;
@@ -33,10 +34,8 @@ namespace Sailthru
         /// <param name="apiKey"></param>
         /// <param name="secret"></param>
         public SailthruClient(string apiKey, string secret)
+            : this(apiKey, secret, DEFAULT_API_URL)
         {
-            this.apiHost = DEFAULT_API_URL;
-            this.apiKey = apiKey;
-            this.secret = secret;
         }
 
 
@@ -51,6 +50,7 @@ namespace Sailthru
             this.apiHost = apiHost;
             this.apiKey = apiKey;
             this.secret = secret;
+            lastRateLimitInfo = new Hashtable();
         }
 
         
@@ -666,6 +666,26 @@ namespace Sailthru
             return this.ApiPost("content", hashForPost);
         }
 
+        /// <summary>
+        /// Get rate limit information for last API call
+        /// </summary>
+        /// <param name="action">API endpoint</param>
+        /// <param name="method">HTTP method</param>
+        /// <returns>Hashtable|null</returns>
+        public Hashtable getLastRateLimitInfo(string action, string method)
+        {
+            if (this.lastRateLimitInfo.ContainsKey(action))
+            {
+                Hashtable rateLimitPerMethod = (Hashtable) this.lastRateLimitInfo[action];
+                string methodUC = method.ToUpper();
+                if (rateLimitPerMethod.ContainsKey(methodUC))
+                {
+                    return (Hashtable)rateLimitPerMethod[methodUC];
+                }
+            }
+            return null;
+        }
+
         #endregion
 
         #region Protected Methods
@@ -753,19 +773,38 @@ namespace Sailthru
             return request;
         }
 
-        protected SailthruResponse SendRequest(HttpWebRequest request)
+        protected SailthruResponse SendRequest(HttpWebRequest request, String action)
         {
+            SailthruResponse sailthruResponse;
             try 
             {
-                return new SailthruResponse((HttpWebResponse)request.GetResponse());
+                sailthruResponse = new SailthruResponse((HttpWebResponse)request.GetResponse());
             } 
             catch (WebException e) 
             {
                 using (HttpWebResponse errorResponse = (HttpWebResponse)e.Response)
                 {
-                    return new SailthruResponse((HttpWebResponse)errorResponse);
+                    sailthruResponse = new SailthruResponse((HttpWebResponse)errorResponse);
                 }
             }
+
+            Hashtable rateLimitInfo = sailthruResponse.getRateLimitInfo();
+            if (rateLimitInfo.Count > 0)
+            {
+                if (lastRateLimitInfo.ContainsKey(action))
+                {
+                    Hashtable rateLimitPerMethod = (Hashtable) lastRateLimitInfo[action];
+                    rateLimitPerMethod.Add(request.Method, rateLimitInfo);
+                }
+                else
+                {
+                    Hashtable rateLimitPerMethod = new Hashtable();
+                    rateLimitPerMethod.Add(request.Method, rateLimitInfo);
+                    lastRateLimitInfo.Add(action, rateLimitPerMethod);
+                }
+            }
+
+            return sailthruResponse;
         }
         
         /// For custom API calls that wrappers above don't cover, you can use the below:
@@ -780,7 +819,7 @@ namespace Sailthru
         {
             AddAuthenticationAndFormatToParams(parameters);
             HttpWebRequest request = BuildRequest("GET", action, parameters);
-            return SendRequest(request);
+            return SendRequest(request, action);
         }
 
         /// <summary>
@@ -793,7 +832,7 @@ namespace Sailthru
         {
             AddAuthenticationAndFormatToParams(parameters);
             HttpWebRequest request = BuildRequest("DELETE", action, parameters);
-            return SendRequest(request);
+            return SendRequest(request, action);
         }
 
         /// <summary>
@@ -806,14 +845,14 @@ namespace Sailthru
         {
             AddAuthenticationAndFormatToParams(parameters);
             HttpWebRequest request = BuildPostRequest(action, parameters);
-            return SendRequest(request);
+            return SendRequest(request, action);
         }
 
         protected SailthruResponse ApiPostWithFile(string action, Hashtable htForPost, String filePath)
         {
             AddAuthenticationAndFormatToParams(htForPost);
             HttpWebRequest request = BuildPostWithFileRequest(action, htForPost, filePath);
-            return SendRequest(request);
+            return SendRequest(request, action);
         }
 
         protected string GetParameterString(Hashtable parameters)
