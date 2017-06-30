@@ -43,6 +43,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="ISailthruClient.cs" />
     <Compile Include="JSON.cs" />
     <Compile Include="OrdinalComparer.cs" />
     <Compile Include="SailthruClient.cs" />
