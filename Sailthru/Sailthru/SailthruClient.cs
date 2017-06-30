@@ -431,6 +431,43 @@ namespace Sailthru
         public SailthruResponse Send(SendRequest request)
         {
             Hashtable hashForPost = new Hashtable();
+
+            // We need to check for hashtable syntax inside option keys, and convert them to _actual_ nested hashtables
+            // eg. request.Options = new HashTable { "headers[Bcc]", "someguy@gmail.com" } should be converted to a hashtable with a nested hashtable like this:
+            // request.Options = new HashTable { "headers", new Hashtable { { "Bcc", "someguy@gmail.com" } } }
+
+            // Create a new options hashtable we'll copy to
+            var newOptions = new Hashtable();
+            foreach (string optionKey in request.Options.Keys)
+            {
+                // Is the key in the form of a nested hashtable? eg. headers[Bcc]
+                if (optionKey != null && optionKey.Contains("[") && optionKey.Contains("]"))
+                {
+                    // Extract new key and sub key names
+                    var newOptionSubKey = optionKey.Substring(optionKey.IndexOf("[") + 1, optionKey.IndexOf("]") - optionKey.IndexOf("[") - 1);
+                    var newOptionKey = optionKey.Substring(0, optionKey.IndexOf("["));
+
+                    // Nested hashtable might already exist, so we'll add to it rather than adding it again
+                    if (newOptions.ContainsKey(newOptionKey))
+                    {
+                        ((Hashtable)newOptions[newOptionKey]).Add(newOptionSubKey, request.Options[optionKey]);
+                    }
+                    else
+                    {
+                        // This is the first time we've seen this new key
+                        newOptions.Add(newOptionKey, new Hashtable { { newOptionSubKey, request.Options[optionKey] } });
+                    }
+                }
+                else
+                {
+                    // Not in nested hashtable format
+                    newOptions.Add(optionKey, request.Options[optionKey]);
+                }
+            }
+
+            // Replace options with our updated hashtable
+            request.Options = newOptions;
+
             hashForPost.Add("json", JsonConvert.SerializeObject(request, Formatting.None, new JsonSerializerSettings { NullValueHandling = NullValueHandling.Ignore }));  
             return this.ApiPost("send", hashForPost);
         }
