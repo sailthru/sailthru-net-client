@@ -14,7 +14,7 @@ using Newtonsoft.Json;
 
 namespace Sailthru
 {
-    public class SailthruClient
+    public class SailthruClient : ISailthruClient
     {
         #region Properties
         private static OrdinalComparer ORDINAL_COMPARER = new OrdinalComparer();
