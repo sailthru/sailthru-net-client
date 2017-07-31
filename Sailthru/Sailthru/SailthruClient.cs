@@ -280,14 +280,19 @@ namespace Sailthru
         /// <summary>
         /// Update information about one of your users, including adding and removing the user from lists.
         /// </summary>
+        /// <remarks>
+        /// Note that the <paramref name="htVars"/> and <paramref name="sendVars"/> parameters do
+        /// not support hashtables or arrays, use the <see cref="SetEmail"/> method which takes 
+        /// an <see cref="EmailRequest"/> argument instead.
+        /// </remarks>
         /// <param name="strEmail"></param>
-        /// <param name="htVars"></param>
+        /// <param name="htVars">Vars to set on the user. Does not support hashtables or arrays</param>
         /// <param name="htLists"></param>
         /// <param name="htTemplates"></param>
         /// <param name="verified"></param>
         /// <param name="optout"></param>
         /// <param name="send"></param>
-        /// <param name="sendVars"></param>
+        /// <param name="sendVars">Send vars to set on the user. Does not support hashtables or arrays</param>
         /// <returns></returns>
         /// <seealso cref="http://docs.sailthru.com/api/email"/>
         public SailthruResponse SetEmail(string strEmail, 
@@ -378,10 +383,18 @@ namespace Sailthru
         /// <summary>
         /// Send a transactional email for multiple users
         /// </summary>
+        /// <remarks>
+        /// Note that the <paramref name="htOptions"/> parameter does not allow
+        /// passing email headers. To specify email headers, use the <see cref="Send"/>
+        /// method which takes a <see cref="SendRequest"/> argument instead.
+        /// Note that the <paramref name="htVars"/> parameter does
+        /// not support hashtables or arrays, use the <see cref="Send"/>
+        /// method which takes a <see cref="SendRequest"/> argument instead.
+        /// </remarks>
         /// <param name="strTemplateName"></param>
         /// <param name="strEmail"></param>
-        /// <param name="htVars"></param>
-        /// <param name="htOptions"></param>
+        /// <param name="htVars">Vars to use for the send. Does not support hashtables or arrays</param>
+        /// <param name="htOptions">Options to use for the send. Does not support email headers</param>
         /// <returns></returns>
         /// <seealso cref="http://docs.sailthru.com/api/send"/>
         public SailthruResponse Multisend(string strTemplateName, string[] strEmail, Hashtable htVars = null, Hashtable htOptions = null)
@@ -412,10 +425,18 @@ namespace Sailthru
         /// <summary>
         /// Send a transactional Email for a single user
         /// </summary>
+        /// <remarks>
+        /// Note that the <paramref name="htOptions"/> parameter does not allow
+        /// passing email headers. To specify email headers, use the <see cref="Send"/>
+        /// method which takes a <see cref="SendRequest"/> argument instead.
+        /// Note that the <paramref name="htVars"/> parameter does
+        /// not support hashtables or arrays, use the <see cref="Send"/>
+        /// method which takes a <see cref="SendRequest"/> argument instead.
+        /// </remarks>
         /// <param name="strTemplateName"></param>
         /// <param name="strEmail"></param>
-        /// <param name="htVars"></param>
-        /// <param name="htOptions"></param>
+        /// <param name="htVars">Vars to use for the send. Does not support hashtables or arrays</param>
+        /// <param name="htOptions">Options to use for the send. Does not support email headers</param>
         /// <returns></returns>
         /// <seealso cref="http://docs.sailthru.com/api/send"/>
         public SailthruResponse Send(string strTemplateName, string strEmail, Hashtable htVars = null, Hashtable htOptions = null)
