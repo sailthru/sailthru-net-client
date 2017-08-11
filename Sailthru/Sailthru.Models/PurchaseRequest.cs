@@ -37,6 +37,14 @@ namespace Sailthru.Models
         [JsonProperty(PropertyName = "items")]
         public ArrayList Items { get; set; }
 
+        /// <summary>
+        /// Gets or sets the items.
+        /// </summary>
+        /// <value>
+        /// The items.
+        /// </value>
+        [JsonProperty(PropertyName = "purchase_keys")]
+        public Hashtable PurchaseKeys { get; set; }
 
         /// <summary>
         /// Gets or sets the vars.
