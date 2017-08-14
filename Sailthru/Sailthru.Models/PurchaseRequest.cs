@@ -38,10 +38,10 @@ namespace Sailthru.Models
         public ArrayList Items { get; set; }
 
         /// <summary>
-        /// Gets or sets the items.
+        /// Gets or sets the purchase keys.
         /// </summary>
         /// <value>
-        /// The items.
+        /// The purchase keys.
         /// </value>
         [JsonProperty(PropertyName = "purchase_keys")]
         public Hashtable PurchaseKeys { get; set; }
@@ -72,7 +72,7 @@ namespace Sailthru.Models
         /// </value>
         [JsonProperty(PropertyName = "adjustments")]
         public ArrayList Adjustments { get; set; }
- 
+
         /// <summary>
         /// Gets or sets the incomplete status.
         /// </summary>
