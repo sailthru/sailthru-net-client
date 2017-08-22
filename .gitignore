@@ -7,3 +7,7 @@ dist
 *.user
 *.cache
 *.userprefs
+*.nupkg
+**/packages/*
+!**/packages/build/
+.DS_Store
