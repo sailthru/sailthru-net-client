@@ -10,7 +10,7 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("Sailthru, Inc.")]
 [assembly: AssemblyProduct("Sailthru Client API")]
-[assembly: AssemblyCopyright("Copyright © Sailthru, Inc. 2011")]
+[assembly: AssemblyCopyright("Copyright © Sailthru, Inc. 2017")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 
