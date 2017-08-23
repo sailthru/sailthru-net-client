@@ -16,7 +16,7 @@
     <PackageId>Sailthru.Client</PackageId>
     <PackageVersion>1.1.0</PackageVersion>
     <Authors>Sailthru</Authors>
-    <PackageLicenseUrl>http://opensource.org/licenses/Apache-2.0</PackageLicenseUrl>
+    <PackageLicenseUrl>https://opensource.org/licenses/MIT</PackageLicenseUrl>
     <PackageProjectUrl>https://github.com/sailthru/sailthru-net-client</PackageProjectUrl>
     <Summary>The .NET implementation of Sailthru Client.</Summary>
     <PackageTags>sailthru client</PackageTags>
