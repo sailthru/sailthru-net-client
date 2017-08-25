@@ -24,7 +24,7 @@ namespace Sailthru
         protected const String ERROR_KEY = "error";
         protected const String ERROR_MSG_KEY = "errormsg";
 
-        
+
         /// <summary>
         /// Response from Server represented as HashTable
         /// </summary>
@@ -47,7 +47,7 @@ namespace Sailthru
             }
         }
 
-        
+
         /// <summary>
         /// Constructor
         /// </summary>
@@ -66,49 +66,45 @@ namespace Sailthru
         /// Parse Response JSON
         /// </summary>
         private void parseJSON()
-        {   
+        {
 
             if (webResponse != null)
             {
-                HttpWebResponse httpWebResponse = webResponse;
-                Stream dataStream = httpWebResponse.GetResponseStream();
-                StreamReader reader = new StreamReader(dataStream);
+                using (HttpWebResponse httpWebResponse = webResponse) {
+                    Stream dataStream = httpWebResponse.GetResponseStream();
+                    StreamReader reader = new StreamReader(dataStream);
 
-                var responseStr = reader.ReadToEnd();
+                    var responseStr = reader.ReadToEnd();
 
-                // Clean up the streams.
-                reader.Close();
-                dataStream.Close();
-                webResponse.Close();
-
-                this.rawResponse = responseStr;
-
-                var jsonResponse = Sailthru.JSON.JsonDecode(responseStr);
-
-                if (jsonResponse is Hashtable)
-                {
-                    hashtableResponse = (Hashtable)jsonResponse;
-                    if (!hashtableResponse.ContainsKey(ERROR_KEY) || !hashtableResponse.ContainsKey(ERROR_MSG_KEY))
-                    {
-                        this.validResponse = true;
-                    }
-                }
-                else
-                {
                     this.rawResponse = responseStr;
-                    this.hashtableResponse = createErrorResponse(responseStr);
-                }
 
-                // parse rate limit headers
-                WebHeaderCollection headers = webResponse.Headers;
-                if (headers.Get("X-Rate-Limit-Limit") != null &&
-                    headers.Get("X-Rate-Limit-Remaining") != null &&
-                    headers.Get("X-Rate-Limit-Reset") != null)
-                {
-                    this.rateLimitInfo.Add("limit", Int32.Parse(headers.Get("X-Rate-Limit-Limit")));
-                    this.rateLimitInfo.Add("remaining", Int32.Parse(headers.Get("X-Rate-Limit-Remaining")));
-                    DateTime reset = new DateTime(1970, 1, 1, 0, 0, 0, 0);
-                    this.rateLimitInfo.Add("reset", reset.AddSeconds(Int64.Parse(headers.Get("X-Rate-Limit-Reset"))));
+                    var jsonResponse = Sailthru.JSON.JsonDecode(responseStr);
+
+                    if (jsonResponse is Hashtable)
+                    {
+                        hashtableResponse = (Hashtable)jsonResponse;
+                        if (!hashtableResponse.ContainsKey(ERROR_KEY) || !hashtableResponse.ContainsKey(ERROR_MSG_KEY))
+                        {
+                            this.validResponse = true;
+                        }
+                    }
+                    else
+                    {
+                        this.rawResponse = responseStr;
+                        this.hashtableResponse = createErrorResponse(responseStr);
+                    }
+
+                    // parse rate limit headers
+                    WebHeaderCollection headers = webResponse.Headers;
+                    if (headers.Get("X-Rate-Limit-Limit") != null &&
+                        headers.Get("X-Rate-Limit-Remaining") != null &&
+                        headers.Get("X-Rate-Limit-Reset") != null)
+                    {
+                        this.rateLimitInfo.Add("limit", Int32.Parse(headers.Get("X-Rate-Limit-Limit")));
+                        this.rateLimitInfo.Add("remaining", Int32.Parse(headers.Get("X-Rate-Limit-Remaining")));
+                        DateTime reset = new DateTime(1970, 1, 1, 0, 0, 0, 0);
+                        this.rateLimitInfo.Add("reset", reset.AddSeconds(Int64.Parse(headers.Get("X-Rate-Limit-Reset"))));
+                    }
                 }
             }
             else
@@ -128,7 +124,7 @@ namespace Sailthru
             return this.validResponse;
         }
 
-        
+
         /// <summary>
         /// create custom hastable with error and errormsg
         /// </summary>
