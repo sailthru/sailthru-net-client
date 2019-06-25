@@ -55,6 +55,7 @@
     <Compile Include="UserRequest.cs" />
     <Compile Include="PurchaseRequest.cs" />
     <Compile Include="ContentRequest.cs" />
+    <Compile Include="EventRequest.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
