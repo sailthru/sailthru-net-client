@@ -688,12 +688,12 @@ namespace Sailthru
         }
 
         /// <summary>
-        /// Send a custom event.
+        /// Notify Sailthru of an event.
         /// </summary>
         /// <param name="request"></param>
         /// <returns></returns>
         /// <seealso cref="http://docs.sailthru.com/api/event"/>
-        public SailthruResponse SendEvent(EventRequest request)
+        public SailthruResponse PostEvent(EventRequest request)
         {
             Hashtable hashForPost = new Hashtable();
             hashForPost.Add("json", JsonConvert.SerializeObject(request, Formatting.None, new JsonSerializerSettings { NullValueHandling = NullValueHandling.Ignore }));
