@@ -688,6 +688,19 @@ namespace Sailthru
         }
 
         /// <summary>
+        /// Notify Sailthru of an event.
+        /// </summary>
+        /// <param name="request"></param>
+        /// <returns></returns>
+        /// <seealso cref="http://docs.sailthru.com/api/event"/>
+        public SailthruResponse PostEvent(EventRequest request)
+        {
+            Hashtable hashForPost = new Hashtable();
+            hashForPost.Add("json", JsonConvert.SerializeObject(request, Formatting.None, new JsonSerializerSettings { NullValueHandling = NullValueHandling.Ignore }));
+            return this.ApiPost("event", hashForPost);
+        }
+
+        /// <summary>
         /// Get rate limit information for last API call
         /// </summary>
         /// <param name="action">API endpoint</param>
