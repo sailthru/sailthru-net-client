@@ -17,12 +17,29 @@ namespace Sailthru
     public class SailthruClient
     {
         #region Properties
+
         private static OrdinalComparer ORDINAL_COMPARER = new OrdinalComparer();
         private static string DEFAULT_API_URL = "https://api.sailthru.com";
         private Hashtable lastRateLimitInfo;
         private string apiHost;
         private string apiKey;
         private string secret;
+
+        /// <summary>
+        /// Set/get the timeout for writing or reading from the connection.
+        /// The default value is 300,000 milliseconds (5 minutes).
+        /// <seealso cref="System.Net.HttpWebRequest.ReadWriteTimeout"/>
+        /// </summary>
+        /// <value>The ReadWriteTimeout.</value>
+        public int ReadWriteTimeout { get; set; } = 300000;
+
+        /// <summary>
+        /// Gets or sets the number of milliseconds to wait before the request times out.
+        /// The default value is 100,000 milliseconds (100 seconds).
+        /// <seealso cref="System.Net.HttpWebRequest.Timeout"/>
+        /// </summary>
+        /// <value>The Timeout.</value>
+        public int Timeout { get; set; } = 100000;
 
         #endregion
 
@@ -731,6 +748,8 @@ namespace Sailthru
             request.Method = method;
             request.UserAgent = "Sailthru API C# Client";
             request.SendChunked = false;
+            request.Timeout = this.Timeout;
+            request.ReadWriteTimeout = this.ReadWriteTimeout;
             return request;
         }
 
