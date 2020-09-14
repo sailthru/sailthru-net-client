@@ -9,6 +9,7 @@ namespace Sailthru.Tests
         [Test()]
         public void TestCase()
         {
+            Assert.Fail();
         }
     }
 }
