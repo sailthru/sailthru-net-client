@@ -40,6 +40,13 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Test.cs" />
+    <Compile Include="Mock/ApiServer.cs" />
+    <Compile Include="Mock/PurchaseApi.cs" />
+    <Compile Include="Mock/ListApi.cs" />
+    <Compile Include="Mock/JobApi.cs" />
+    <Compile Include="Mock/EventApi.cs" />
+    <Compile Include="Mock/UserApi.cs" />
+    <Compile Include="Mock/ErrorResponse.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
