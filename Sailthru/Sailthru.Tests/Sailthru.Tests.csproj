@@ -37,5 +37,15 @@
   <ItemGroup>
     <None Include="packages.config" />
   </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Sailthru\Sailthru.csproj">
+      <Project>{21C7EF1E-3D2E-4AA8-B3FA-787A80F7C939}</Project>
+      <Name>Sailthru</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Sailthru.Models\Sailthru.Models.csproj">
+      <Project>{4993ADAC-7553-4733-B72F-011CE4D93A3B}</Project>
+      <Name>Sailthru.Models</Name>
+    </ProjectReference>
+  </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
 </Project>
