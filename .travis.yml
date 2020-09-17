@@ -1,2 +1,8 @@
 language: csharp
 solution: Sailthru/Sailthru.sln
+install:
+  - nuget restore Sailthru/Sailthru.sln
+  - nuget install NUnit.Console -Version 3.12.0-beta1 -OutputDirectory testrunner
+script:
+  - msbuild /p:Configuration=Release Sailthru/Sailthru.sln
+  - mono ./testrunner/NUnit.ConsoleRunner.3.12.0-beta1/tools/nunit3-console.exe ./Sailthru/Sailthru.Tests/bin/Release/Sailthru.Tests.dll
