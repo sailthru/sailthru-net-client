@@ -1,8 +1,20 @@
 language: csharp
 solution: Sailthru/Sailthru.sln
+
+before_install:
+  - openssl aes-256-cbc -K $encrypted_0dca07c38cc0_key -iv $encrypted_0dca07c38cc0_iv -in NuGet.Config.enc -out NuGet.Config -d
+
 install:
   - nuget restore Sailthru/Sailthru.sln
   - nuget install NUnit.Console -Version 3.12.0-beta1 -OutputDirectory testrunner
+
 script:
   - msbuild /p:Configuration=Release Sailthru/Sailthru.sln
   - mono ./testrunner/NUnit.ConsoleRunner.3.12.0-beta1/tools/nunit3-console.exe ./Sailthru/Sailthru.Tests/bin/Release/Sailthru.Tests.dll
+
+deploy:
+  skip_cleanup: true
+  provider: script
+  on:
+    branch: master
+  script: nuget push Sailthru/Sailthru/bin/Release/Sailthru.Client.*.nupkg
