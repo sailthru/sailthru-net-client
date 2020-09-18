@@ -17,6 +17,6 @@ before_deploy:
 deploy:
   skip_cleanup: true
   provider: script
-  # on:
-  #   branch: master
+  on:
+    all_branches: true
   script: nuget push Sailthru/Sailthru/bin/Release/Sailthru.Client.*.nupkg
