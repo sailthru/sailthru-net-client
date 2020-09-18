@@ -9,4 +9,4 @@ install:
 script:
   - msbuild /noLogo /p:Configuration=Release Sailthru/Sailthru.sln
   - mono ./testrunner/NUnit.ConsoleRunner.3.12.0-beta1/tools/nunit3-console.exe ./Sailthru/Sailthru.Tests/bin/Release/net452/Sailthru.Tests.dll
-  # - dotnet test --no-build -f netcoreapp2.1 -c Release Sailthru/Sailthru.sln
+  - dotnet test --no-build -f netcoreapp2.1 -c Release Sailthru/Sailthru.sln
