@@ -3,9 +3,7 @@ using System.IO;
 using System.Net;
 using System.Threading;
 using System.Web;
-using System.Collections.Generic;
 using Newtonsoft.Json;
-using MongoDB.Bson;
 using Newtonsoft.Json.Linq;
 using System.Collections.Specialized;
 
@@ -182,8 +180,8 @@ namespace Sailthru.Tests.Mock
             foreach (string entry in query.Split('&'))
             {
                 string[] parts = entry.Split(new char[] { '=' }, 2);
-                string key = HttpUtility.UrlDecode(parts[0]);
-                string value = HttpUtility.UrlDecode(parts[1]);
+                string key = WebUtility.UrlDecode(parts[0]);
+                string value = WebUtility.UrlDecode(parts[1]);
                 coll.Add(key, value);
             }
             return coll;
