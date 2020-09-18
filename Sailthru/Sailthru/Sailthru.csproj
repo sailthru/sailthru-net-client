@@ -14,7 +14,7 @@
     <FileAlignment>512</FileAlignment>
     <PackOnBuild>true</PackOnBuild>
     <PackageId>Sailthru.Client</PackageId>
-    <PackageVersion>1.1.6-alpha</PackageVersion>
+    <PackageVersion>1.1.6-alpha.2</PackageVersion>
     <Authors>Sailthru</Authors>
     <PackageLicenseUrl>https://opensource.org/licenses/MIT</PackageLicenseUrl>
     <PackageProjectUrl>https://github.com/sailthru/sailthru-net-client</PackageProjectUrl>
