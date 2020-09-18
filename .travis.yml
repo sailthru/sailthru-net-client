@@ -12,6 +12,7 @@ script:
 
 before_deploy:
   - nuget setApiKey $NUGET_API_KEY -Verbosity quiet >/dev/null 2>&1
+  - msbuild /t:Pack /p:Configuration=Release Sailthru/Sailthru/Sailthru.csproj
 
 deploy:
   skip_cleanup: true
