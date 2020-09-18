@@ -1,9 +1,6 @@
 language: csharp
 solution: Sailthru/Sailthru.sln
 
-before_install:
-  - nuget setApiKey $NUGET_API_KEY -Verbosity quiet >/dev/null 2>&1
-
 install:
   - nuget restore Sailthru/Sailthru.sln
   - msbuild /t:Restore Sailthru/Sailthru.sln
@@ -12,6 +9,9 @@ install:
 script:
   - msbuild /p:Configuration=Release Sailthru/Sailthru.sln
   - mono ./testrunner/NUnit.ConsoleRunner.3.12.0-beta1/tools/nunit3-console.exe ./Sailthru/Sailthru.Tests/bin/Release/Sailthru.Tests.dll
+
+before_deploy:
+  - nuget setApiKey $NUGET_API_KEY -Verbosity quiet >/dev/null 2>&1
 
 deploy:
   skip_cleanup: true
