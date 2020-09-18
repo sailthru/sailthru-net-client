@@ -11,7 +11,7 @@ script:
   - mono ./testrunner/NUnit.ConsoleRunner.3.12.0-beta1/tools/nunit3-console.exe ./Sailthru/Sailthru.Tests/bin/Release/Sailthru.Tests.dll
   - msbuild /t:Pack /p:Configuration=Release Sailthru/Sailthru/Sailthru.csproj
   - nuget setApiKey $NUGET_API_KEY -Verbosity quiet >/dev/null 2>&1
-  - nuget push Sailthru/Sailthru/bin/Release/Sailthru.Client.*.nupkg
+  - nuget push Sailthru/Sailthru/bin/Release/Sailthru.Client.*.nupkg -Source nuget.org
 
 # before_deploy:
 #   - nuget setApiKey $NUGET_API_KEY -Verbosity quiet >/dev/null 2>&1
