@@ -6,6 +6,7 @@ before_install:
 
 install:
   - nuget restore Sailthru/Sailthru.sln
+  - msbuild /t:Restore Sailthru/Sailthru.sln
   - nuget install NUnit.Console -Version 3.12.0-beta1 -OutputDirectory testrunner
 
 script:
