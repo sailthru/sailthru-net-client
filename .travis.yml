@@ -35,4 +35,4 @@ deploy:
   on:
     tags: true
     condition: $DOTNET = mono
-  script: nuget push Sailthru/Sailthru/bin/Release/Sailthru.Client.*.nupkg
+  script: nuget push Sailthru/Sailthru/bin/Release/Sailthru.Client.*.nupkg -Source nuget.org
