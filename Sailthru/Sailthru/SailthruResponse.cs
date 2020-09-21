@@ -76,6 +76,8 @@ namespace Sailthru
 
                 var responseStr = reader.ReadToEnd();
 
+                WebHeaderCollection headers = webResponse.Headers;
+
                 // Clean up the streams.
                 reader.Close();
                 dataStream.Close();
@@ -100,7 +102,6 @@ namespace Sailthru
                 }
 
                 // parse rate limit headers
-                WebHeaderCollection headers = webResponse.Headers;
                 if (headers.Get("X-Rate-Limit-Limit") != null &&
                     headers.Get("X-Rate-Limit-Remaining") != null &&
                     headers.Get("X-Rate-Limit-Reset") != null)
