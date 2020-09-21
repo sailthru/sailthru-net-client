@@ -522,9 +522,14 @@ namespace Sailthru
             if (parameters.ContainsKey("file")) {
                 String filePath = (String)parameters["file"];
                 parameters.Remove("file");
-                return this.ApiPostWithFile("job", parameters, filePath);
+
+                Hashtable hashForPost = new Hashtable();
+                hashForPost.Add("json", JsonConvert.SerializeObject(parameters, Formatting.None, new JsonSerializerSettings { NullValueHandling = NullValueHandling.Ignore }));
+                return this.ApiPostWithFile("job", hashForPost, filePath);
             } else {
-                return this.ApiPost("job", parameters);
+                Hashtable hashForPost = new Hashtable();
+                hashForPost.Add("json", JsonConvert.SerializeObject(parameters, Formatting.None, new JsonSerializerSettings { NullValueHandling = NullValueHandling.Ignore }));
+                return this.ApiPost("job", hashForPost);
             }
         }
 

@@ -1,0 +1,164 @@
+﻿using NUnit.Framework;
+using System;
+using Sailthru.Tests.Mock;
+using Sailthru.Models;
+using System.Collections;
+using System.Collections.Generic;
+using System.IO;
+using static Sailthru.Models.UserRequest;
+
+namespace Sailthru.Tests
+{
+    [TestFixture]
+    public class Test
+    {
+        private static ApiServer server = new ApiServer();
+        private SailthruClient client = new SailthruClient("3386", "3386", server.ApiUrl);
+
+        [Test]
+        public void PostListEraseJob()
+        {
+            Hashtable jobParams = new Hashtable()
+            {
+                ["lists"] = new string[] { "foo", "bar" }
+            };
+
+            SailthruResponse response = client.ProcessJob("list_erase", null, null, jobParams);
+            Assert.IsTrue(response.IsOK());
+            Assert.AreEqual(response.HashtableResponse["name"], "Bulk List Erase: 2 requested");
+        }
+
+        [Test]
+        public void PostUser()
+        {
+            UserRequest request = new UserRequest();
+            request.Id = "test@sailthru.com";
+            request.Login = "test@sailthru.com";
+            request.OptoutEmail = OptoutStatus.Basic;
+            request.Vars = new Hashtable()
+            {
+                ["foobar"] = "test"
+            };
+            request.Fields = new Hashtable()
+            {
+                ["vars"] = 1,
+                ["optout_email"] = 1
+            };
+
+            SailthruResponse response = client.SetUser(request);
+            Assert.IsTrue(response.IsOK());
+
+            Assert.AreEqual(response.HashtableResponse["optout_email"], "basic");
+
+            Hashtable vars = response.HashtableResponse["vars"] as Hashtable;
+            Assert.AreEqual(vars["foobar"], "test");
+        }
+
+        [Test]
+        public void PostEvent()
+        {
+            EventRequest request = new EventRequest();
+            request.Id = "test@sailthru.com";
+            request.Event = "hello";
+            request.Vars = new Hashtable()
+            {
+                ["var1"] = "yes"
+            };
+
+            SailthruResponse response = client.PostEvent(request);
+            Assert.IsTrue(response.IsOK());
+        }
+
+        [Test]
+        public void PostImportJob()
+        {
+            List<String> emails = new List<String>() {
+                "user1@example.com",
+                "user2@example.com",
+                "user3@example.com"
+            };
+
+            SailthruResponse response = client.ProcessImportJob("test_list", emails);
+            Assert.IsTrue(response.IsOK());
+            Assert.AreEqual(response.HashtableResponse["name"], "List Import: test_list");
+        }
+
+        [Test]
+        [Ignore("mock api server missing support for form data")]
+        public void PostUpdateJob()
+        {
+            string filename = Path.GetTempFileName();
+
+            using (StreamWriter writer = new StreamWriter(filename))
+            {
+                writer.WriteLine("{\"id\":\"user1@example.com\", \"signup_date\":\"1987-08-01\"}");
+                writer.WriteLine("{\"id\":\"user2@example.com\", \"signup_date\":\"1987-08-01\"}");
+                writer.WriteLine("{\"id\":\"user3@example.com\", \"signup_date\":\"1987-08-01\"}");
+            }
+
+            Hashtable updateParams = new Hashtable()
+            {
+                ["file"] = filename
+            };
+
+            SailthruResponse response = client.ProcessJob("update", null, null, updateParams);
+            Assert.IsTrue(response.IsOK());
+            Assert.AreEqual(response.HashtableResponse["name"], "Bulk Update");
+        }
+
+        [Test]
+        [Ignore("client library fails to serialize nested fields in GET requests")]
+        public void GetListWithFields()
+        {
+            Hashtable parameters = new Hashtable();
+            parameters["list"] = "List With 2 Users";
+            parameters["fields"] = new Dictionary<string, object>()
+            {
+                ["vars"] = 1
+            };
+
+            SailthruResponse response = client.ApiGet("list", parameters);
+            Assert.IsTrue(response.IsOK());
+        }
+
+        [Test]
+        public void PostPurchase()
+        {
+            PurchaseRequest request = new PurchaseRequest();
+            request.Email = "test@example.com";
+            request.PurchaseKeys = new Hashtable()
+            {
+                ["extid"] = "12345"
+            };
+
+            Hashtable item1 = new Hashtable();
+            item1.Add("qty", 1);
+            item1.Add("id", "abc");
+            item1.Add("title", "This new product");
+            item1.Add("price", 1099);
+            item1.Add("url", "http://www.example.com/thisnewproduct.html");
+
+            Hashtable item2 = new Hashtable();
+            item2.Add("qty", 2);
+            item2.Add("id", "def");
+            item2.Add("title", "water bottle");
+            item2.Add("price", 199);
+            item2.Add("url", "http://www.example.com/water.html");
+
+            ArrayList items = new ArrayList();
+            items.Add(item1);
+            items.Add(item2);
+            request.Items = items;
+
+            SailthruResponse response = client.Purchase(request);
+            Assert.IsTrue(response.IsOK());
+
+            Hashtable purchaseResult = (Hashtable)response.HashtableResponse["purchase"];
+            Assert.AreEqual(purchaseResult["price"], 1497);
+            Assert.AreEqual(purchaseResult["qty"], 3);
+
+            Hashtable purchaseKeys = purchaseResult["purchase_keys"] as Hashtable;
+            Assert.AreEqual(purchaseKeys["extid"], "12345");
+        }
+    }
+}
