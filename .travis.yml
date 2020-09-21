@@ -35,3 +35,7 @@ deploy:
     tags: true
     condition: $DOTNET = mono
   script: nuget push Sailthru/Sailthru/bin/Release/Sailthru.Client.*.nupkg -Source nuget.org
+
+branches:
+  only:
+  - master
