@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <TargetFrameworks Condition="'$(TestTargetFrameworks)'==''">netcoreapp2.1;netcoreapp3.1;net452</TargetFrameworks>
-    <TargetFrameworks Condition="'$(TestTargetFrameworks)'!=''">$(TestTargetFrameworks)</TargetFrameworks>
+    <TargetFramework Condition=" '$(TestFramework)' == '' ">net452</TargetFramework>
+    <TargetFramework Condition=" '$(TestFramework)' != '' ">$(TestFramework)</TargetFramework>
     <IsPackable>false</IsPackable>
   </PropertyGroup>
   <ItemGroup>

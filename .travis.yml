@@ -15,18 +15,17 @@ jobs:
   fast_finish: true
 
 install:
-  - nuget restore Sailthru/Sailthru/Sailthru.csproj -PackagesDirectory Sailthru/packages
-  - nuget restore Sailthru/Sailthru.Models/Sailthru.Models.csproj -PackagesDirectory Sailthru/packages
+  - msbuild /t:Restore /p:TestFramework=${TEST_FRAMEWORK} Sailthru/Sailthru.sln
   - if [ "$DOTNET" = "mono" ]; then nuget install NUnit.Console -Version 3.12.0-beta1 -OutputDirectory testrunner; fi
 
 
 script:
-  - msbuild /noLogo "/p:TestTargetFrameworks=${TEST_FRAMEWORK}" /p:Configuration=Release Sailthru/Sailthru.sln
-  - if [ "$DOTNET" = "mono" ]; then mono ./testrunner/NUnit.ConsoleRunner.3.12.0-beta1/tools/nunit3-console.exe ./Sailthru/Sailthru.Tests/bin/Release/Sailthru.Tests.dll; fi
-  - if [ "$DOTNET" != "mono" ]; then dotnet test --no-build -f "${TEST_FRAMEWORK}" -c Release Sailthru/Sailthru.sln; fi
+  - msbuild /p:Configuration=Release /p:TestFramework=${TEST_FRAMEWORK} Sailthru/Sailthru.sln
+  - if [ "$DOTNET" = "mono" ]; then mono ./testrunner/NUnit.ConsoleRunner.3.12.0-beta1/tools/nunit3-console.exe ./Sailthru/Sailthru.Tests/bin/Release/net452/Sailthru.Tests.dll; fi
+  - if [ "$DOTNET" != "mono" ]; then dotnet test --no-build -p:TestFramework=${TEST_FRAMEWORK} -c Release Sailthru/Sailthru.sln; fi
 
 before_deploy:
-  - msbuild /noLogo /t:Pack /p:Configuration=Release Sailthru/Sailthru/Sailthru.csproj
+  - msbuild /t:Pack /p:Configuration=Release Sailthru/Sailthru/Sailthru.csproj
   - nuget setApiKey $NUGET_API_KEY -Verbosity quiet >/dev/null 2>&1
 
 deploy:
@@ -36,3 +35,7 @@ deploy:
     tags: true
     condition: $DOTNET = mono
   script: nuget push Sailthru/Sailthru/bin/Release/Sailthru.Client.*.nupkg -Source nuget.org
+
+branches:
+  only:
+  - master
