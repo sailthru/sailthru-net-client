@@ -22,7 +22,7 @@ install:
 
 script:
   - msbuild /noLogo "/p:TestTargetFrameworks=${TEST_FRAMEWORK}" /p:Configuration=Release Sailthru/Sailthru.sln
-  - if [ "$DOTNET" = "mono" ]; then mono ./testrunner/NUnit.ConsoleRunner.3.12.0-beta1/tools/nunit3-console.exe ./Sailthru/Sailthru.Tests/bin/Release/net452/Sailthru.Tests.dll; fi
+  - if [ "$DOTNET" = "mono" ]; then mono ./testrunner/NUnit.ConsoleRunner.3.12.0-beta1/tools/nunit3-console.exe ./Sailthru/Sailthru.Tests/bin/Release/Sailthru.Tests.dll; fi
   - if [ "$DOTNET" != "mono" ]; then dotnet test --no-build -f "${TEST_FRAMEWORK}" -c Release Sailthru/Sailthru.sln; fi
 
 before_deploy:
