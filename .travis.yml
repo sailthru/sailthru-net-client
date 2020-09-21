@@ -16,7 +16,6 @@ jobs:
 
 install:
   - nuget restore Sailthru/Sailthru.sln
-  - msbuild /t:Restore Sailthru/Sailthru.sln
   - if [ "$DOTNET" = "mono" ]; then nuget install NUnit.Console -Version 3.12.0-beta1 -OutputDirectory testrunner; fi
 
 
