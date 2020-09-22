@@ -129,7 +129,7 @@ namespace Sailthru.Tests
             request.Id = "test@example.com";
             request.Event = "trigger_timeout";
 
-            SailthruClient clientWithTimeout = new SailthruClient("3386", "3386", "http://api.sailthru-sb.com");
+            SailthruClient clientWithTimeout = new SailthruClient("3386", "3386", server.ApiUrl);
             clientWithTimeout.Timeout = 1000;
             SailthruResponse response = clientWithTimeout.PostEvent(request);
             Assert.IsFalse(response.IsOK());
