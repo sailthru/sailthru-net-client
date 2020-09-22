@@ -122,6 +122,20 @@ namespace Sailthru.Tests
         }
 
         [Test]
+        [Timeout(10000)]
+        public void Timeout()
+        {
+            EventRequest request = new EventRequest();
+            request.Id = "test@example.com";
+            request.Event = "trigger_timeout";
+
+            SailthruClient clientWithTimeout = new SailthruClient("3386", "3386", "http://api.sailthru-sb.com");
+            clientWithTimeout.Timeout = 1000;
+            SailthruResponse response = clientWithTimeout.PostEvent(request);
+            Assert.IsFalse(response.IsOK());
+        }
+
+        [Test]
         public void PostPurchase()
         {
             PurchaseRequest request = new PurchaseRequest();
