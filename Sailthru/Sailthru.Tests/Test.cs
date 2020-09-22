@@ -61,8 +61,6 @@ namespace Sailthru.Tests
 
             UserRequest request = new UserRequest();
             request.Id = "test@sailthru.com";
-            request.Login = "test@sailthru.com";
-            request.OptoutEmail = OptoutStatus.Basic;
             request.Vars = new Hashtable()
             {
                 ["unicode"] = unicodeString
