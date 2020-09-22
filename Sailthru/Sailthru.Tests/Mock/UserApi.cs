@@ -11,8 +11,8 @@ namespace Sailthru.Tests.Mock
             string optout = request["optout_email"].Value<string>();
             JObject vars = request["vars"].Value<JObject>();
             JObject fields = request["fields"].Value<JObject>();
-            bool returnVars = fields != null && fields["vars"].Value<int>() == 1;
-            bool returnOptout = fields != null && fields["optout_email"].Value<int>() == 1;
+            bool returnVars = fields != null && fields.ContainsKey("vars") && fields["vars"].Value<int>() == 1;
+            bool returnOptout = fields != null && fields.ContainsKey("optout_email") && fields["optout_email"].Value<int>() == 1;
             Dictionary<string, object> result = new Dictionary<string, object>()
             {
                 ["ok"] = true
