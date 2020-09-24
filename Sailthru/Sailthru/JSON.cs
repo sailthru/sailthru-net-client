@@ -283,7 +283,7 @@ namespace Sailthru
                             // parse the 32 bit hex into an integer codepoint
                             uint codePoint = UInt32.Parse(new string(unicodeCharArray), NumberStyles.HexNumber);
                             // convert the integer codepoint to a unicode char and add to string
-                            s.Append(Char.ConvertFromUtf32((int)codePoint));
+                            s.Append((char)codePoint);
                             // skip 4 chars
                             index += 4;
                         }
