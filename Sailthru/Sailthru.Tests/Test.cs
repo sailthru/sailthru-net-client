@@ -55,6 +55,29 @@ namespace Sailthru.Tests
         }
 
         [Test]
+        public void UnicodeResponse()
+        {
+            string unicodeString = "ä好😃⇔";
+
+            UserRequest request = new UserRequest();
+            request.Id = "test@sailthru.com";
+            request.Vars = new Hashtable()
+            {
+                ["unicode"] = unicodeString
+            };
+            request.Fields = new Hashtable()
+            {
+                ["vars"] = 1,
+            };
+
+            SailthruResponse response = client.SetUser(request);
+            Assert.IsTrue(response.IsOK());
+
+            Hashtable vars = response.HashtableResponse["vars"] as Hashtable;
+            Assert.AreEqual(vars["unicode"], unicodeString);
+        }
+
+        [Test]
         public void PostEvent()
         {
             EventRequest request = new EventRequest();
