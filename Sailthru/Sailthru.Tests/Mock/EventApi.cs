@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using Newtonsoft.Json.Linq;
+using System.Threading;
 
 namespace Sailthru.Tests.Mock
 {
@@ -18,6 +19,12 @@ namespace Sailthru.Tests.Mock
             {
                 throw new ArgumentException("event is required");
             }
+
+            if (eventName == "trigger_timeout")
+            {
+                Thread.Sleep(10000);
+            }
+
             return new Dictionary<string, object>()
             {
                 ["ok"] = true
