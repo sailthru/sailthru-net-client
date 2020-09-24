@@ -12,6 +12,7 @@ namespace Sailthru.Tests.Mock
     public class ApiServer
     {
         private const String API_URL = "http://localhost:5555";
+        private static JsonSerializerSettings jsonSettings;
 
         private readonly HttpListener listener;
         private readonly Thread listenerThread;
@@ -30,6 +31,9 @@ namespace Sailthru.Tests.Mock
             listenerThread = new Thread(HandleRequests);
             listenerThread.IsBackground = true;
             listenerThread.Start();
+
+            jsonSettings = new JsonSerializerSettings();
+            jsonSettings.StringEscapeHandling = StringEscapeHandling.EscapeNonAscii;
         }
 
         public String ApiUrl
@@ -83,7 +87,7 @@ namespace Sailthru.Tests.Mock
                 context.Response.AddHeader("Content-Type", "application/json");
                 using (StreamWriter writer = new StreamWriter(context.Response.OutputStream))
                 {
-                    writer.Write(JsonConvert.SerializeObject(response));
+                    writer.Write(JsonConvert.SerializeObject(response, jsonSettings));
                 }
             }
 
