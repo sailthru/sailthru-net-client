@@ -7,10 +7,10 @@ namespace Sailthru.Tests.Mock
     {
         public static object ProcessPost(JObject request)
         {
-            string id = request["id"].Value<string>();
-            string optout = request["optout_email"].Value<string>();
-            JObject vars = request["vars"].Value<JObject>();
-            JObject fields = request["fields"].Value<JObject>();
+            string id = (string)request["id"];
+            string optout = (string)request["optout_email"];
+            JObject vars = (JObject)request["vars"];
+            JObject fields = (JObject)request["fields"];
             bool returnVars = fields != null && fields.ContainsKey("vars") && fields["vars"].Value<int>() == 1;
             bool returnOptout = fields != null && fields.ContainsKey("optout_email") && fields["optout_email"].Value<int>() == 1;
             Dictionary<string, object> result = new Dictionary<string, object>()
