@@ -6,6 +6,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using static Sailthru.Models.UserRequest;
+using Newtonsoft.Json;
 
 namespace Sailthru.Tests
 {
@@ -130,14 +131,18 @@ namespace Sailthru.Tests
         }
 
         [Test]
-        [Ignore("client library fails to serialize nested fields in GET requests")]
         public void GetListWithFields()
         {
-            Hashtable parameters = new Hashtable();
-            parameters["list"] = "List With 2 Users";
-            parameters["fields"] = new Dictionary<string, object>()
+            Hashtable request = new Hashtable();
+            request["list"] = "List With 2 Users";
+            request["fields"] = new Dictionary<string, object>()
             {
                 ["vars"] = 1
+            };
+
+            Hashtable parameters = new Hashtable()
+            {
+                ["json"] = JsonConvert.SerializeObject(request)
             };
 
             SailthruResponse response = client.ApiGet("list", parameters);
