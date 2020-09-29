@@ -11,6 +11,7 @@ using System.Collections.Specialized;
 using System.Web;
 using Sailthru.Models;
 using Newtonsoft.Json;
+using System.Reflection;
 
 namespace Sailthru
 {
@@ -19,7 +20,9 @@ namespace Sailthru
         #region Properties
 
         private static OrdinalComparer ORDINAL_COMPARER = new OrdinalComparer();
+        private static string USER_AGENT = "Sailthru API C# Client " + Assembly.GetExecutingAssembly().GetName().Version;
         private static string DEFAULT_API_URL = "https://api.sailthru.com";
+
         private Hashtable lastRateLimitInfo;
         private string apiHost;
         private string apiKey;
@@ -751,7 +754,7 @@ namespace Sailthru
             String uri = this.apiHost + "/" + path;
             HttpWebRequest request = (HttpWebRequest)HttpWebRequest.Create(uri);
             request.Method = method;
-            request.UserAgent = "Sailthru API C# Client";
+            request.UserAgent = USER_AGENT;
             request.SendChunked = false;
             request.Timeout = this.Timeout;
             request.ReadWriteTimeout = this.ReadWriteTimeout;
