@@ -202,5 +202,21 @@ namespace Sailthru.Tests
             Hashtable purchaseKeys = purchaseResult["purchase_keys"] as Hashtable;
             Assert.AreEqual(purchaseKeys["extid"], "12345");
         }
+
+        [Test]
+        public void PostDraftBlast()
+        {
+            BlastRequest request = new BlastRequest
+            {
+                Name = "test",
+                List = "list",
+                Subject = "test"
+            };
+
+            SailthruResponse response = client.ScheduleBlast(request);
+            Assert.IsTrue(response.IsOK());
+            Assert.AreEqual(response.HashtableResponse["status"], "created");
+            Assert.AreEqual(response.HashtableResponse["name"], "test");
+        }
     }
 }
