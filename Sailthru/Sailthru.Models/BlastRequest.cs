@@ -247,15 +247,6 @@ namespace Sailthru.Models
         public int EmailHourRange { get; set; }
 
         /// <summary>
-        /// Gets or sets the test percent.
-        /// </summary>
-        /// <value>
-        /// The test percent.
-        /// </value>
-        [JsonProperty(PropertyName = "test_percent")]
-        public int TestPercent { get; set; }
-
-        /// <summary>
         /// Gets or sets the data feed URL.
         /// </summary>
         /// <value>
