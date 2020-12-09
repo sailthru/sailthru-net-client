@@ -63,6 +63,11 @@ namespace Sailthru.Tests.Mock
             {
                 response = ProcessRequestInternal(context);
             }
+            catch (ApiException ex)
+            {
+                statusCode = 400;
+                response = ex.Response;
+            }
             catch (FileNotFoundException)
             {
                 statusCode = 404;
@@ -124,6 +129,10 @@ namespace Sailthru.Tests.Mock
             else if (method == "POST" && path == "/blast")
             {
                 return BlastApi.ProcessPost(requestBody);
+            }
+            else if (method == "POST" && path == "/content")
+            {
+                return ContentApi.ProcessPost(requestBody);
             }
             else
             {

@@ -218,5 +218,19 @@ namespace Sailthru.Tests
             Assert.AreEqual(response.HashtableResponse["status"], "created");
             Assert.AreEqual(response.HashtableResponse["name"], "test");
         }
+
+        [Test]
+        public void SetContentWithUrl()
+        {
+            ContentRequest request = new ContentRequest();
+            request.Url = "http://example.com/product";
+
+            SailthruResponse response = client.SetContent(request);
+            Assert.IsTrue(response.IsOK());
+
+            ArrayList contents = response.HashtableResponse["content"] as ArrayList;
+            Hashtable content = contents[0] as Hashtable;
+            Assert.AreEqual(content["url"], request.Url);
+        }
     }
 }
