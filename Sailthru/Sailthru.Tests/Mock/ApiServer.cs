@@ -125,6 +125,10 @@ namespace Sailthru.Tests.Mock
             {
                 return BlastApi.ProcessPost(requestBody);
             }
+            else if (method == "POST" && path == "/send")
+            {
+                return SendApi.ProcessPost(requestBody);
+            }
             else
             {
                 throw new FileNotFoundException();
