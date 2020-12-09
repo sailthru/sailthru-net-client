@@ -5,10 +5,10 @@ namespace Sailthru.Tests.Mock
     public class ErrorResponse
     {
         [JsonProperty]
-        private int error;
+        private readonly int error;
 
         [JsonProperty]
-        private string errormsg;
+        private readonly string errormsg;
 
         public ErrorResponse(int error, string errormsg)
         {

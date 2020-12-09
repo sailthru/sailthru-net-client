@@ -220,6 +220,36 @@ namespace Sailthru.Tests
         }
 
         [Test]
+        public void Send()
+        {
+            SendRequest request = new SendRequest();
+            request.Email = "test+123@sailthru.com";
+            request.Template = "Sandbox Image Template";
+            request.DataFeedUrl = "https://feed.sailthru.com/ws/feed?id=59010e2dade9c209738b456a";
+            request.Vars = new Hashtable
+            {
+                ["hello"] = "world"
+            };
+
+            SailthruResponse response = client.Send(request);
+            Assert.IsTrue(response.IsOK());
+            Assert.AreEqual(request.Email, response.HashtableResponse["email"]);
+            Assert.AreEqual(request.Template, response.HashtableResponse["template"]);
+        }
+
+        [Test]
+        public void SendMissingTemplate()
+        {
+            SendRequest request = new SendRequest();
+            request.Email = "test+123@sailthru.com";
+            request.Template = "Not Exist";
+
+            SailthruResponse response = client.Send(request);
+            Assert.IsFalse(response.IsOK());
+            Assert.AreEqual(14, response.HashtableResponse["error"]);
+        }
+
+	[Test]
         public void SetContentWithUrl()
         {
             ContentRequest request = new ContentRequest();
