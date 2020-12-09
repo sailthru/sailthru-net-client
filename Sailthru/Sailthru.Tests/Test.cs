@@ -232,5 +232,40 @@ namespace Sailthru.Tests
             Hashtable content = contents[0] as Hashtable;
             Assert.AreEqual(content["url"], request.Url);
         }
+
+        [Test]
+        public void SetContentWithId()
+        {
+            ContentRequest request = new ContentRequest();
+            request.Id = "http://example.com/product";
+            request.Key = "url";
+            request.Keys = new Hashtable
+            {
+                ["sku"] = "123abc"
+            };
+            request.Title = "Product Name Here";
+            request.Description = "Product info text goes here.";
+            request.Date = DateTime.Now.ToString();
+            request.Tags = new string[] { "blue", "jeans", "size-m" };
+            request.Vars = new Hashtable
+            {
+                ["var1"] = "var1 value"
+            };
+            request.Images = new Hashtable
+            {
+                ["full"] = new Hashtable
+                {
+                    ["url"] = "http://example.com/images/product.jpg"
+                }
+            };
+            request.SiteName = "Store";
+
+            SailthruResponse response = client.SetContent(request);
+            Assert.IsTrue(response.IsOK());
+
+            ArrayList contents = response.HashtableResponse["content"] as ArrayList;
+            Hashtable content = contents[0] as Hashtable;
+            Assert.AreEqual("123abc", content["sku"]);
+        }
     }
 }
