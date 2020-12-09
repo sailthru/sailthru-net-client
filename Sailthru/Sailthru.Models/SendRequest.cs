@@ -63,5 +63,14 @@ namespace Sailthru.Models
         /// </value>
         [JsonProperty(PropertyName = "options")]
         public Hashtable Options { get; set; }
+
+        /// <summary>
+        /// Gets or sets the data feed URL.
+        /// </summary>
+        /// <value>
+        /// The data feed URL.
+        /// </value>
+        [JsonProperty(PropertyName = "data_feed_url")]
+        public string DataFeedUrl { get; set; }
     }
 }
