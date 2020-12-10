@@ -187,7 +187,7 @@
         /// The price.
         /// </value>
         [JsonProperty(PropertyName = "price")]
-        public int Price { get; set; }
+        public int? Price { get; set; }
 
         /// <summary>
         /// Gets or sets the inventory.
@@ -196,7 +196,7 @@
         /// The inventory
         /// </value>
         [JsonProperty(PropertyName = "inventory")]
-        public int Inventory { get; set; }
+        public int? Inventory { get; set; }
 
         /// <summary>
         /// Gets or sets the override exclude.
