@@ -268,6 +268,16 @@ namespace Sailthru.Tests
         }
 
         [Test]
+        public void GetContents()
+        {
+            SailthruResponse response = client.GetContents(3);
+            Assert.IsTrue(response.IsOK());
+
+            ArrayList contents = response.HashtableResponse["content"] as ArrayList;
+            Assert.AreEqual(3, contents.Count);
+        }
+
+        [Test]
         public void SetContentWithUrl()
         {
             ContentRequest request = new ContentRequest();
