@@ -1,5 +1,6 @@
 language: csharp
 solution: Sailthru/Sailthru.sln
+dist: bionic
 
 jobs:
   include:
