@@ -6,6 +6,51 @@ namespace Sailthru.Tests.Mock
 {
     public static class ContentApi
     {
+        public static object ProcessGet(JObject request)
+        {
+            request = ConvertUrlFieldToUrlKey(request);
+
+            if (request.ContainsKey("id"))
+            {
+                string key = GetAndValidateKey(request);
+                string id = request["id"].Value<string>();
+
+                if (id == "http://www.sailthru.com/welcome-emails-your-first-hand-shake-with-your-new-user")
+                {
+                    return new Dictionary<string, object>
+                    {
+                        ["url"] = id,
+                        ["author"] = "Marketing Team",
+                        ["site_name"] = "Sailthru"
+                    };
+                }
+                else
+                {
+                    throw new ApiException(99, "Content not found: " + id, 404);
+                }
+            }
+            else
+            {
+                int numItems = request.ContainsKey("items") ? request["items"].Value<int>() : 20;
+
+                List<Dictionary<string, object>> items = new List<Dictionary<string, object>>();
+
+                for (int i = 0; i < numItems; i++)
+                {
+                    items.Add(new Dictionary<string, object>
+                    {
+                        ["url"] = "http://example.com/" + i,
+                        ["title"] = "Item Number: " + i
+                    });
+                }
+
+                return new Dictionary<string, object>
+                {
+                    ["content"] = items
+                };
+            }
+        }
+
         public static object ProcessPost(JObject request)
         {
             request = ConvertUrlFieldToUrlKey(request);

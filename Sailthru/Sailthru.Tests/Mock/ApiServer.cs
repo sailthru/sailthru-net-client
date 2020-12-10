@@ -134,6 +134,10 @@ namespace Sailthru.Tests.Mock
             {
                 return ContentApi.ProcessPost(requestBody);
             }
+            else if (method == "GET" && path == "/content")
+            {
+                return ContentApi.ProcessGet(requestBody);
+            }
             else if (method == "POST" && path == "/send")
             {
                 return SendApi.ProcessPost(requestBody);
