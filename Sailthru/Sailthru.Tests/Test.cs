@@ -250,6 +250,24 @@ namespace Sailthru.Tests
         }
 
         [Test]
+        public void GetContent()
+        {
+            SailthruResponse response = client.GetContent("http://www.sailthru.com/welcome-emails-your-first-hand-shake-with-your-new-user");
+            Assert.IsTrue(response.IsOK());
+
+            Assert.AreEqual("Marketing Team", response.HashtableResponse["author"]);
+            Assert.AreEqual("Sailthru", response.HashtableResponse["site_name"]);
+        }
+
+        [Test]
+        public void GetMissingContent()
+        {
+            SailthruResponse response = client.GetContent("http://example.com/missing");
+            Assert.IsFalse(response.IsOK());
+            Assert.That(((string)response.HashtableResponse["errormsg"]).StartsWith("Content not found", StringComparison.Ordinal));
+        }
+
+        [Test]
         public void SetContentWithUrl()
         {
             ContentRequest request = new ContentRequest();
