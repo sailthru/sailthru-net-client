@@ -165,12 +165,24 @@ namespace Sailthru.Tests.Mock
                 throw new NotSupportedException("only json format is supported");
             }
 
-            if (dict["json"] == null || dict["api_key"] == null || dict["sig"] == null)
+            if (dict["api_key"] == null || dict["sig"] == null)
             {
                 throw new NotSupportedException("required field is missing");
             }
 
-            return JsonConvert.DeserializeObject(dict["json"]) as JObject;
+            if (dict["json"] != null)
+            {
+                return JsonConvert.DeserializeObject(dict["json"]) as JObject;
+            }
+            else
+            {
+                JObject obj = new JObject();
+                foreach (string key in dict)
+                {
+                    obj.Add(key, JValue.CreateString(dict[key]));
+                }
+                return obj;
+            }
         }
 
         private NameValueCollection DecodeRequest(HttpListenerRequest request)
