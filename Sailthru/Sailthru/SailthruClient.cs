@@ -276,6 +276,7 @@ namespace Sailthru
         /// <param name="strEmail"></param>
         /// <returns></returns>
         /// <seealso cref="http://docs.sailthru.com/api/email"/>
+        [Obsolete("This endpoint is deprecated. Use GetUser instead.")]
         public SailthruResponse GetEmail(string email)
         {
             Hashtable parameters = new Hashtable();
@@ -290,6 +291,7 @@ namespace Sailthru
         /// <param name="request"></param>
         /// <returns></returns>
         /// <seealso cref="http://docs.sailthru.com/api/email"/>
+        [Obsolete("This endpoint is deprecated. Use GetUser instead.")]
         public SailthruResponse GetEmail (EmailRequest request)
         {
             Hashtable hashForPost = new Hashtable();
@@ -315,6 +317,7 @@ namespace Sailthru
         /// <param name="sendVars">Send vars to set on the user. Does not support hashtables or arrays</param>
         /// <returns></returns>
         /// <seealso cref="http://docs.sailthru.com/api/email"/>
+        [Obsolete("This endpoint is deprecated. Use SetUser instead.")]
         public SailthruResponse SetEmail(string strEmail, 
             Hashtable htVars = null, 
             Hashtable htLists = null, 
@@ -392,6 +395,7 @@ namespace Sailthru
         /// <param name="request">EmailRequest parameters.</param>
         /// <returns></returns>
         /// <seealso cref="http://docs.sailthru.com/api/email"/>
+        [Obsolete("This endpoint is deprecated. Use SetUser instead.")]
         public SailthruResponse SetEmail(EmailRequest request)
         {
             Hashtable hashForPost = new Hashtable();
