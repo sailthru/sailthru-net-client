@@ -15,6 +15,7 @@ namespace Sailthru.Tests.Mock
             string name = request["name"].Value<string>();
             string subject = request["subject"].Value<string>();
             string list = request["list"].Value<string>();
+            string linkDomain = request["link_domain"].Value<string>();
             string modifyTime = DateTime.Now.ToLocalTime().ToString("ddd, dd MMM yyyy HH:mm:ss zzz");
 
             return new Dictionary<string, object>
@@ -24,6 +25,7 @@ namespace Sailthru.Tests.Mock
                 ["subject"] = subject,
                 ["list"] = list,
                 ["modify_time"] = modifyTime,
+                ["link_domain"] = linkDomain,
                 ["status"] = "created"
             };
         }
