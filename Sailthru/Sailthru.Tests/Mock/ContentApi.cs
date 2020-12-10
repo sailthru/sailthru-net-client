@@ -17,7 +17,7 @@ namespace Sailthru.Tests.Mock
 
             if (key != "url" && !exist)
             {
-                throw new ApiException(99, "You may not insert a content without url");
+                throw new ApiException(99, "You may not insert a content without url", 400);
             }
 
             Dictionary<string, object> content = new Dictionary<string, object>
@@ -60,13 +60,13 @@ namespace Sailthru.Tests.Mock
             {
                 if (!request.ContainsKey("id"))
                 {
-                    throw new ApiException(99, "Missing required parameter: id/url");
+                    throw new ApiException(99, "Missing required parameter: id/url", 400);
                 }
 
                 id = request.Value<string>("id");
                 if (!Uri.TryCreate(id, UriKind.Absolute, out Uri uri))
                 {
-                    throw new ApiException(99, "Invalid Url: " + id);
+                    throw new ApiException(99, "Invalid Url: " + id, 400);
                 }
 
                 key = "url";
@@ -75,7 +75,7 @@ namespace Sailthru.Tests.Mock
             {
                 if (key != "url" && key != "sku")
                 {
-                    throw new ApiException(99, "Content is not enabled for " + key + " lookup");
+                    throw new ApiException(99, "Content is not enabled for " + key + " lookup", 400);
                 }
             }
 

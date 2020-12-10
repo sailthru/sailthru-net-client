@@ -5,9 +5,12 @@ namespace Sailthru.Tests.Mock
     {
         public ErrorResponse Response { get; private set; }
 
-        public ApiException(int error, string errormsg)
+        public int StatusCode { get; private set; }
+
+        public ApiException(int error, string errormsg, int statusCode)
         {
             Response = new ErrorResponse(error, errormsg);
+            StatusCode = statusCode;
         }
     }
 }

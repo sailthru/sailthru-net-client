@@ -65,7 +65,7 @@ namespace Sailthru.Tests.Mock
             }
             catch (ApiException ex)
             {
-                statusCode = 400;
+                statusCode = ex.StatusCode;
                 response = ex.Response;
             }
             catch (FileNotFoundException)
