@@ -65,6 +65,11 @@ namespace Sailthru.Tests.Mock
                 throw new ApiException(99, "You may not insert a content without url", 400);
             }
 
+            if (request.ContainsKey("override_exclude") && request["override_exclude"].Value<int>() != 1)
+            {
+                throw new ApiException(99, "Override exclude must either be unset or equal to 1", 400);
+            }
+
             Dictionary<string, object> content = new Dictionary<string, object>
             {
                 ["url"] = id,

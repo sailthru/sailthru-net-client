@@ -7,6 +7,7 @@ using System.Collections.Generic;
 using System.IO;
 using static Sailthru.Models.UserRequest;
 using Newtonsoft.Json;
+using static Sailthru.Models.ContentRequest;
 
 namespace Sailthru.Tests
 {
@@ -319,6 +320,7 @@ namespace Sailthru.Tests
             request.SiteName = "Store";
             request.Price = 1299;
             request.Inventory = 100;
+            request.OverrideExclude = OverrideExcludeType.Enabled;
 
             SailthruResponse response = client.SetContent(request);
             Assert.IsTrue(response.IsOK());
