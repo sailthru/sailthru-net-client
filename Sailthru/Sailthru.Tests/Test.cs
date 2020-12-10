@@ -221,6 +221,32 @@ namespace Sailthru.Tests
         }
 
         [Test]
+        public void PostScheduledBlast()
+        {
+            string content = @"Lorem ipsum dolor sit amet, consectetuer adipiscing elit.
+            Aenean commodo ligula eget dolor.Aenean massa.
+            Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus.
+            Donec quam felis, ultricies nec, pellentesque eu, pretium quis, sem.
+            Nulla consequat massa quis enim.Donec pede justo, fringilla vel, aliquet nec, vulputate eget, arcu.
+            In enim justo, rhoncus ut, imperdiet a, venenatis vitae, justo.";
+
+            BlastRequest request = new BlastRequest();
+            request.Name = "Blast Name1";
+            request.ContentHtml = content;
+            request.ContentText = content;
+            request.List = "List With 2 Users";
+            request.Subject = "Sample Subject";
+            request.ScheduleTime = "+3 hours";
+            request.FromName = "C# Client";
+            request.FromEmail = "danny+fake@sailthru.com";
+
+            SailthruResponse response = client.ScheduleBlast(request);
+            Assert.IsTrue(response.IsOK());
+            Assert.AreEqual(response.HashtableResponse["status"], "scheduled");
+            Assert.AreEqual(response.HashtableResponse["name"], "Blast Name1");
+        }
+
+        [Test]
         public void Send()
         {
             SendRequest request = new SendRequest();
