@@ -8,6 +8,7 @@ using System.IO;
 using static Sailthru.Models.UserRequest;
 using Newtonsoft.Json;
 using static Sailthru.Models.ContentRequest;
+using static Sailthru.Models.BlastRequest;
 
 namespace Sailthru.Tests
 {
@@ -218,6 +219,24 @@ namespace Sailthru.Tests
             Assert.IsTrue(response.IsOK());
             Assert.AreEqual(response.HashtableResponse["status"], "created");
             Assert.AreEqual(response.HashtableResponse["name"], "test");
+        }
+
+        [Test]
+        public void PostRetargetingBlastMissingId()
+        {
+            BlastRequest request = new BlastRequest
+            {
+                Name = "test",
+                List = "list",
+                Subject = "test",
+                ScheduleTime = "+3 hours",
+                MessageCriteria = MessageCriteriaType.NotOpened,
+                PreviousBlastId = 500
+            };
+
+            SailthruResponse response = client.ScheduleBlast(request);
+            Assert.IsFalse(response.IsOK());
+            Assert.AreEqual("No blast found with id: 500", response.HashtableResponse["errormsg"]);
         }
 
         [Test]
