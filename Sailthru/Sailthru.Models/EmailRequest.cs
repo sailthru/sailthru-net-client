@@ -17,11 +17,13 @@ namespace Sailthru.Models
     /// Request object used for interaction with the email API.
     /// </summary>
     [JsonObject(MemberSerialization.OptIn)]
+    [Obsolete]
     public class EmailRequest
     {
         /// <summary>
         /// Flag to determine the list subscription options.
         /// </summary>
+        [Obsolete]
         public enum ListType
         {
             /// <summary>
@@ -38,6 +40,7 @@ namespace Sailthru.Models
         /// <summary>
         /// Flag to determine the template opt-in options.
         /// </summary>
+        [Obsolete]
         public enum TemplateType
         {
             /// <summary>
