@@ -299,5 +299,14 @@ namespace Sailthru.Models
         /// </value>
         [JsonProperty(PropertyName = "test_email")]
         public string TestEmail { get; set; }
+
+        /// <summary>
+        /// Gets or sets the link domain.
+        /// </summary>
+        /// <value>
+        /// The link domain.
+        /// </value>
+        [JsonProperty(PropertyName = "link_domain")]
+        public string LinkDomain { get; set; }
     }
 }
