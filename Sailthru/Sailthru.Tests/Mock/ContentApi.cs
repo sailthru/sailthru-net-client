@@ -74,6 +74,8 @@ namespace Sailthru.Tests.Mock
                 ["site_name"] = request["site_name"],
                 ["vars"] = request["vars"],
                 ["images"] = request["images"],
+                ["price"] = request["price"],
+                ["inventory"] = request["inventory"],
             };
 
             if (request["keys"] is JObject keys && keys.ContainsKey("sku"))

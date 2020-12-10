@@ -317,6 +317,8 @@ namespace Sailthru.Tests
                 }
             };
             request.SiteName = "Store";
+            request.Price = 1299;
+            request.Inventory = 100;
 
             SailthruResponse response = client.SetContent(request);
             Assert.IsTrue(response.IsOK());
@@ -324,6 +326,8 @@ namespace Sailthru.Tests
             ArrayList contents = response.HashtableResponse["content"] as ArrayList;
             Hashtable content = contents[0] as Hashtable;
             Assert.AreEqual("123abc", content["sku"]);
+            Assert.AreEqual(1299, content["price"]);
+            Assert.AreEqual(100, content["inventory"]);
         }
     }
 }
