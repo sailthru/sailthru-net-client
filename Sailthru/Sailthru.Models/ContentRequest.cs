@@ -30,6 +30,49 @@
         }
 
         /// <summary>
+        /// Flag to determine whether to override exclude filtering options.
+        /// </summary>
+        public enum OverrideExcludeType
+        {
+            /// <summary>
+            /// Disable override exclude.
+            /// </summary>
+            Disabled = 0,
+
+            /// <summary>
+            /// Enable override exclude.
+            /// </summary>
+            Enabled = 1
+        }
+
+        /// <summary>
+        /// Gets or sets the ID.
+        /// </summary>
+        /// <value>
+        /// The ID.
+        /// </value>
+        [JsonProperty(PropertyName = "id")]
+        public string Id { get; set; }
+
+        /// <summary>
+        /// Gets or sets the key.
+        /// </summary>
+        /// <value>
+        /// The key.
+        /// </value>
+        [JsonProperty(PropertyName = "key")]
+        public string Key { get; set; }
+
+        /// <summary>
+        /// Gets or sets the keys.
+        /// </summary>
+        /// <value>
+        /// The keys.
+        /// </value>
+        [JsonProperty(PropertyName = "keys")]
+        public Hashtable Keys { get; set; }
+
+        /// <summary>
         /// Gets or sets the url.
         /// </summary>
         /// <value>
@@ -136,5 +179,32 @@
         /// </value>
         [JsonProperty(PropertyName = "spider")]
         public SpiderType Spider { get; set; }
-   }
+
+        /// <summary>
+        /// Gets or sets the price.
+        /// </summary>
+        /// <value>
+        /// The price.
+        /// </value>
+        [JsonProperty(PropertyName = "price")]
+        public int? Price { get; set; }
+
+        /// <summary>
+        /// Gets or sets the inventory.
+        /// </summary>
+        /// <value>
+        /// The inventory
+        /// </value>
+        [JsonProperty(PropertyName = "inventory")]
+        public int? Inventory { get; set; }
+
+        /// <summary>
+        /// Gets or sets the override exclude.
+        /// </summary>
+        /// <value>
+        /// The override exclude.
+        /// </value>
+        [JsonProperty(PropertyName = "override_exclude", DefaultValueHandling = DefaultValueHandling.Ignore)]
+        public OverrideExcludeType OverrideExclude { get; set; }
+    }
 }

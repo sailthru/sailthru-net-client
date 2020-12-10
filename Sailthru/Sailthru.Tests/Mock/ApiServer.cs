@@ -63,6 +63,11 @@ namespace Sailthru.Tests.Mock
             {
                 response = ProcessRequestInternal(context);
             }
+            catch (ApiException ex)
+            {
+                statusCode = ex.StatusCode;
+                response = ex.Response;
+            }
             catch (FileNotFoundException)
             {
                 statusCode = 404;
@@ -125,6 +130,14 @@ namespace Sailthru.Tests.Mock
             {
                 return BlastApi.ProcessPost(requestBody);
             }
+            else if (method == "POST" && path == "/content")
+            {
+                return ContentApi.ProcessPost(requestBody);
+            }
+            else if (method == "GET" && path == "/content")
+            {
+                return ContentApi.ProcessGet(requestBody);
+            }
             else if (method == "POST" && path == "/send")
             {
                 return SendApi.ProcessPost(requestBody);
@@ -156,12 +169,24 @@ namespace Sailthru.Tests.Mock
                 throw new NotSupportedException("only json format is supported");
             }
 
-            if (dict["json"] == null || dict["api_key"] == null || dict["sig"] == null)
+            if (dict["api_key"] == null || dict["sig"] == null)
             {
                 throw new NotSupportedException("required field is missing");
             }
 
-            return JsonConvert.DeserializeObject(dict["json"]) as JObject;
+            if (dict["json"] != null)
+            {
+                return JsonConvert.DeserializeObject(dict["json"]) as JObject;
+            }
+            else
+            {
+                JObject obj = new JObject();
+                foreach (string key in dict)
+                {
+                    obj.Add(key, JValue.CreateString(dict[key]));
+                }
+                return obj;
+            }
         }
 
         private NameValueCollection DecodeRequest(HttpListenerRequest request)

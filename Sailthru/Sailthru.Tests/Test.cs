@@ -7,6 +7,7 @@ using System.Collections.Generic;
 using System.IO;
 using static Sailthru.Models.UserRequest;
 using Newtonsoft.Json;
+using static Sailthru.Models.ContentRequest;
 
 namespace Sailthru.Tests
 {
@@ -247,6 +248,88 @@ namespace Sailthru.Tests
             SailthruResponse response = client.Send(request);
             Assert.IsFalse(response.IsOK());
             Assert.AreEqual(14, response.HashtableResponse["error"]);
+        }
+
+        [Test]
+        public void GetContent()
+        {
+            SailthruResponse response = client.GetContent("http://www.sailthru.com/welcome-emails-your-first-hand-shake-with-your-new-user");
+            Assert.IsTrue(response.IsOK());
+
+            Assert.AreEqual("Marketing Team", response.HashtableResponse["author"]);
+            Assert.AreEqual("Sailthru", response.HashtableResponse["site_name"]);
+        }
+
+        [Test]
+        public void GetMissingContent()
+        {
+            SailthruResponse response = client.GetContent("http://example.com/missing");
+            Assert.IsFalse(response.IsOK());
+            Assert.That(((string)response.HashtableResponse["errormsg"]).StartsWith("Content not found", StringComparison.Ordinal));
+        }
+
+        [Test]
+        public void GetContents()
+        {
+            SailthruResponse response = client.GetContents(3);
+            Assert.IsTrue(response.IsOK());
+
+            ArrayList contents = response.HashtableResponse["content"] as ArrayList;
+            Assert.AreEqual(3, contents.Count);
+        }
+
+        [Test]
+        public void SetContentWithUrl()
+        {
+            ContentRequest request = new ContentRequest();
+            request.Url = "http://example.com/product";
+
+            SailthruResponse response = client.SetContent(request);
+            Assert.IsTrue(response.IsOK());
+
+            ArrayList contents = response.HashtableResponse["content"] as ArrayList;
+            Hashtable content = contents[0] as Hashtable;
+            Assert.AreEqual(content["url"], request.Url);
+        }
+
+        [Test]
+        public void SetContentWithId()
+        {
+            ContentRequest request = new ContentRequest();
+            request.Id = "http://example.com/product";
+            request.Key = "url";
+            request.Keys = new Hashtable
+            {
+                ["sku"] = "123abc"
+            };
+            request.Title = "Product Name Here";
+            request.Description = "Product info text goes here.";
+            request.Date = DateTime.Now.ToString();
+            request.Tags = new string[] { "blue", "jeans", "size-m" };
+            request.Vars = new Hashtable
+            {
+                ["var1"] = "var1 value"
+            };
+            request.Images = new Hashtable
+            {
+                ["full"] = new Hashtable
+                {
+                    ["url"] = "http://example.com/images/product.jpg"
+                }
+            };
+            request.SiteName = "Store";
+            request.Price = 1299;
+            request.Inventory = 100;
+            request.OverrideExclude = OverrideExcludeType.Enabled;
+
+            SailthruResponse response = client.SetContent(request);
+            Assert.IsTrue(response.IsOK());
+
+            ArrayList contents = response.HashtableResponse["content"] as ArrayList;
+            Hashtable content = contents[0] as Hashtable;
+            Assert.AreEqual("123abc", content["sku"]);
+            Assert.AreEqual(1299, content["price"]);
+            Assert.AreEqual(100, content["inventory"]);
         }
     }
 }

@@ -699,7 +699,19 @@ namespace Sailthru
         public SailthruResponse GetContent (string url)
         {
             Hashtable hashForPost = new Hashtable();
-            hashForPost.Add ("url", url);
+            hashForPost.Add("url", url);
+            return this.ApiGet("content", hashForPost);
+        }
+
+        /// <summary>
+        /// Gets the most recent pieces of content.
+        /// </summary>
+        /// <returns>The contents.</returns>
+        /// <param name="items">Number of items to return.</param>
+        public SailthruResponse GetContents(int items)
+        {
+            Hashtable hashForPost = new Hashtable();
+            hashForPost.Add("items", items);
             return this.ApiGet("content", hashForPost);
         }
 
