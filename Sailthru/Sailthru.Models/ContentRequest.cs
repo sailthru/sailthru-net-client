@@ -163,5 +163,23 @@
         /// </value>
         [JsonProperty(PropertyName = "spider")]
         public SpiderType Spider { get; set; }
-   }
+
+        /// <summary>
+        /// Gets or sets the price.
+        /// </summary>
+        /// <value>
+        /// The price.
+        /// </value>
+        [JsonProperty(PropertyName = "price")]
+        public int Price { get; set; }
+
+        /// <summary>
+        /// Gets or sets the inventory.
+        /// </summary>
+        /// <value>
+        /// The inventory
+        /// </value>
+        [JsonProperty(PropertyName = "inventory")]
+        public int Inventory { get; set; }
+    }
 }
