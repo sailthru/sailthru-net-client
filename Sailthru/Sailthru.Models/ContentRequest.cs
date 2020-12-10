@@ -30,6 +30,22 @@
         }
 
         /// <summary>
+        /// Flag to determine whether to override exclude filtering options.
+        /// </summary>
+        public enum OverrideExcludeType
+        {
+            /// <summary>
+            /// Disable override exclude.
+            /// </summary>
+            Disabled = 0,
+
+            /// <summary>
+            /// Enable override exclude.
+            /// </summary>
+            Enabled = 1
+        }
+
+        /// <summary>
         /// Gets or sets the ID.
         /// </summary>
         /// <value>
@@ -181,5 +197,14 @@
         /// </value>
         [JsonProperty(PropertyName = "inventory")]
         public int Inventory { get; set; }
+
+        /// <summary>
+        /// Gets or sets the override exclude.
+        /// </summary>
+        /// <value>
+        /// The override exclude.
+        /// </value>
+        [JsonProperty(PropertyName = "override_exclude", DefaultValueHandling = DefaultValueHandling.Ignore)]
+        public OverrideExcludeType OverrideExclude { get; set; }
     }
 }
