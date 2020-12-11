@@ -261,12 +261,18 @@ namespace Sailthru.Tests
             request.FromName = "C# Client";
             request.FromEmail = "danny+fake@sailthru.com";
             request.SeedEmails = new string[] { "seed1@example.com", "seed2@example.com" };
+            request.Labels = new Dictionary<string, LabelType>
+            {
+                ["AddLabel"] = LabelType.Add,
+                ["RemoveLabel"] = LabelType.Remove
+            };
 
             SailthruResponse response = client.ScheduleBlast(request);
             Assert.IsTrue(response.IsOK());
             Assert.AreEqual("Blast Name1", response.HashtableResponse["name"]);
             Assert.AreEqual("scheduled", response.HashtableResponse["status"]);
             Assert.AreEqual(request.SeedEmails, response.HashtableResponse["seed_emails"]);
+            Assert.AreEqual(new string[] { "AddLabel" }, response.HashtableResponse["labels"]);
         }
 
         [Test]

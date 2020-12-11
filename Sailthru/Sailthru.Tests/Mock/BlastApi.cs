@@ -19,6 +19,16 @@ namespace Sailthru.Tests.Mock
             string linkDomain = (string)request["link_domain"];
             string status = (string)request["status"];
             string[] seedEmails = request["seed_emails"].Value<string[]>();
+            Dictionary<string, int> labels = request["labels"].Value<Dictionary<string, int>>();
+
+            List<string> blastLabels = new List<string>();
+            foreach (KeyValuePair<string, int> label in labels)
+            {
+                if (label.Value == 1)
+                {
+                    blastLabels.Add(label.Key);
+                }
+            }
 
             if (status == null)
             {
@@ -56,6 +66,7 @@ namespace Sailthru.Tests.Mock
                 ["modify_time"] = modifyTime,
                 ["link_domain"] = linkDomain,
                 ["seed_emails"] = seedEmails,
+                ["labels"] = labels,
                 ["status"] = status
             };
 
