@@ -94,6 +94,35 @@ namespace Sailthru.Models
         }
 
         /// <summary>
+        /// Blast status.
+        /// </summary>
+        [JsonConverter(typeof(StringEnumConverter))]
+        public enum StatusType
+        {
+            [EnumMember(Value = "draft")]
+            Draft,
+
+            [EnumMember(Value = "scheduled")]
+            Scheduled
+        }
+
+        /// <summary>
+        /// Flag to determine blast labels.
+        /// </summary>
+        public enum LabelType
+        {
+            /// <summary>
+            /// Remove label from the blast.
+            /// </summary>
+            Remove = 0,
+
+            /// <summary>
+            /// Add the label to the blast.
+            /// </summary>
+            Add = 1
+        }
+
+        /// <summary>
         /// Gets or sets the name.
         /// </summary>
         /// <value>
@@ -344,5 +373,41 @@ namespace Sailthru.Models
         /// </value>
         [JsonProperty(PropertyName = "previous_blast_id")]
         public int? PreviousBlastId { get; set; }
+        
+        /// <summary>
+        /// Gets or sets the link domain.
+        /// </summary>
+        /// <value>
+        /// The link domain.
+        /// </value>
+        [JsonProperty(PropertyName = "link_domain")]
+        public string LinkDomain { get; set; }
+
+        /// <summary>
+        /// Gets or sets the status.
+        /// </summary>
+        /// <value>
+        /// The status.
+        /// </value>
+        [JsonProperty(PropertyName = "status")]
+        public StatusType? Status { get; set; }
+
+        /// <summary>
+        /// Gets or sets the seed emails.
+        /// </summary>
+        /// <value>
+        /// The seed emails.
+        /// </value>
+        [JsonProperty(PropertyName = "seed_emails")]
+        public string[] SeedEmails { get; set; }
+
+        /// <summary>
+        /// Gets or sets the labels.
+        /// </summary>
+        /// <value>
+        /// The labels.
+        /// </value>
+        [JsonProperty(PropertyName = "labels")]
+        public Dictionary<string, LabelType> Labels { get; set; }
     }
 }

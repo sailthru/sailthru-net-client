@@ -212,7 +212,9 @@ namespace Sailthru.Tests
             {
                 Name = "test",
                 List = "list",
-                Subject = "test"
+                Subject = "test",
+                ScheduleTime = "+3 hours",
+                Status = StatusType.Draft
             };
 
             SailthruResponse response = client.ScheduleBlast(request);
@@ -237,6 +239,56 @@ namespace Sailthru.Tests
             SailthruResponse response = client.ScheduleBlast(request);
             Assert.IsFalse(response.IsOK());
             Assert.AreEqual("No blast found with id: 500", response.HashtableResponse["errormsg"]);
+        }
+
+        [Test]
+        public void PostScheduledBlast()
+        {
+            string content = @"Lorem ipsum dolor sit amet, consectetuer adipiscing elit.
+            Aenean commodo ligula eget dolor.Aenean massa.
+            Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus.
+            Donec quam felis, ultricies nec, pellentesque eu, pretium quis, sem.
+            Nulla consequat massa quis enim.Donec pede justo, fringilla vel, aliquet nec, vulputate eget, arcu.
+            In enim justo, rhoncus ut, imperdiet a, venenatis vitae, justo.";
+
+            BlastRequest request = new BlastRequest();
+            request.Name = "Blast Name1";
+            request.ContentHtml = content;
+            request.ContentText = content;
+            request.List = "List With 2 Users";
+            request.Subject = "Sample Subject";
+            request.ScheduleTime = "+3 hours";
+            request.FromName = "C# Client";
+            request.FromEmail = "danny+fake@sailthru.com";
+            request.SeedEmails = new string[] { "seed1@example.com", "seed2@example.com" };
+            request.Labels = new Dictionary<string, LabelType>
+            {
+                ["AddLabel"] = LabelType.Add,
+                ["RemoveLabel"] = LabelType.Remove
+            };
+
+            SailthruResponse response = client.ScheduleBlast(request);
+            Assert.IsTrue(response.IsOK());
+            Assert.AreEqual("Blast Name1", response.HashtableResponse["name"]);
+            Assert.AreEqual("scheduled", response.HashtableResponse["status"]);
+            Assert.AreEqual(request.SeedEmails, response.HashtableResponse["seed_emails"]);
+            Assert.AreEqual(new string[] { "AddLabel" }, response.HashtableResponse["labels"]);
+        }
+
+        [Test]
+        public void PostScheduledBlastNoScheduleTime()
+        {
+            BlastRequest request = new BlastRequest
+            {
+                Name = "test",
+                List = "list",
+                Subject = "test",
+                Status = StatusType.Scheduled
+            };
+
+            SailthruResponse response = client.ScheduleBlast(request);
+            Assert.IsFalse(response.IsOK());
+            Assert.AreEqual(2, response.HashtableResponse["error"]);
         }
 
         [Test]

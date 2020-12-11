@@ -16,6 +16,49 @@ namespace Sailthru.Tests.Mock
             string subject = request["subject"].Value<string>();
             string list = request["list"].Value<string>();
             string modifyTime = DateTime.Now.ToLocalTime().ToString("ddd, dd MMM yyyy HH:mm:ss zzz");
+            string linkDomain = (string)request["link_domain"];
+            string status = (string)request["status"];
+            JArray seedEmails = request.ContainsKey("seed_emails") ? request["seed_emails"] as JArray : null;
+            JObject labels = request.ContainsKey("labels") ? request["labels"] as JObject : null;
+
+            List<string> blastLabels = new List<string>();
+            if (labels != null)
+            {
+                foreach (KeyValuePair<string, JToken> label in labels)
+                {
+                    if (label.Value.Value<int>() == 1)
+                    {
+                        blastLabels.Add(label.Key);
+                    }
+                }
+            }
+
+            if (status == null)
+            {
+                if (request.ContainsKey("schedule_time"))
+                {
+                    status = "scheduled";
+                }
+                else
+                {
+                    status = "created";
+                }
+            }
+            else
+            {
+                if (status == "scheduled")
+                {
+                    if (!request.ContainsKey("schedule_time"))
+                    {
+                        throw new ApiException(2, "Missing required field: schedule_time for blast", 200);
+                    }
+                }
+                else
+                {
+                    status = "created";
+                }
+            }
+
 
             Dictionary<string, object> blast = new Dictionary<string, object>
             {
@@ -24,7 +67,10 @@ namespace Sailthru.Tests.Mock
                 ["subject"] = subject,
                 ["list"] = list,
                 ["modify_time"] = modifyTime,
-                ["status"] = "created",
+                ["link_domain"] = linkDomain,
+                ["seed_emails"] = seedEmails,
+                ["labels"] = blastLabels,
+                ["status"] = status
             };
 
             if (request.ContainsKey("previous_blast_id"))
