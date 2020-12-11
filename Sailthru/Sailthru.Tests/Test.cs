@@ -263,8 +263,8 @@ namespace Sailthru.Tests
 
             SailthruResponse response = client.ScheduleBlast(request);
             Assert.IsTrue(response.IsOK());
-            Assert.AreEqual(response.HashtableResponse["status"], "scheduled");
-            Assert.AreEqual(response.HashtableResponse["name"], "Blast Name1");
+            Assert.AreEqual("Blast Name1", response.HashtableResponse["name"]);
+            Assert.AreEqual("scheduled", response.HashtableResponse["status"]);
         }
 
         [Test]
