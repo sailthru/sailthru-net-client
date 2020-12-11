@@ -12,6 +12,8 @@ namespace Sailthru.Models
     using System.Text;
     using Newtonsoft.Json;
     using System.Collections;
+    using Newtonsoft.Json.Converters;
+    using System.Runtime.Serialization;
 
     /// <summary>
     /// Request object used for interaction with the blast API.
@@ -64,6 +66,31 @@ namespace Sailthru.Models
             /// Blast is marked as public.
             /// </summary>
             Public = 1
+        }
+
+        /// <summary>
+        /// Message criteria for retargeting campaigns.
+        /// </summary>
+        [JsonConverter(typeof(StringEnumConverter))]
+        public enum MessageCriteriaType
+        {
+            [EnumMember(Value = "not_opened")]
+            NotOpened,
+
+            [EnumMember(Value = "not_clicked")]
+            NotClicked,
+
+            [EnumMember(Value = "not_purchased")]
+            NotPurchased,
+
+            [EnumMember(Value = "opened")]
+            Opened,
+
+            [EnumMember(Value = "clicked")]
+            Clicked,
+
+            [EnumMember(Value = "purchased")]
+            Purchased
         }
 
         /// <summary>
@@ -300,6 +327,24 @@ namespace Sailthru.Models
         [JsonProperty(PropertyName = "test_email")]
         public string TestEmail { get; set; }
 
+        /// <summary>
+        /// Gets or sets the message criteria.
+        /// </summary>
+        /// <value>
+        /// The message criteria.
+        /// </value>
+        [JsonProperty(PropertyName = "message_criteria")]
+        public MessageCriteriaType? MessageCriteria { get; set; }
+
+        /// <summary>
+        /// Gets or sets the previous blast ID.
+        /// </summary>
+        /// <value>
+        /// The previous blast ID.
+        /// </value>
+        [JsonProperty(PropertyName = "previous_blast_id")]
+        public int? PreviousBlastId { get; set; }
+        
         /// <summary>
         /// Gets or sets the link domain.
         /// </summary>
