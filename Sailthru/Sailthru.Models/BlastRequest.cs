@@ -94,6 +94,19 @@ namespace Sailthru.Models
         }
 
         /// <summary>
+        /// Blast status.
+        /// </summary>
+        [JsonConverter(typeof(StringEnumConverter))]
+        public enum StatusType
+        {
+            [EnumMember(Value = "draft")]
+            Draft,
+
+            [EnumMember(Value = "scheduled")]
+            Scheduled
+        }
+
+        /// <summary>
         /// Gets or sets the name.
         /// </summary>
         /// <value>
@@ -353,5 +366,14 @@ namespace Sailthru.Models
         /// </value>
         [JsonProperty(PropertyName = "link_domain")]
         public string LinkDomain { get; set; }
+
+        /// <summary>
+        /// Gets or sets the status.
+        /// </summary>
+        /// <value>
+        /// The status.
+        /// </value>
+        [JsonProperty(PropertyName = "status")]
+        public StatusType? Status { get; set; }
     }
 }
