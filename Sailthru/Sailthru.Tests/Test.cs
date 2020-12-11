@@ -260,11 +260,13 @@ namespace Sailthru.Tests
             request.ScheduleTime = "+3 hours";
             request.FromName = "C# Client";
             request.FromEmail = "danny+fake@sailthru.com";
+            request.SeedEmails = new string[] { "seed1@example.com", "seed2@example.com" };
 
             SailthruResponse response = client.ScheduleBlast(request);
             Assert.IsTrue(response.IsOK());
             Assert.AreEqual("Blast Name1", response.HashtableResponse["name"]);
             Assert.AreEqual("scheduled", response.HashtableResponse["status"]);
+            Assert.AreEqual(request.SeedEmails, response.HashtableResponse["seed_emails"]);
         }
 
         [Test]
