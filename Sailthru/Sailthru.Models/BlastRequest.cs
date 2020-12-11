@@ -107,6 +107,22 @@ namespace Sailthru.Models
         }
 
         /// <summary>
+        /// Flag to determine blast labels.
+        /// </summary>
+        public enum LabelType
+        {
+            /// <summary>
+            /// Remove label from the blast.
+            /// </summary>
+            Remove = 0,
+
+            /// <summary>
+            /// Add the label to the blast.
+            /// </summary>
+            Add = 1
+        }
+
+        /// <summary>
         /// Gets or sets the name.
         /// </summary>
         /// <value>
@@ -384,5 +400,14 @@ namespace Sailthru.Models
         /// </value>
         [JsonProperty(PropertyName = "seed_emails")]
         public string[] SeedEmails { get; set; }
+
+        /// <summary>
+        /// Gets or sets the labels.
+        /// </summary>
+        /// <value>
+        /// The labels.
+        /// </value>
+        [JsonProperty(PropertyName = "labels")]
+        public Dictionary<string, LabelType> Labels { get; set; }
     }
 }
