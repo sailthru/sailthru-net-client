@@ -212,7 +212,9 @@ namespace Sailthru.Tests
             {
                 Name = "test",
                 List = "list",
-                Subject = "test"
+                Subject = "test",
+                ScheduleTime = "+3 hours",
+                Status = StatusType.Draft
             };
 
             SailthruResponse response = client.ScheduleBlast(request);
@@ -263,6 +265,22 @@ namespace Sailthru.Tests
             Assert.IsTrue(response.IsOK());
             Assert.AreEqual(response.HashtableResponse["status"], "scheduled");
             Assert.AreEqual(response.HashtableResponse["name"], "Blast Name1");
+        }
+
+        [Test]
+        public void PostScheduledBlastNoScheduleTime()
+        {
+            BlastRequest request = new BlastRequest
+            {
+                Name = "test",
+                List = "list",
+                Subject = "test",
+                Status = StatusType.Scheduled
+            };
+
+            SailthruResponse response = client.ScheduleBlast(request);
+            Assert.IsFalse(response.IsOK());
+            Assert.AreEqual(2, response.HashtableResponse["error"]);
         }
 
         [Test]

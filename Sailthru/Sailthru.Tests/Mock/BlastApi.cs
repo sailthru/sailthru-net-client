@@ -16,13 +16,35 @@ namespace Sailthru.Tests.Mock
             string subject = request["subject"].Value<string>();
             string list = request["list"].Value<string>();
             string modifyTime = DateTime.Now.ToLocalTime().ToString("ddd, dd MMM yyyy HH:mm:ss zzz");
-            string status = "created";
             string linkDomain = (string)request["link_domain"];
+            string status = (string)request["status"];
 
-            if (request.ContainsKey("schedule_time"))
+            if (status == null)
             {
-                status = "scheduled";
+                if (request.ContainsKey("schedule_time"))
+                {
+                    status = "scheduled";
+                }
+                else
+                {
+                    status = "created";
+                }
             }
+            else
+            {
+                if (status == "scheduled")
+                {
+                    if (!request.ContainsKey("schedule_time"))
+                    {
+                        throw new ApiException(2, "Missing required field: schedule_time for blast", 200);
+                    }
+                }
+                else
+                {
+                    status = "created";
+                }
+            }
+
 
             Dictionary<string, object> blast = new Dictionary<string, object>
             {
