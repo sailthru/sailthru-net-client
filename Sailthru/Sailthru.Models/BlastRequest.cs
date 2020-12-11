@@ -375,5 +375,14 @@ namespace Sailthru.Models
         /// </value>
         [JsonProperty(PropertyName = "status")]
         public StatusType? Status { get; set; }
+
+        /// <summary>
+        /// Gets or sets the seed emails.
+        /// </summary>
+        /// <value>
+        /// The seed emails.
+        /// </value>
+        [JsonProperty(PropertyName = "seed_emails")]
+        public string[] SeedEmails { get; set; }
     }
 }

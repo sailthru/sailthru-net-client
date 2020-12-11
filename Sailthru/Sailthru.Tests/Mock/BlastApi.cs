@@ -18,6 +18,7 @@ namespace Sailthru.Tests.Mock
             string modifyTime = DateTime.Now.ToLocalTime().ToString("ddd, dd MMM yyyy HH:mm:ss zzz");
             string linkDomain = (string)request["link_domain"];
             string status = (string)request["status"];
+            string[] seedEmails = request["seed_emails"].Value<string[]>();
 
             if (status == null)
             {
@@ -54,6 +55,7 @@ namespace Sailthru.Tests.Mock
                 ["list"] = list,
                 ["modify_time"] = modifyTime,
                 ["link_domain"] = linkDomain,
+                ["seed_emails"] = seedEmails,
                 ["status"] = status
             };
 
