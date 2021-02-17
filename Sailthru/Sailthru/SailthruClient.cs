@@ -517,6 +517,21 @@ namespace Sailthru
             return this.ApiPost("purchase", hashForPost);
         }
 
+        /// <summary>
+        /// Start a background job, such as a data import or export.
+        /// </summary>
+        /// <example>
+        /// E.g. update job:
+        /// <code>
+        /// Hashtable updateParams = new Hashtable();
+        /// updateParams.Add("file", "/directory/update.json");
+        /// ProcessJob("update", null, null, updateParams);
+        /// </code>
+        /// </example>
+        /// <param name="jobType">See documentation on Job Types: https://getstarted.sailthru.com/developers/api/job/</param>
+        /// <param name="reportEmail">when job is done, send a report to the email</param>
+        /// <param name="postbackUrl">See documentation: https://getstarted.sailthru.com/developers/api-basics/postbacks/</param>
+        /// <param name="parameters">use key "file" to pass the JSON file to process</param>
         public SailthruResponse ProcessJob(String jobType, String reportEmail, String postbackUrl, Hashtable parameters)
         {
             parameters["job"] = jobType;
