@@ -1,21 +1,17 @@
-﻿using System;
-using System.IO;
+﻿using System.Collections.Specialized;
 using System.Net;
-using System.Threading;
-using System.Web;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
-using System.Collections.Specialized;
 
 namespace Sailthru.Tests.Mock
 {
     public class ApiServer
     {
-        private const String API_URL = "http://localhost:5555";
-        private static JsonSerializerSettings jsonSettings;
+        private const string API_URL = "http://localhost:5555";
+        private static readonly JsonSerializerSettings s_jsonSettings = new() { StringEscapeHandling = StringEscapeHandling.EscapeNonAscii };
 
-        private readonly HttpListener listener;
-        private readonly Thread listenerThread;
+        private readonly HttpListener _listener;
+        private readonly Thread _listenerThread;
 
         public ApiServer()
         {
@@ -24,19 +20,18 @@ namespace Sailthru.Tests.Mock
                 throw new NotSupportedException("HttpListener is not supported on this platform");
             }
 
-            listener = new HttpListener();
-            listener.Prefixes.Add(API_URL + "/");
-            listener.Start();
+            _listener = new HttpListener();
+            _listener.Prefixes.Add(API_URL + "/");
+            _listener.Start();
 
-            listenerThread = new Thread(HandleRequests);
-            listenerThread.IsBackground = true;
-            listenerThread.Start();
-
-            jsonSettings = new JsonSerializerSettings();
-            jsonSettings.StringEscapeHandling = StringEscapeHandling.EscapeNonAscii;
+            _listenerThread = new Thread(HandleRequests)
+            {
+                IsBackground = true
+            };
+            _listenerThread.Start();
         }
 
-        public String ApiUrl
+        public string ApiUrl
         {
             get
             {
@@ -46,9 +41,9 @@ namespace Sailthru.Tests.Mock
 
         private void HandleRequests()
         {
-            while (listener.IsListening)
+            while (_listener.IsListening)
             {
-                ThreadPool.QueueUserWorkItem(ProcessRequest, listener.GetContext());
+                ThreadPool.QueueUserWorkItem(ProcessRequest, _listener.GetContext());
             }
         }
 
@@ -90,9 +85,9 @@ namespace Sailthru.Tests.Mock
             {
                 context.Response.StatusCode = statusCode;
                 context.Response.AddHeader("Content-Type", "application/json");
-                using (StreamWriter writer = new StreamWriter(context.Response.OutputStream))
+                using (StreamWriter writer = new(context.Response.OutputStream))
                 {
-                    writer.Write(JsonConvert.SerializeObject(response, jsonSettings));
+                    writer.Write(JsonConvert.SerializeObject(response, s_jsonSettings));
                 }
             }
 
@@ -180,19 +175,20 @@ namespace Sailthru.Tests.Mock
             }
             else
             {
-                JObject obj = new JObject();
+                JObject obj = new();
                 foreach (string key in dict)
                 {
                     obj.Add(key, JValue.CreateString(dict[key]));
                 }
+
                 return obj;
             }
         }
 
-        private NameValueCollection DecodeRequest(HttpListenerRequest request)
+        private static NameValueCollection DecodeRequest(HttpListenerRequest request)
         {
             string body;
-            using (StreamReader reader = new StreamReader(request.InputStream))
+            using (StreamReader reader = new(request.InputStream))
             {
                 body = reader.ReadToEnd();
             }
@@ -211,9 +207,9 @@ namespace Sailthru.Tests.Mock
             }
         }
 
-        private NameValueCollection DecodeQueryString(string query)
+        private static NameValueCollection DecodeQueryString(string query)
         {
-            NameValueCollection coll = new NameValueCollection();
+            NameValueCollection coll = new();
             foreach (string entry in query.Split('&'))
             {
                 string[] parts = entry.Split(new char[] { '=' }, 2);
@@ -221,6 +217,7 @@ namespace Sailthru.Tests.Mock
                 string value = WebUtility.UrlDecode(parts[1]);
                 coll.Add(key, value);
             }
+
             return coll;
         }
 
@@ -228,7 +225,7 @@ namespace Sailthru.Tests.Mock
         {
             // If this is called, the test is probably over,
             // so force-destroy all pending requests.
-            listener.Abort();
+            _listener.Abort();
         }
     }
 }

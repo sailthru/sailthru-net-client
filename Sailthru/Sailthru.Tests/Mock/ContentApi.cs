@@ -1,6 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using Newtonsoft.Json.Linq;
+﻿using Newtonsoft.Json.Linq;
 
 namespace Sailthru.Tests.Mock
 {
@@ -33,7 +31,7 @@ namespace Sailthru.Tests.Mock
             {
                 int numItems = request.ContainsKey("items") ? request["items"].Value<int>() : 20;
 
-                List<Dictionary<string, object>> items = new List<Dictionary<string, object>>();
+                List<Dictionary<string, object>> items = new();
 
                 for (int i = 0; i < numItems; i++)
                 {
@@ -70,7 +68,7 @@ namespace Sailthru.Tests.Mock
                 throw new ApiException(99, "Override exclude must either be unset or equal to 1", 400);
             }
 
-            Dictionary<string, object> content = new Dictionary<string, object>
+            Dictionary<string, object> content = new()
             {
                 ["url"] = id,
                 ["title"] = request["title"],
@@ -105,8 +103,7 @@ namespace Sailthru.Tests.Mock
 
         private static string GetAndValidateKey(JObject request)
         {
-            string key = request.ContainsKey("key") ? request.Value<string>("key") : null;
-            string id = null;
+            string? key = request.ContainsKey("key") ? request.Value<string>("key") : null;
 
             if (key == null)
             {
@@ -115,8 +112,9 @@ namespace Sailthru.Tests.Mock
                     throw new ApiException(99, "Missing required parameter: id/url", 400);
                 }
 
-                id = request.Value<string>("id");
-                if (!Uri.TryCreate(id, UriKind.Absolute, out Uri uri))
+                string id = request.Value<string>("id");
+
+                if (!Uri.TryCreate(id, UriKind.Absolute, out _))
                 {
                     throw new ApiException(99, "Invalid Url: " + id, 400);
                 }
@@ -125,7 +123,7 @@ namespace Sailthru.Tests.Mock
             }
             else
             {
-                if (key != "url" && key != "sku")
+                if (key is not "url" and not "sku")
                 {
                     throw new ApiException(99, "Content is not enabled for " + key + " lookup", 400);
                 }
@@ -142,6 +140,7 @@ namespace Sailthru.Tests.Mock
                 request["id"] = request["url"];
                 request.Remove("url");
             }
+
             return request;
         }
     }

@@ -1,11 +1,13 @@
 ﻿
-Microsoft Visual Studio Solution File, Format Version 11.00
-# Visual Studio 2010
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Sailthru", "Sailthru\Sailthru.csproj", "{21C7EF1E-3D2E-4AA8-B3FA-787A80F7C939}"
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.3.32929.385
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Sailthru", "Sailthru\Sailthru.csproj", "{C0B94283-6DF4-4E49-8C22-09386AEAB066}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Sailthru.Models", "Sailthru.Models\Sailthru.Models.csproj", "{4993ADAC-7553-4733-B72F-011CE4D93A3B}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Sailthru.Models", "Sailthru.Models\Sailthru.Models.csproj", "{323BC685-36AC-44D4-933E-D60381243FA7}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Sailthru.Tests", "Sailthru.Tests\Sailthru.Tests.csproj", "{995F96C5-15DA-41CF-84BB-AAB8A4D48AFE}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Sailthru.Tests", "Sailthru.Tests\Sailthru.Tests.csproj", "{4DFA49F4-3803-42D5-9426-FCB651C24452}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -13,23 +15,23 @@ Global
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{21C7EF1E-3D2E-4AA8-B3FA-787A80F7C939}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{21C7EF1E-3D2E-4AA8-B3FA-787A80F7C939}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{21C7EF1E-3D2E-4AA8-B3FA-787A80F7C939}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{21C7EF1E-3D2E-4AA8-B3FA-787A80F7C939}.Release|Any CPU.Build.0 = Release|Any CPU
-		{4993ADAC-7553-4733-B72F-011CE4D93A3B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{4993ADAC-7553-4733-B72F-011CE4D93A3B}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{4993ADAC-7553-4733-B72F-011CE4D93A3B}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{4993ADAC-7553-4733-B72F-011CE4D93A3B}.Release|Any CPU.Build.0 = Release|Any CPU
-		{995F96C5-15DA-41CF-84BB-AAB8A4D48AFE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{995F96C5-15DA-41CF-84BB-AAB8A4D48AFE}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{995F96C5-15DA-41CF-84BB-AAB8A4D48AFE}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{995F96C5-15DA-41CF-84BB-AAB8A4D48AFE}.Release|Any CPU.Build.0 = Release|Any CPU
-	EndGlobalSection
-	GlobalSection(MonoDevelopProperties) = preSolution
-		StartupItem = Sailthru\Sailthru.csproj
+		{C0B94283-6DF4-4E49-8C22-09386AEAB066}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C0B94283-6DF4-4E49-8C22-09386AEAB066}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C0B94283-6DF4-4E49-8C22-09386AEAB066}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C0B94283-6DF4-4E49-8C22-09386AEAB066}.Release|Any CPU.Build.0 = Release|Any CPU
+		{323BC685-36AC-44D4-933E-D60381243FA7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{323BC685-36AC-44D4-933E-D60381243FA7}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{323BC685-36AC-44D4-933E-D60381243FA7}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{323BC685-36AC-44D4-933E-D60381243FA7}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4DFA49F4-3803-42D5-9426-FCB651C24452}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4DFA49F4-3803-42D5-9426-FCB651C24452}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4DFA49F4-3803-42D5-9426-FCB651C24452}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4DFA49F4-3803-42D5-9426-FCB651C24452}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {7B8DDAB4-3AC3-466D-9CC6-AB9560D239F5}
 	EndGlobalSection
 EndGlobal

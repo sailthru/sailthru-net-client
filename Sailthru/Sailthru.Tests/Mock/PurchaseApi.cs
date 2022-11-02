@@ -1,8 +1,5 @@
-using Newtonsoft.Json.Linq;
 using MongoDB.Bson;
-using System;
-using System.Collections.Generic;
-using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 
 namespace Sailthru.Tests.Mock
 {
@@ -11,14 +8,13 @@ namespace Sailthru.Tests.Mock
         public static Dictionary<string, object> ProcessPost(JObject request)
         {
             JObject purchaseKeys = (JObject)request["purchase_keys"];
-            string extid = purchaseKeys != null ? purchaseKeys["extid"].Value<string>() : null;
+            string? extid = purchaseKeys["extid"]?.Value<string>();
 
             ObjectId purchaseId = ObjectId.GenerateNewId();
-            string date = DateTime.Now.ToLocalTime().ToString("ddd, dd MMM yyyy HH:mm:ss zzz");
 
             int totalQty = 0;
             int totalPrice = 0;
-            foreach (JObject item in request["items"])
+            foreach (JObject item in request["items"].Cast<JObject>())
             {
                 int qty = item["qty"].Value<int>();
                 int price = item["price"].Value<int>();
@@ -26,7 +22,8 @@ namespace Sailthru.Tests.Mock
                 totalPrice += qty * price;
             }
 
-            Dictionary<string, object> purchase = new Dictionary<string, object>
+            string? date = DateTime.Now.ToLocalTime().ToString("ddd, dd MMM yyyy HH:mm:ss zzz");
+            Dictionary<string, object> purchase = new()
             {
                 ["_id"] = purchaseId.ToString(),
                 ["items"] = request["items"],

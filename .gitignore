@@ -11,3 +11,4 @@ dist
 **/packages/*
 !**/packages/build/
 .DS_Store
+/Sailthru/.vs

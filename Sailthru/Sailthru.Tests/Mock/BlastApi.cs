@@ -1,17 +1,14 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Threading;
-using Newtonsoft.Json.Linq;
+﻿using Newtonsoft.Json.Linq;
 
 namespace Sailthru.Tests.Mock
 {
     public static class BlastApi
     {
-        private static int currentId = 1000;
+        private static int s_currentId = 1000;
 
         public static object ProcessPost(JObject request)
         {
-            int blastId = Interlocked.Increment(ref currentId);
+            int blastId = Interlocked.Increment(ref s_currentId);
             string name = request["name"].Value<string>();
             string subject = request["subject"].Value<string>();
             string list = request["list"].Value<string>();
@@ -21,7 +18,7 @@ namespace Sailthru.Tests.Mock
             JArray seedEmails = request.ContainsKey("seed_emails") ? request["seed_emails"] as JArray : null;
             JObject labels = request.ContainsKey("labels") ? request["labels"] as JObject : null;
 
-            List<string> blastLabels = new List<string>();
+            List<string> blastLabels = new();
             if (labels != null)
             {
                 foreach (KeyValuePair<string, JToken> label in labels)
@@ -59,8 +56,7 @@ namespace Sailthru.Tests.Mock
                 }
             }
 
-
-            Dictionary<string, object> blast = new Dictionary<string, object>
+            Dictionary<string, object> blast = new()
             {
                 ["blast_id"] = blastId,
                 ["name"] = name,
@@ -88,6 +84,7 @@ namespace Sailthru.Tests.Mock
 
                 blast["previous_blast_id"] = previousBlastId;
             }
+
             if (request.ContainsKey("message_criteria"))
             {
                 string messageCriteria = request["message_criteria"].Value<string>();
@@ -95,6 +92,7 @@ namespace Sailthru.Tests.Mock
                 {
                     throw new ApiException(99, "invalid message criteria", 400);
                 }
+
                 blast["message_criteria"] = messageCriteria;
             }
 

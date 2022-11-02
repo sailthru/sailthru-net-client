@@ -1,5 +1,4 @@
-﻿using System;
-namespace Sailthru.Tests.Mock
+﻿namespace Sailthru.Tests.Mock
 {
     public class ApiException : SystemException
     {
