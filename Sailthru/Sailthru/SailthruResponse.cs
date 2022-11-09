@@ -1,64 +1,40 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Net;
-using System.IO;
 using System.Collections;
+using System.IO;
+using System.Net;
 
 namespace Sailthru
 {
     public class SailthruResponse
     {
+        private readonly HttpWebResponse _webResponse;
+        private readonly Hashtable _rateLimitInfo;
+        private bool _validResponse;
 
-        private HttpWebResponse webResponse;
+        protected const string ERROR_KEY = "error";
+        protected const string ERROR_MSG_KEY = "errormsg";
 
-        private Hashtable hashtableResponse;
-
-        private Hashtable rateLimitInfo;
-
-        private String rawResponse;
-
-        private Boolean validResponse;
-
-        protected const String ERROR_KEY = "error";
-        protected const String ERROR_MSG_KEY = "errormsg";
-
-        
         /// <summary>
         /// Response from Server represented as HashTable
         /// </summary>
-        public Hashtable HashtableResponse
-        {
-            get
-            {
-                return this.hashtableResponse;
-            }
-        }
+        public Hashtable HashtableResponse { get; private set; }
 
         /// <summary>
         /// RawResponse Getter
         /// </summary>
-        public String RawResponse
-        {
-            get
-            {
-                return this.rawResponse;
-            }
-        }
+        public string RawResponse { get; private set; }
 
-        
         /// <summary>
         /// Constructor
         /// </summary>
         /// <param name="response"></param>
         public SailthruResponse(HttpWebResponse response)
         {
-            this.webResponse = response;
-            this.hashtableResponse = null;
-            this.rawResponse = "";
-            this.validResponse = false;
-            this.rateLimitInfo = new Hashtable();
+            _webResponse = response;
+            HashtableResponse = null;
+            RawResponse = string.Empty;
+            _validResponse = false;
+            _rateLimitInfo = new Hashtable();
             parseJSON();
         }
 
@@ -66,39 +42,38 @@ namespace Sailthru
         /// Parse Response JSON
         /// </summary>
         private void parseJSON()
-        {   
-
-            if (webResponse != null)
+        {
+            if (_webResponse != null)
             {
-                HttpWebResponse httpWebResponse = webResponse;
+                HttpWebResponse httpWebResponse = _webResponse;
                 Stream dataStream = httpWebResponse.GetResponseStream();
                 StreamReader reader = new StreamReader(dataStream);
 
-                var responseStr = reader.ReadToEnd();
+                string responseStr = reader.ReadToEnd();
 
-                WebHeaderCollection headers = webResponse.Headers;
+                WebHeaderCollection headers = _webResponse.Headers;
 
                 // Clean up the streams.
                 reader.Close();
                 dataStream.Close();
-                webResponse.Close();
+                _webResponse.Close();
 
-                this.rawResponse = responseStr;
+                RawResponse = responseStr;
 
-                var jsonResponse = Sailthru.JSON.JsonDecode(responseStr);
+                object jsonResponse = JSON.JsonDecode(responseStr);
 
-                if (jsonResponse is Hashtable)
+                if (jsonResponse is Hashtable hashtable)
                 {
-                    hashtableResponse = (Hashtable)jsonResponse;
-                    if (!hashtableResponse.ContainsKey(ERROR_KEY) || !hashtableResponse.ContainsKey(ERROR_MSG_KEY))
+                    HashtableResponse = hashtable;
+                    if (!HashtableResponse.ContainsKey(ERROR_KEY) || !HashtableResponse.ContainsKey(ERROR_MSG_KEY))
                     {
-                        this.validResponse = true;
+                        _validResponse = true;
                     }
                 }
                 else
                 {
-                    this.rawResponse = responseStr;
-                    this.hashtableResponse = createErrorResponse(responseStr);
+                    RawResponse = responseStr;
+                    HashtableResponse = createErrorResponse(responseStr);
                 }
 
                 // parse rate limit headers
@@ -106,17 +81,17 @@ namespace Sailthru
                     headers.Get("X-Rate-Limit-Remaining") != null &&
                     headers.Get("X-Rate-Limit-Reset") != null)
                 {
-                    this.rateLimitInfo.Add("limit", Int32.Parse(headers.Get("X-Rate-Limit-Limit")));
-                    this.rateLimitInfo.Add("remaining", Int32.Parse(headers.Get("X-Rate-Limit-Remaining")));
+                    _rateLimitInfo.Add("limit", int.Parse(headers.Get("X-Rate-Limit-Limit")));
+                    _rateLimitInfo.Add("remaining", int.Parse(headers.Get("X-Rate-Limit-Remaining")));
                     DateTime reset = new DateTime(1970, 1, 1, 0, 0, 0, 0);
-                    this.rateLimitInfo.Add("reset", reset.AddSeconds(Int64.Parse(headers.Get("X-Rate-Limit-Reset"))));
+                    _rateLimitInfo.Add("reset", reset.AddSeconds(long.Parse(headers.Get("X-Rate-Limit-Reset"))));
                 }
             }
             else
             {
-                var msg = "There was a problem making request to the server";
-                this.rawResponse = msg;
-                this.hashtableResponse = createErrorResponse(msg);
+                string msg = "There was a problem making request to the server";
+                RawResponse = msg;
+                HashtableResponse = createErrorResponse(msg);
             }
         }
 
@@ -124,28 +99,30 @@ namespace Sailthru
         /// Check if the response is valid
         /// </summary>
         /// <returns></returns>
-        public Boolean IsOK()
+        public bool IsOK()
         {
-            return this.validResponse;
+            return _validResponse;
         }
 
-        
         /// <summary>
         /// create custom hastable with error and errormsg
         /// </summary>
         /// <param name="message"></param>
         /// <returns></returns>
-        private Hashtable createErrorResponse(String message)
+        private Hashtable createErrorResponse(string message)
         {
-            Hashtable hash = new Hashtable();
-            hash.Add(ERROR_KEY, 99);
-            hash.Add(ERROR_MSG_KEY, message);
+            Hashtable hash = new Hashtable
+            {
+                { ERROR_KEY, 99 },
+                { ERROR_MSG_KEY, message }
+            };
+
             return hash;
         }
 
         public Hashtable getRateLimitInfo()
         {
-            return this.rateLimitInfo;
+            return _rateLimitInfo;
         }
     }
 }

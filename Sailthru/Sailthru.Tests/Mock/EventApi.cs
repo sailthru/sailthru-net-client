@@ -1,7 +1,4 @@
-using System;
-using System.Collections.Generic;
 using Newtonsoft.Json.Linq;
-using System.Threading;
 
 namespace Sailthru.Tests.Mock
 {
@@ -9,8 +6,8 @@ namespace Sailthru.Tests.Mock
     {
         public static object ProcessPost(JObject request)
         {
-            string id = request["id"].Value<string>();
-            string eventName = request["event"].Value<string>();
+            string? id = request["id"]?.Value<string>();
+            string? eventName = request["event"]?.Value<string>();
             if (id == null)
             {
                 throw new ArgumentException("id is required");

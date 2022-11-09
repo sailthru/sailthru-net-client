@@ -1,18 +1,15 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Globalization;
 using System.Collections;
+using System.Globalization;
+using System.Text;
 
 namespace Sailthru
 {
     /// <summary>
-    /// This class encodes and decodes JSON strings.
-    /// Spec. details, see http://www.json.org/
-    /// 
-    /// JSON uses Arrays and Objects. These correspond here to the datatypes ArrayList and Hashtable.
-    /// All numbers are parsed to doubles.
+    /// This class encodes and decodes JSON strings. Spec. details, see http://www.json.org/
+    ///
+    /// JSON uses Arrays and Objects. These correspond here to the datatypes ArrayList and
+    /// Hashtable. All numbers are parsed to doubles.
     /// Source: http://techblog.procurios.nl/k/news/view/14605/14863/How-do-I-write-my-own-parser-for-JSON.html
     /// </summary>
     public class JSON
@@ -75,7 +72,7 @@ namespace Sailthru
         {
             StringBuilder builder = new StringBuilder(BUILDER_CAPACITY);
             bool success = SerializeValue(json, builder);
-            return (success ? builder.ToString() : null);
+            return success ? builder.ToString() : null;
         }
 
         protected static Hashtable ParseObject(char[] json, ref int index, ref bool success)
@@ -106,7 +103,6 @@ namespace Sailthru
                 }
                 else
                 {
-
                     // name
                     string name = ParseString(json, ref index, ref success);
                     if (!success)
@@ -182,24 +178,31 @@ namespace Sailthru
         {
             switch (LookAhead(json, index))
             {
-                case JSON.TOKEN_STRING:
+                case TOKEN_STRING:
                     return ParseString(json, ref index, ref success);
-                case JSON.TOKEN_NUMBER:
+
+                case TOKEN_NUMBER:
                     return ParseNumber(json, ref index);
-                case JSON.TOKEN_CURLY_OPEN:
+
+                case TOKEN_CURLY_OPEN:
                     return ParseObject(json, ref index, ref success);
-                case JSON.TOKEN_SQUARED_OPEN:
+
+                case TOKEN_SQUARED_OPEN:
                     return ParseArray(json, ref index, ref success);
-                case JSON.TOKEN_TRUE:
+
+                case TOKEN_TRUE:
                     NextToken(json, ref index);
-                    return Boolean.Parse("TRUE");
-                case JSON.TOKEN_FALSE:
+                    return bool.Parse("TRUE");
+
+                case TOKEN_FALSE:
                     NextToken(json, ref index);
-                    return Boolean.Parse("FALSE");
-                case JSON.TOKEN_NULL:
+                    return bool.Parse("FALSE");
+
+                case TOKEN_NULL:
                     NextToken(json, ref index);
                     return null;
-                case JSON.TOKEN_NONE:
+
+                case TOKEN_NONE:
                     break;
             }
 
@@ -209,70 +212,68 @@ namespace Sailthru
 
         protected static string ParseString(char[] json, ref int index, ref bool success)
         {
-            StringBuilder s = new StringBuilder(BUILDER_CAPACITY);
-            char c;
+            StringBuilder stringBuilder = new StringBuilder(BUILDER_CAPACITY);
+            char character;
 
             EatWhitespace(json, ref index);
 
-            // "
-            c = json[index++];
+            character = json[index++];
 
             bool complete = false;
             while (!complete)
             {
-
                 if (index == json.Length)
                 {
                     break;
                 }
 
-                c = json[index++];
-                if (c == '"')
+                character = json[index++];
+                if (character == '"')
                 {
                     complete = true;
                     break;
                 }
-                else if (c == '\\')
+                else if (character == '\\')
                 {
-
                     if (index == json.Length)
                     {
                         break;
                     }
-                    c = json[index++];
-                    if (c == '"')
+
+                    character = json[index++];
+                    if (character == '"')
                     {
-                        s.Append('"');
+                        stringBuilder.Append('"');
                     }
-                    else if (c == '\\')
+                    else if (character == '\\')
                     {
-                        s.Append('\\');
+                        stringBuilder.Append('\\');
                     }
-                    else if (c == '/')
+                    else if (character == '/')
                     {
-                        s.Append('/');
+                        stringBuilder.Append('/');
                     }
-                    else if (c == 'b')
+                    else if (character == 'b')
                     {
-                        s.Append('\b');
+                        stringBuilder.Append('\b');
                     }
-                    else if (c == 'f')
+                    else if (character == 'f')
                     {
-                        s.Append('\f');
+                        stringBuilder.Append('\f');
                     }
-                    else if (c == 'n')
+                    else if (character == 'n')
                     {
-                        s.Append('\n');
+                        stringBuilder.Append('\n');
                     }
-                    else if (c == 'r')
+                    else if (character == 'r')
                     {
-                        s.Append('\r');
+                        stringBuilder.Append('\r');
                     }
-                    else if (c == 't')
+                    else if (character == 't')
                     {
-                        s.Append('\t');
+                        stringBuilder.Append('\t');
                     }
-                    else if (c == 'u')
+                    else if (character == 'u')
                     {
                         int remainingLength = json.Length - index;
                         if (remainingLength >= 4)
@@ -281,9 +282,9 @@ namespace Sailthru
                             char[] unicodeCharArray = new char[4];
                             Array.Copy(json, index, unicodeCharArray, 0, 4);
                             // parse the 32 bit hex into an integer codepoint
-                            uint codePoint = UInt32.Parse(new string(unicodeCharArray), NumberStyles.HexNumber);
+                            uint codePoint = uint.Parse(new string(unicodeCharArray), NumberStyles.HexNumber);
                             // convert the integer codepoint to a unicode char and add to string
-                            s.Append((char)codePoint);
+                            stringBuilder.Append((char)codePoint);
                             // skip 4 chars
                             index += 4;
                         }
@@ -292,13 +293,11 @@ namespace Sailthru
                             break;
                         }
                     }
-
                 }
                 else
                 {
-                    s.Append(c);
+                    stringBuilder.Append(character);
                 }
-
             }
 
             if (!complete)
@@ -307,7 +306,7 @@ namespace Sailthru
                 return null;
             }
 
-            return s.ToString();
+            return stringBuilder.ToString();
         }
 
         protected static double ParseNumber(char[] json, ref int index)
@@ -315,12 +314,12 @@ namespace Sailthru
             EatWhitespace(json, ref index);
 
             int lastIndex = GetLastIndexOfNumber(json, index);
-            int charLength = (lastIndex - index) + 1;
+            int charLength = lastIndex - index + 1;
             char[] numberCharArray = new char[charLength];
 
             Array.Copy(json, index, numberCharArray, 0, charLength);
             index = lastIndex + 1;
-            return Double.Parse(new string(numberCharArray), CultureInfo.InvariantCulture);
+            return double.Parse(new string(numberCharArray), CultureInfo.InvariantCulture);
         }
 
         protected static int GetLastIndexOfNumber(char[] json, int index)
@@ -334,6 +333,7 @@ namespace Sailthru
                     break;
                 }
             }
+
             return lastIndex - 1;
         }
 
@@ -360,7 +360,7 @@ namespace Sailthru
 
             if (index == json.Length)
             {
-                return JSON.TOKEN_NONE;
+                return TOKEN_NONE;
             }
 
             char c = json[index];
@@ -368,17 +368,23 @@ namespace Sailthru
             switch (c)
             {
                 case '{':
-                    return JSON.TOKEN_CURLY_OPEN;
+                    return TOKEN_CURLY_OPEN;
+
                 case '}':
-                    return JSON.TOKEN_CURLY_CLOSE;
+                    return TOKEN_CURLY_CLOSE;
+
                 case '[':
-                    return JSON.TOKEN_SQUARED_OPEN;
+                    return TOKEN_SQUARED_OPEN;
+
                 case ']':
-                    return JSON.TOKEN_SQUARED_CLOSE;
+                    return TOKEN_SQUARED_CLOSE;
+
                 case ',':
-                    return JSON.TOKEN_COMMA;
+                    return TOKEN_COMMA;
+
                 case '"':
-                    return JSON.TOKEN_STRING;
+                    return TOKEN_STRING;
+
                 case '0':
                 case '1':
                 case '2':
@@ -391,9 +397,11 @@ namespace Sailthru
                 case '9':
                 case '-':
                     return JSON.TOKEN_NUMBER;
+
                 case ':':
                     return JSON.TOKEN_COLON;
             }
+
             index--;
 
             int remainingLength = json.Length - index;
@@ -408,7 +416,7 @@ namespace Sailthru
                     json[index + 4] == 'e')
                 {
                     index += 5;
-                    return JSON.TOKEN_FALSE;
+                    return TOKEN_FALSE;
                 }
             }
 
@@ -421,7 +429,7 @@ namespace Sailthru
                     json[index + 3] == 'e')
                 {
                     index += 4;
-                    return JSON.TOKEN_TRUE;
+                    return TOKEN_TRUE;
                 }
             }
 
@@ -434,40 +442,36 @@ namespace Sailthru
                     json[index + 3] == 'l')
                 {
                     index += 4;
-                    return JSON.TOKEN_NULL;
+                    return TOKEN_NULL;
                 }
             }
 
-            return JSON.TOKEN_NONE;
+            return TOKEN_NONE;
         }
 
         protected static bool SerializeValue(object value, StringBuilder builder)
         {
             bool success = true;
 
-            if (value is string)
+            if (value is string @string)
             {
-                success = SerializeString((string)value, builder);
+                success = SerializeString(@string, builder);
             }
-            else if (value is Hashtable)
+            else if (value is Hashtable @hastable)
             {
-                success = SerializeObject((Hashtable)value, builder);
+                success = SerializeObject(@hastable, builder);
             }
-            else if (value is ArrayList)
+            else if (value is ArrayList arrayList)
             {
-                success = SerializeArray((ArrayList)value, builder);
+                success = SerializeArray(arrayList, builder);
             }
             else if (IsNumeric(value))
             {
                 success = SerializeNumber(Convert.ToDouble(value), builder);
             }
-            else if ((value is Boolean) && ((Boolean)value == true))
+            else if (value is bool @bool)
             {
-                builder.Append("true");
-            }
-            else if ((value is Boolean) && ((Boolean)value == false))
-            {
-                builder.Append("false");
+                builder.Append(@bool.ToString());
             }
             else if (value == null)
             {
@@ -477,6 +481,7 @@ namespace Sailthru
             {
                 success = false;
             }
+
             return success;
         }
 
@@ -597,16 +602,11 @@ namespace Sailthru
         }
 
         /// <summary>
-        /// Determines if a given object is numeric in any way
-        /// (can be integer, double, null, etc). 
-        /// 
+        /// Determines if a given object is numeric in any way (can be integer, double, null, etc).
+        ///
         /// Thanks to mtighe for pointing out Double.TryParse to me.
         /// </summary>
-        protected static bool IsNumeric(object o)
-        {
-            double result;
-
-            return (o == null) ? false : Double.TryParse(o.ToString(), out result);
-        }
+        protected static bool IsNumeric(object o) =>
+            o != null && double.TryParse(o.ToString(), out double result);
     }
 }
