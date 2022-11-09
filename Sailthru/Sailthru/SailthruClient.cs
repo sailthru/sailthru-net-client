@@ -197,9 +197,9 @@ namespace Sailthru
         /// Get rate limit information for last API call
         /// </summary>
         /// <param name="action">API endpoint</param>
-        /// <param name="method">HTTP method</param>
+        /// <param name="method">HTTP method.</param>
         /// <returns>Hashtable|null</returns>
-        public Hashtable getLastRateLimitInfo(string action, string method)
+        public Hashtable GetLastRateLimitInfo(string action, string method)
         {
             if (_lastRateLimitInfo.ContainsKey(action))
             {
@@ -212,6 +212,18 @@ namespace Sailthru
             }
 
             return null;
+        }
+
+        /// <summary>
+        /// Get rate limit information for last API call
+        /// </summary>
+        /// <param name="action">API endpoint</param>
+        /// <param name="method">HTTP method</param>
+        /// <returns>Hashtable|null</returns>
+        [Obsolete("Use GetLastRateLimitInfo")]
+        public Hashtable getLastRateLimitInfo(string action, string method)
+        {
+            return GetLastRateLimitInfo(action, method);
         }
 
         /// <summary>
@@ -357,6 +369,23 @@ namespace Sailthru
             Hashtable parameters = new Hashtable
             {
                 ["template"] = templateName
+            };
+
+            return ApiGet("template", parameters);
+        }
+
+        /// <summary>
+        /// Gets the template.
+        /// </summary>
+        /// <param name="templateName">Name of the template.</param>
+        /// <param name="revisionId">The revision identifier.</param>
+        /// <returns>Sailthru Response Object</returns>
+        public SailthruResponse GetTemplate(string templateName, int revision)
+        {
+            Hashtable parameters = new Hashtable
+            {
+                ["template"] = templateName,
+                ["revision"] = revision
             };
 
             return ApiGet("template", parameters);
