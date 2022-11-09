@@ -133,6 +133,21 @@ namespace Sailthru
         }
 
         /// <summary>
+        /// Gets the blast by status.
+        /// </summary>
+        /// <param name="statusType">Type of the status.</param>
+        /// <seealso cref="http://docs.sailthru.com/api/blast"/>
+        /// <returns>Sailthru Response Object</returns>
+        public SailthruResponse GetBlastByStatus(BlastRequest.StatusType statusType)
+        {
+            Hashtable parameters = new Hashtable
+            {
+                ["status"] = statusType
+            };
+            return ApiGet("blast", parameters);
+        }
+
+        /// <summary>
         /// Get information about one of your urls.
         /// </summary>
         /// <param name="request"></param>
@@ -180,6 +195,36 @@ namespace Sailthru
             }
 
             return null;
+        }
+
+        /// <summary>
+        /// Gets the list by ID.
+        /// </summary>
+        /// <param name="listId">The list identifier.</param>
+        /// <returns>Sailthru Response Object</returns>
+        public SailthruResponse GetList(string listId)
+        {
+            Hashtable parameters = new Hashtable
+            {
+                ["list_id"] = listId
+            };
+
+            return ApiGet("list", parameters);
+        }
+
+        /// <summary>
+        /// Gets the list by Name.
+        /// </summary>
+        /// <param name="listName">Name of the list.</param>
+        /// <returns>Sailthru Response Object</returns>
+        public SailthruResponse GetListByName(string listName)
+        {
+            Hashtable parameters = new Hashtable
+            {
+                ["list"] = listName
+            };
+
+            return ApiGet("list", parameters);
         }
 
         /// <summary>
@@ -397,6 +442,22 @@ namespace Sailthru
             return ApiPost("event", hashForPost);
         }
 
+        /// <summary>
+        /// Preview Email
+        /// </summary>
+        /// <param name="request">Preview Request parameters.</param>
+        /// <seealso cref="http://docs.sailthru.com/api/preview"/>
+        /// <returns>Sailthru Response Object</returns>
+        public SailthruResponse PreviewEmail(PreviewRequest request)
+        {
+            Hashtable hashForPost = new Hashtable
+            {
+                { "json", JsonConvert.SerializeObject(request, Formatting.None, new JsonSerializerSettings { NullValueHandling = NullValueHandling.Ignore }) }
+            };
+
+            return ApiPost("preview", hashForPost);
+        }
+
         public SailthruResponse ProcessImportJob(string listName, List<string> emails)
         {
             return ProcessImportJob(null, null, listName, emails);
@@ -557,6 +618,22 @@ namespace Sailthru
             }
 
             return false;
+        }
+
+        /// <summary>
+        /// Save List
+        /// </summary>
+        /// <param name="request">List Request parameters.</param>
+        /// <seealso cref="https://getstarted.sailthru.com/developers/api/list/"/>
+        /// <returns>Sailthru Response Object</returns>
+        public SailthruResponse SaveList(ListRequest request)
+        {
+            Hashtable hashForPost = new Hashtable
+            {
+                { "json", JsonConvert.SerializeObject(request, Formatting.None, new JsonSerializerSettings { NullValueHandling = NullValueHandling.Ignore }) }
+            };
+
+            return ApiPost("list", hashForPost);
         }
 
         /// <summary>

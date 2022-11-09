@@ -66,7 +66,7 @@ namespace Sailthru.Tests.Mock
                 ["link_domain"] = linkDomain,
                 ["seed_emails"] = seedEmails,
                 ["labels"] = blastLabels,
-                ["status"] = status
+                ["status"] = status,
             };
 
             if (request.ContainsKey("previous_blast_id"))

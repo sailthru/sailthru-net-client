@@ -223,8 +223,7 @@ namespace Sailthru.Tests.Mock
 
         public void Close()
         {
-            // If this is called, the test is probably over,
-            // so force-destroy all pending requests.
+            // If this is called, the test is probably over, so force-destroy all pending requests.
             _listener.Abort();
         }
     }

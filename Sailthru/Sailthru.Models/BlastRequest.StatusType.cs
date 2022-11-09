@@ -16,7 +16,13 @@ namespace Sailthru.Models
             Draft,
 
             [EnumMember(Value = "scheduled")]
-            Scheduled
+            Scheduled,
+
+            [EnumMember(Value = "sending")]
+            Sending,
+
+            [EnumMember(Value = "sent")]
+            Sent
         }
     }
 }
