@@ -163,6 +163,23 @@ namespace Sailthru
         }
 
         /// <summary>
+        /// Gets the content Sku.
+        /// </summary>
+        /// <param name="id">The identifier.</param>
+        /// <param name="sku">The sku.</param>
+        /// <returns>Sailthru Response Object</returns>
+        public SailthruResponse GetContent(string id, string sku)
+        {
+            Hashtable hashForPost = new Hashtable
+            {
+                { "id", id },
+                { "key", sku }
+            };
+
+            return ApiGet("content", hashForPost);
+        }
+
+        /// <summary>
         /// Gets the most recent pieces of content.
         /// </summary>
         /// <returns>The contents.</returns>
