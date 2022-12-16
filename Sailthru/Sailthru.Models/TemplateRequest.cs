@@ -25,11 +25,25 @@ namespace Sailthru.Models
         public int? Revision { get; set; }
 
         /// <summary>
+        /// Gets or sets the data feed URL.
+        /// </summary>
+        /// <value>The data feed URL.</value>
+        [JsonProperty(PropertyName = "data_feed_url")]
+        public string DataFeedUrl { get; set; }
+
+        /// <summary>
         /// Gets or sets the sample.
         /// </summary>
         /// <value>The sample.</value>
         [JsonProperty(PropertyName = "sample")]
         public string Sample { get; set; }
+
+        /// <summary>
+        /// Gets or sets the label.
+        /// </summary>
+        /// <value>The label.</value>
+        [JsonProperty(PropertyName = "labels")]
+        public LabelType Label { get; set; }
 
         /// <summary>
         /// Gets or sets the name of the public.
@@ -149,5 +163,26 @@ namespace Sailthru.Models
         /// <value>The setup.</value>
         [JsonProperty(PropertyName = "setup")]
         public string Setup { get; set; }
+
+        /// <summary>
+        /// Gets or sets the content application.
+        /// </summary>
+        /// <value>The content application.</value>
+        /// <remarks>
+        /// Push Notifications – the content contained inside the push notification alert text
+        /// </remarks>
+        [JsonProperty(PropertyName = "content_app")]
+        public string ContentApp { get; set; }
+
+        /// <summary>
+        /// Gets or sets the application sound.
+        /// </summary>
+        /// <value>The application sound.</value>
+        /// <remarks>
+        /// Push Notifications – The sound that will play when an push notification is received
+        /// (this sound must be provided by the client’s app)
+        /// </remarks>
+        [JsonProperty(PropertyName = "app_sound")]
+        public string AppSound { get; set; }
     }
 }

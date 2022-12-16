@@ -133,6 +133,21 @@ namespace Sailthru
         }
 
         /// <summary>
+        /// Gets the blast by status.
+        /// </summary>
+        /// <param name="statusType">Type of the status.</param>
+        /// <seealso cref="http://docs.sailthru.com/api/blast"/>
+        /// <returns>Sailthru Response Object</returns>
+        public SailthruResponse GetBlastByStatus(BlastRequest.StatusType statusType)
+        {
+            Hashtable parameters = new Hashtable
+            {
+                ["status"] = statusType
+            };
+            return ApiGet("blast", parameters);
+        }
+
+        /// <summary>
         /// Get information about one of your urls.
         /// </summary>
         /// <param name="request"></param>
@@ -144,6 +159,23 @@ namespace Sailthru
             {
                 { "url", url }
             };
+            return ApiGet("content", hashForPost);
+        }
+
+        /// <summary>
+        /// Gets the content Sku.
+        /// </summary>
+        /// <param name="id">The identifier.</param>
+        /// <param name="sku">The sku.</param>
+        /// <returns>Sailthru Response Object</returns>
+        public SailthruResponse GetContent(string id, string sku)
+        {
+            Hashtable hashForPost = new Hashtable
+            {
+                { "id", id },
+                { "key", sku }
+            };
+
             return ApiGet("content", hashForPost);
         }
 
@@ -165,9 +197,9 @@ namespace Sailthru
         /// Get rate limit information for last API call
         /// </summary>
         /// <param name="action">API endpoint</param>
-        /// <param name="method">HTTP method</param>
+        /// <param name="method">HTTP method.</param>
         /// <returns>Hashtable|null</returns>
-        public Hashtable getLastRateLimitInfo(string action, string method)
+        public Hashtable GetLastRateLimitInfo(string action, string method)
         {
             if (_lastRateLimitInfo.ContainsKey(action))
             {
@@ -180,6 +212,48 @@ namespace Sailthru
             }
 
             return null;
+        }
+
+        /// <summary>
+        /// Get rate limit information for last API call
+        /// </summary>
+        /// <param name="action">API endpoint</param>
+        /// <param name="method">HTTP method</param>
+        /// <returns>Hashtable|null</returns>
+        [Obsolete("Use GetLastRateLimitInfo")]
+        public Hashtable getLastRateLimitInfo(string action, string method)
+        {
+            return GetLastRateLimitInfo(action, method);
+        }
+
+        /// <summary>
+        /// Gets the list by ID.
+        /// </summary>
+        /// <param name="listId">The list identifier.</param>
+        /// <returns>Sailthru Response Object</returns>
+        public SailthruResponse GetList(string listId)
+        {
+            Hashtable parameters = new Hashtable
+            {
+                ["list_id"] = listId
+            };
+
+            return ApiGet("list", parameters);
+        }
+
+        /// <summary>
+        /// Gets the list by Name.
+        /// </summary>
+        /// <param name="listName">Name of the list.</param>
+        /// <returns>Sailthru Response Object</returns>
+        public SailthruResponse GetListByName(string listName)
+        {
+            Hashtable parameters = new Hashtable
+            {
+                ["list"] = listName
+            };
+
+            return ApiGet("list", parameters);
         }
 
         /// <summary>
@@ -301,6 +375,23 @@ namespace Sailthru
         }
 
         /// <summary>
+        /// Gets the template.
+        /// </summary>
+        /// <param name="templateName">Name of the template.</param>
+        /// <param name="revisionId">The revision identifier.</param>
+        /// <returns>Sailthru Response Object</returns>
+        public SailthruResponse GetTemplate(string templateName, int revision)
+        {
+            Hashtable parameters = new Hashtable
+            {
+                ["template"] = templateName,
+                ["revision"] = revision
+            };
+
+            return ApiGet("template", parameters);
+        }
+
+        /// <summary>
         /// Get information about one of your users. Users are referenced by multiple keys.
         /// </summary>
         /// <param name="request"></param>
@@ -395,6 +486,22 @@ namespace Sailthru
             };
 
             return ApiPost("event", hashForPost);
+        }
+
+        /// <summary>
+        /// Preview Email
+        /// </summary>
+        /// <param name="request">Preview Request parameters.</param>
+        /// <seealso cref="http://docs.sailthru.com/api/preview"/>
+        /// <returns>Sailthru Response Object</returns>
+        public SailthruResponse PreviewEmail(PreviewRequest request)
+        {
+            Hashtable hashForPost = new Hashtable
+            {
+                { "json", JsonConvert.SerializeObject(request, Formatting.None, new JsonSerializerSettings { NullValueHandling = NullValueHandling.Ignore }) }
+            };
+
+            return ApiPost("preview", hashForPost);
         }
 
         public SailthruResponse ProcessImportJob(string listName, List<string> emails)
@@ -557,6 +664,22 @@ namespace Sailthru
             }
 
             return false;
+        }
+
+        /// <summary>
+        /// Save List
+        /// </summary>
+        /// <param name="request">List Request parameters.</param>
+        /// <seealso cref="https://getstarted.sailthru.com/developers/api/list/"/>
+        /// <returns>Sailthru Response Object</returns>
+        public SailthruResponse SaveList(ListRequest request)
+        {
+            Hashtable hashForPost = new Hashtable
+            {
+                { "json", JsonConvert.SerializeObject(request, Formatting.None, new JsonSerializerSettings { NullValueHandling = NullValueHandling.Ignore }) }
+            };
+
+            return ApiPost("list", hashForPost);
         }
 
         /// <summary>

@@ -134,5 +134,23 @@ namespace Sailthru.Models
         /// <value>The override exclude.</value>
         [JsonProperty(PropertyName = "override_exclude", DefaultValueHandling = DefaultValueHandling.Ignore)]
         public OverrideExcludeType OverrideExclude { get; set; }
+
+        /// <summary>
+        /// Gets or sets the availability.
+        /// </summary>
+        /// <value>
+        /// The availability.
+        /// </value>
+        [JsonProperty(PropertyName = "availability")]
+        public AvailabilityType Availability { get; set; }
+
+        /// <summary>
+        /// Gets or sets the sale price.
+        /// </summary>
+        /// <value>
+        /// The sale price.
+        /// </value>
+        [JsonProperty(PropertyName = "sale_price")]
+        public int? SalePrice { get; set; }
     }
 }
