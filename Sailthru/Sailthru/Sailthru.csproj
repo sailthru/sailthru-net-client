@@ -10,6 +10,7 @@
     <Authors>Sailthru</Authors>
     <Company>Sailthru, Inc.</Company>
     <PackageProjectUrl>https://github.com/sailthru/sailthru-net-client</PackageProjectUrl>
+    <PackageId>Sailthru.Client</PackageId>
     <PackageTags>Sailthru</PackageTags>
   </PropertyGroup>
 
