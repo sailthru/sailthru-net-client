@@ -24,7 +24,7 @@ jobs:
       with:
         dotnet-version: '7.0.x'
     - name: Verify tag is correct and fail if it doesn't match the version in project
-      run: grep -q "${GITHUB_REF_NAME}" Sailthru/Sailthru.csproj
+      run: grep -q "${GITHUB_REF_NAME#?}" Sailthru/Sailthru.csproj
     - name: Restore dependencies
       run: dotnet restore
     - name: Build
