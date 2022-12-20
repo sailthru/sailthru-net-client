@@ -4,7 +4,7 @@
     <TargetFramework>netstandard2.0</TargetFramework>
     <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
     <Title>Sailthru.Client</Title>
-    <Version>1.2.1</Version>
+    <Version>1.2.2</Version>
     <Copyright>Copyright © Sailthru, Inc. 2022</Copyright>
     <Description>The .NET implementation of Sailthru Client.</Description>
     <Authors>Sailthru</Authors>
