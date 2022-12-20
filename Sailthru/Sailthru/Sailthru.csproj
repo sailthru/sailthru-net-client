@@ -13,6 +13,7 @@
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
     <PackageId>Sailthru.Client</PackageId>
     <PackageTags>Sailthru</PackageTags>
+    <TargetsForTfmSpecificBuildOutput>$(TargetsForTfmSpecificBuildOutput);IncludeP2PAssets</TargetsForTfmSpecificBuildOutput>
   </PropertyGroup>
 
   <ItemGroup>
@@ -24,7 +25,13 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Sailthru.Models\Sailthru.Models.csproj" />
+    <ProjectReference Include="..\Sailthru.Models\Sailthru.Models.csproj" PrivateAssets="All" />
   </ItemGroup>
+
+  <Target Name="IncludeP2PAssets">
+    <ItemGroup>
+      <BuildOutputInPackage Include="$(OutputPath)\Sailthru.Models.dll" />
+    </ItemGroup>
+  </Target>
 
 </Project>
