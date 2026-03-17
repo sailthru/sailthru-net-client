@@ -153,6 +153,13 @@ namespace Sailthru.Models
         public string LinkDomain { get; set; }
 
         /// <summary>
+        /// Gets or sets the link params.
+        /// </summary>
+        /// <value>The link params.</value>
+        [JsonProperty(PropertyName = "link_params")]
+        public Hashtable LinkParams { get; set; }
+
+        /// <summary>
         /// Gets or sets the link tracking.
         /// </summary>
         /// <value>The link tracking.</value>

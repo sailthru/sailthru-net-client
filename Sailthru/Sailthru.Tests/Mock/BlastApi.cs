@@ -15,6 +15,7 @@ namespace Sailthru.Tests.Mock
             string modifyTime = DateTime.Now.ToLocalTime().ToString("ddd, dd MMM yyyy HH:mm:ss zzz");
             string linkDomain = (string)request["link_domain"];
             string status = (string)request["status"];
+            JObject linkParams = request.ContainsKey("link_params") ? request["link_params"] as JObject : null;
             JArray seedEmails = request.ContainsKey("seed_emails") ? request["seed_emails"] as JArray : null;
             JObject labels = request.ContainsKey("labels") ? request["labels"] as JObject : null;
 
@@ -64,6 +65,7 @@ namespace Sailthru.Tests.Mock
                 ["list"] = list,
                 ["modify_time"] = modifyTime,
                 ["link_domain"] = linkDomain,
+                ["link_params"] = linkParams,
                 ["seed_emails"] = seedEmails,
                 ["labels"] = blastLabels,
                 ["status"] = status,

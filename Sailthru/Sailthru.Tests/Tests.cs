@@ -297,6 +297,30 @@ namespace Sailthru.Tests
         }
 
         [TestMethod]
+        public void PostBlastWithLinkParams()
+        {
+            BlastRequest request = new()
+            {
+                Name = "Link Params Test",
+                List = "list",
+                Subject = "Test Subject",
+                ScheduleTime = "+3 hours",
+                LinkParams = new Hashtable
+                {
+                    { "utm_source", "sailthru" },
+                    { "utm_campaign", "summer_sale" }
+                }
+            };
+
+            SailthruResponse response = _client.ScheduleBlast(request);
+            Assert.IsTrue(response.IsOK());
+
+            Hashtable linkParams = response.HashtableResponse["link_params"] as Hashtable;
+            Assert.AreEqual("sailthru", linkParams["utm_source"]);
+            Assert.AreEqual("summer_sale", linkParams["utm_campaign"]);
+        }
+
+        [TestMethod]
         public void PostScheduledBlastNoScheduleTime()
         {
             BlastRequest request = new()
