@@ -80,11 +80,28 @@ namespace Sailthru.Models
         public long EmailCount { get; set; }
 
         /// <summary>
+        /// Gets or sets whether this blast is excluded from message frequency capping.
+        /// Set to false to exclude this blast from the account's message frequency capping rules.
+        /// </summary>
+        /// <value>Whether capping is enabled for this blast.</value>
+        [JsonProperty(PropertyName = "capping_enabled")]
+        public bool? CappingEnabled { get; set; }
+
+        /// <summary>
         /// Gets or sets the email hour range.
         /// </summary>
         /// <value>The email hour range.</value>
         [JsonProperty(PropertyName = "email_hour_range")]
         public int EmailHourRange { get; set; }
+
+        /// <summary>
+        /// Gets or sets the fallback time for personalized send time.
+        /// Used when subscriber engagement data is unavailable. Must fall within the
+        /// send window defined by email_hour_range starting at schedule_time.
+        /// </summary>
+        /// <value>The fallback send time, e.g. "12:00 PM EST" or "10:30 AM".</value>
+        [JsonProperty(PropertyName = "fallback_time")]
+        public string FallbackTime { get; set; }
 
         /// <summary>
         /// Gets or sets the end time.

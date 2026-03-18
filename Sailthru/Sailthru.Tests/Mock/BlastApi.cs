@@ -18,6 +18,8 @@ namespace Sailthru.Tests.Mock
             JObject linkParams = request.ContainsKey("link_params") ? request["link_params"] as JObject : null;
             JArray seedEmails = request.ContainsKey("seed_emails") ? request["seed_emails"] as JArray : null;
             JObject labels = request.ContainsKey("labels") ? request["labels"] as JObject : null;
+            string fallbackTime = (string)request["fallback_time"];
+            bool? cappingEnabled = request.ContainsKey("capping_enabled") ? request["capping_enabled"].Value<bool>() : (bool?)null;
 
             List<string> blastLabels = new();
             if (labels != null)
@@ -69,6 +71,8 @@ namespace Sailthru.Tests.Mock
                 ["seed_emails"] = seedEmails,
                 ["labels"] = blastLabels,
                 ["status"] = status,
+                ["fallback_time"] = fallbackTime,
+                ["capping_enabled"] = cappingEnabled,
             };
 
             if (request.ContainsKey("previous_blast_id"))

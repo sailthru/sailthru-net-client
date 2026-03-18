@@ -308,7 +308,7 @@ namespace Sailthru.Tests
                 LinkParams = new Hashtable
                 {
                     { "utm_source", "sailthru" },
-                    { "utm_campaign", "summer_sale" }
+                    { "utm_campaign", "test_run" }
                 }
             };
 
@@ -317,7 +317,42 @@ namespace Sailthru.Tests
 
             Hashtable linkParams = response.HashtableResponse["link_params"] as Hashtable;
             Assert.AreEqual("sailthru", linkParams["utm_source"]);
-            Assert.AreEqual("summer_sale", linkParams["utm_campaign"]);
+            Assert.AreEqual("test_run", linkParams["utm_campaign"]);
+        }
+
+        [TestMethod]
+        public void PostBlastWithFallbackTime()
+        {
+            BlastRequest request = new()
+            {
+                Name = "Fallback Time Test",
+                List = "list",
+                Subject = "Test Subject",
+                ScheduleTime = "+3 hours",
+                EmailHourRange = 8,
+                FallbackTime = "12:00 PM EST"
+            };
+
+            SailthruResponse response = _client.ScheduleBlast(request);
+            Assert.IsTrue(response.IsOK());
+            Assert.AreEqual("12:00 PM EST", response.HashtableResponse["fallback_time"]);
+        }
+
+        [TestMethod]
+        public void PostBlastWithCappingDisabled()
+        {
+            BlastRequest request = new()
+            {
+                Name = "Capping Disabled Test",
+                List = "list",
+                Subject = "Test Subject",
+                ScheduleTime = "+3 hours",
+                CappingEnabled = false
+            };
+
+            SailthruResponse response = _client.ScheduleBlast(request);
+            Assert.IsTrue(response.IsOK());
+            Assert.AreEqual(false, response.HashtableResponse["capping_enabled"]);
         }
 
         [TestMethod]
