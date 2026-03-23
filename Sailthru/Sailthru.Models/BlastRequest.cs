@@ -80,10 +80,11 @@ namespace Sailthru.Models
         public long EmailCount { get; set; }
 
         /// <summary>
-        /// Gets or sets whether this blast is excluded from message frequency capping.
+        /// Gets or sets whether message frequency capping is enabled for this blast.
         /// Set to false to exclude this blast from the account's message frequency capping rules.
+        ///  If null, capping is enabled by default.
         /// </summary>
-        /// <value>Whether capping is enabled for this blast.</value>
+        /// <value>True if frequency capping is enabled; false to exclude this blast from capping.</value>
         [JsonProperty(PropertyName = "capping_enabled")]
         public bool? CappingEnabled { get; set; }
 
