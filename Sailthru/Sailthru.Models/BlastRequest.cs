@@ -82,7 +82,7 @@ namespace Sailthru.Models
         /// <summary>
         /// Gets or sets whether message frequency capping is enabled for this blast.
         /// Set to false to exclude this blast from the account's message frequency capping rules.
-        ///  If null, capping is enabled by default.
+        /// If null, capping is enabled by default.
         /// </summary>
         /// <value>True if frequency capping is enabled; false to exclude this blast from capping.</value>
         [JsonProperty(PropertyName = "capping_enabled")]
