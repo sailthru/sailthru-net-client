@@ -297,6 +297,65 @@ namespace Sailthru.Tests
         }
 
         [TestMethod]
+        public void PostBlastWithLinkParams()
+        {
+            BlastRequest request = new()
+            {
+                Name = "Link Params Test",
+                List = "list",
+                Subject = "Test Subject",
+                ScheduleTime = "+3 hours",
+                LinkParams = new Hashtable
+                {
+                    { "utm_source", "sailthru" },
+                    { "utm_campaign", "test_run" }
+                }
+            };
+
+            SailthruResponse response = _client.ScheduleBlast(request);
+            Assert.IsTrue(response.IsOK());
+
+            Hashtable linkParams = response.HashtableResponse["link_params"] as Hashtable;
+            Assert.AreEqual("sailthru", linkParams["utm_source"]);
+            Assert.AreEqual("test_run", linkParams["utm_campaign"]);
+        }
+
+        [TestMethod]
+        public void PostBlastWithFallbackTime()
+        {
+            BlastRequest request = new()
+            {
+                Name = "Fallback Time Test",
+                List = "list",
+                Subject = "Test Subject",
+                ScheduleTime = "+3 hours",
+                EmailHourRange = 8,
+                FallbackTime = "12:00 PM EST"
+            };
+
+            SailthruResponse response = _client.ScheduleBlast(request);
+            Assert.IsTrue(response.IsOK());
+            Assert.AreEqual("12:00 PM EST", response.HashtableResponse["fallback_time"]);
+        }
+
+        [TestMethod]
+        public void PostBlastWithCappingDisabled()
+        {
+            BlastRequest request = new()
+            {
+                Name = "Capping Disabled Test",
+                List = "list",
+                Subject = "Test Subject",
+                ScheduleTime = "+3 hours",
+                CappingEnabled = false
+            };
+
+            SailthruResponse response = _client.ScheduleBlast(request);
+            Assert.IsTrue(response.IsOK());
+            Assert.AreEqual(false, response.HashtableResponse["capping_enabled"]);
+        }
+
+        [TestMethod]
         public void PostScheduledBlastNoScheduleTime()
         {
             BlastRequest request = new()

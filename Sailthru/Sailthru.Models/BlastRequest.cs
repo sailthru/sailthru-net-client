@@ -80,11 +80,29 @@ namespace Sailthru.Models
         public long EmailCount { get; set; }
 
         /// <summary>
+        /// Gets or sets whether message frequency capping is enabled for this blast.
+        /// Set to false to exclude this blast from the account's message frequency capping rules.
+        /// If null, capping is enabled by default.
+        /// </summary>
+        /// <value>True if frequency capping is enabled; false to exclude this blast from capping.</value>
+        [JsonProperty(PropertyName = "capping_enabled")]
+        public bool? CappingEnabled { get; set; }
+
+        /// <summary>
         /// Gets or sets the email hour range.
         /// </summary>
         /// <value>The email hour range.</value>
         [JsonProperty(PropertyName = "email_hour_range")]
         public int EmailHourRange { get; set; }
+
+        /// <summary>
+        /// Gets or sets the fallback time for personalized send time.
+        /// Used when subscriber engagement data is unavailable. Must fall within the
+        /// send window defined by email_hour_range starting at schedule_time.
+        /// </summary>
+        /// <value>The fallback send time, e.g. "12:00 PM EST" or "10:30 AM".</value>
+        [JsonProperty(PropertyName = "fallback_time")]
+        public string FallbackTime { get; set; }
 
         /// <summary>
         /// Gets or sets the end time.
@@ -151,6 +169,13 @@ namespace Sailthru.Models
         /// <value>The link domain.</value>
         [JsonProperty(PropertyName = "link_domain")]
         public string LinkDomain { get; set; }
+
+        /// <summary>
+        /// Gets or sets the link params.
+        /// </summary>
+        /// <value>The link params.</value>
+        [JsonProperty(PropertyName = "link_params")]
+        public Hashtable LinkParams { get; set; }
 
         /// <summary>
         /// Gets or sets the link tracking.
