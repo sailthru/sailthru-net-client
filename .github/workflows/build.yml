@@ -29,6 +29,11 @@ jobs:
       uses: actions/setup-dotnet@v3
       with:
         dotnet-version: ${{ matrix.dotnet }}
+    - name: Setup .NET 6 runtime (for running net6.0 tests)
+      if: matrix.dotnet != '6.0.x'
+      uses: actions/setup-dotnet@v3
+      with:
+        dotnet-version: 6.0.x
     - name: Restore dependencies
       run: dotnet restore
     - name: Build
