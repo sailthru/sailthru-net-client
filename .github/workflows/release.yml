@@ -13,10 +13,6 @@ jobs:
 
     runs-on: ubuntu-latest
 
-    permissions:
-      contents: read
-      id-token: write
-
     defaults:
       run:
         working-directory: ./Sailthru
@@ -39,10 +35,7 @@ jobs:
       run: dotnet build --no-restore --configuration Release
     - name: Test
       run: dotnet test --no-build --configuration Release --verbosity normal
-    - name: NuGet login (OIDC -> short-lived API key)
-      uses: NuGet/login@v1
-      id: login
-      with:
-        user: ${{ secrets.NUGET_USER }}
     - name: Publish the package to nuget.org
-      run: dotnet nuget push */bin/Release/*.nupkg --api-key ${{ steps.login.outputs.NUGET_API_KEY }} --source https://api.nuget.org/v3/index.json
+      run: dotnet nuget push */bin/Release/*.nupkg -k $NUGET_AUTH_TOKEN -s https://api.nuget.org/v3/index.json
+      env:
+        NUGET_AUTH_TOKEN: ${{ secrets.NUGET_TOKEN }}
