@@ -142,7 +142,8 @@ namespace Sailthru
         {
             Hashtable parameters = new Hashtable
             {
-                ["status"] = statusType
+                // Ensure the status type is in lowercase as required by the API
+                ["status"] = statusType.ToString().ToLower()
             };
             return ApiGet("blast", parameters);
         }
