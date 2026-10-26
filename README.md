@@ -33,3 +33,21 @@ if (lastRateLimitInfo != null) {
     }
 }
 ```
+
+#### Quality checks
+
+CI discovers every stable .NET SDK channel from 8.0 through the latest on PRs,
+pushes to `master`, weekly, and manual runs. Library packages retain `netstandard2.0`.
+
+With the .NET 10 SDK installed, run from the repository root:
+
+```shell
+dotnet restore Sailthru/Sailthru.sln -p:ClientTestFramework=net10.0
+dotnet build Sailthru/Sailthru.sln --no-restore --configuration Release -p:ClientTestFramework=net10.0
+dotnet test Sailthru/Sailthru.sln --no-build --configuration Release -p:ClientTestFramework=net10.0
+bash scripts/test-package.sh net10.0
+```
+
+The package check installs the built NuGet artifact into a temporary consumer and
+makes a local request with dummy credentials. These commands do not publish; the
+existing tag-release workflow runs the package check before publishing.

@@ -7,36 +7,61 @@ on:
   push:
     branches: [ "master" ]
   pull_request:
+  schedule:
+    # Check runtime compatibility every Monday at 05:07 UTC.
+    - cron: '7 5 * * 1'
+  workflow_dispatch:
+
+permissions:
+  contents: read
 
 jobs:
+  discover:
+    name: Discover runtimes
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    outputs:
+      versions: ${{ steps.versions.outputs.versions }}
+    steps:
+      - uses: actions/checkout@v4
+      - name: Test discovery and list stable runtimes
+        id: versions
+        uses: actions/github-script@v7
+        with:
+          script: |
+            require('node:child_process').execFileSync(process.execPath,
+              ['--test', '.github/scripts/runtime-matrix.test.cjs'], {stdio: 'inherit'});
+            await require('./.github/scripts/runtime-matrix.cjs')({core});
+
   build:
+    needs: discover
 
     runs-on: ubuntu-latest
+    timeout-minutes: 15
 
     defaults:
       run:
         working-directory: ./Sailthru
 
     strategy:
+      fail-fast: false
       matrix:
-        dotnet: [ '6.0.x', '7.0.x' ]
+        dotnet: ${{ fromJSON(needs.discover.outputs.versions) }}
 
     name: .Net version ${{ matrix.dotnet }}
 
     steps:
     - uses: actions/checkout@v4
-    - name: Setup .NET
-      uses: actions/setup-dotnet@v3
+    - name: Set up selected test runtime
+      id: runtime
+      uses: ./.github/actions/setup-runtime
       with:
-        dotnet-version: ${{ matrix.dotnet }}
-    - name: Setup .NET 6 runtime (for running net6.0 tests)
-      if: matrix.dotnet != '6.0.x'
-      uses: actions/setup-dotnet@v3
-      with:
-        dotnet-version: 6.0.x
+        version: ${{ matrix.dotnet }}
     - name: Restore dependencies
-      run: dotnet restore
+      run: dotnet restore -p:ClientTestFramework=${{ steps.runtime.outputs.framework }}
     - name: Build
-      run: dotnet build --no-restore --configuration Release
+      run: dotnet build --no-restore --configuration Release -p:ClientTestFramework=${{ steps.runtime.outputs.framework }}
     - name: Test
-      run: dotnet test --no-build --verbosity normal --configuration Release
+      run: dotnet test --no-build --verbosity normal --configuration Release -p:ClientTestFramework=${{ steps.runtime.outputs.framework }}
+    - name: Test built NuGet package
+      run: bash ../scripts/test-package.sh ${{ steps.runtime.outputs.framework }}
