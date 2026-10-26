@@ -36,7 +36,7 @@ if (lastRateLimitInfo != null) {
 
 #### Quality checks
 
-CI tests .NET 8, 9, 10, and the newest supported stable release (`current`) on PRs,
+CI discovers every stable .NET SDK channel from 8.0 through the latest on PRs,
 pushes to `master`, weekly, and manual runs. Library packages retain `netstandard2.0`.
 
 With the .NET 10 SDK installed, run from the repository root:

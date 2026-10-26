@@ -16,7 +16,25 @@ permissions:
   contents: read
 
 jobs:
+  discover:
+    name: Discover runtimes
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    outputs:
+      versions: ${{ steps.versions.outputs.versions }}
+    steps:
+      - uses: actions/checkout@v4
+      - name: Test discovery and list stable runtimes
+        id: versions
+        uses: actions/github-script@v7
+        with:
+          script: |
+            require('node:child_process').execFileSync(process.execPath,
+              ['--test', '.github/scripts/runtime-matrix.test.cjs'], {stdio: 'inherit'});
+            await require('./.github/scripts/runtime-matrix.cjs')({core});
+
   build:
+    needs: discover
 
     runs-on: ubuntu-latest
     timeout-minutes: 15
@@ -28,7 +46,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        dotnet: ['8.0.x', '9.0.x', '10.0.x', 'current']
+        dotnet: ${{ fromJSON(needs.discover.outputs.versions) }}
 
     name: .Net version ${{ matrix.dotnet }}
 
